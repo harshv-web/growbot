@@ -4,11 +4,17 @@
   const T = window.THREE, J = window.Jeevo;
   if (!T) { window.JeevoWorld = null; return; }
 
-  function faceTexture(style, size = 256, line) {
-    const c = document.createElement("canvas"); c.width = c.height = size;
+  function faceTexture(style, size = 256, line, h) {
+    const c = document.createElement("canvas"); c.width = size; c.height = h || size;
     const ctx = c.getContext("2d"), tex = new T.CanvasTexture(c);
     tex.anisotropy = 4;
-    return { tex, draw(t) { const ex = J.soul.express(); J.drawFace(ctx, size, size, ex, t, { style: style === "epaper" ? "epaper" : style, line, bg: "#03050a" }); if (style === "epaper") J.dither(ctx, size, size); tex.needsUpdate = true; } };
+    if (style === "oled") { tex.magFilter = T.NearestFilter; tex.minFilter = T.NearestFilter; }
+    return { tex, canvas: c, draw(t) {
+      const ex = J.soul.express();
+      if (style === "oled") { J.oledFace(ctx, ex, t); }
+      else { J.drawFace(ctx, c.width, c.height, ex, t, { style: style === "epaper" ? "epaper" : style, line, bg: "#000", dy: typeof line === "function" ? -0.08 : 0 }); if (style === "epaper") J.dither(ctx, c.width, c.height); }
+      if (typeof line === "function") { ctx.fillStyle = "#fff"; ctx.font = `500 ${Math.round(c.height * 0.07)}px Inter, Arial, sans-serif`; ctx.textAlign = "center"; ctx.fillText(line(), c.width / 2, c.height * 0.9); }
+      tex.needsUpdate = true; } };
   }
   function roundedSlab(w, h, d, r, mat) {
     const s = new T.Shape(), x = -w / 2, y = -h / 2;
@@ -62,6 +68,41 @@
       const ring = new T.Mesh(new T.TorusGeometry(0.22, 0.012, 8, 60), new T.MeshStandardMaterial({ color: 0x7a8295, metalness: 0.9, roughness: 0.2 })); ring.position.set(0, 0.24, 0.096); g.add(ring);
       let last = 0;
       return { group: g, update(t) { if (t - last > 1200) { f.draw(t); last = t; } } };   // e-paper refreshes rarely
+    },
+    key() {
+      const g = new T.Group();
+      const body = roundedSlab(1.25, 0.82, 0.22, 0.2, new T.MeshStandardMaterial({ color: 0x1b1d22, metalness: 0.35, roughness: 0.45 })); g.add(body);
+      const f = faceTexture("oled", 128, null, 64); const scr = new T.Mesh(new T.PlaneGeometry(0.96, 0.48), new T.MeshBasicMaterial({ map: f.tex })); scr.position.z = 0.172; g.add(scr);
+      const bez = new T.Mesh(new T.PlaneGeometry(1.04, 0.56), new T.MeshBasicMaterial({ color: 0x000000 })); bez.position.z = 0.17; g.add(bez);
+      const ring = new T.Mesh(new T.TorusGeometry(0.2, 0.035, 12, 40), new T.MeshStandardMaterial({ color: 0xc9ccd2, metalness: 0.95, roughness: 0.2 })); ring.position.set(-0.52, 0.52, 0); g.add(ring);
+      const pad = new T.Mesh(new T.CylinderGeometry(0.07, 0.07, 0.02, 24), new T.MeshStandardMaterial({ color: 0xb87333, metalness: 0.9, roughness: 0.3 })); pad.rotation.x = Math.PI / 2; pad.position.set(0.5, -0.3, 0.14); g.add(pad);
+      return { group: g, update(t, ex) { f.draw(t); g.rotation.z = Math.sin(t / 1100 * ex.tempo) * 0.05; } };
+    },
+    tablet() {
+      const g = new T.Group(), body = roundedSlab(1.9, 1.15, 0.09, 0.09, shell()); g.add(body);
+      const f = faceTexture("color", 512, () => J.dayLine ? J.dayLine() : "Morning. Chai first.", 310); const scr = new T.Mesh(new T.PlaneGeometry(1.72, 1.04), new T.MeshBasicMaterial({ map: f.tex })); scr.position.z = 0.075; g.add(scr);
+      const stand = new T.Mesh(new T.BoxGeometry(0.5, 0.08, 0.7), shell()); stand.position.set(0, -0.64, -0.25); g.add(stand);
+      const leg = new T.Mesh(new T.BoxGeometry(0.4, 0.7, 0.06), shell()); leg.position.set(0, -0.35, -0.25); leg.rotation.x = -0.35; g.add(leg);
+      g.rotation.x = -0.12;
+      return { group: g, update(t) { f.draw(t); } };
+    },
+    scooter() {
+      const g = new T.Group(), paint = new T.MeshStandardMaterial({ color: 0xf2f2f2, metalness: 0.25, roughness: 0.35 }), dark = new T.MeshStandardMaterial({ color: 0x1a1c20, metalness: 0.4, roughness: 0.5 });
+      const sh = new T.Shape();   // side profile, metres-ish
+      sh.moveTo(-1.1, 0.25); sh.lineTo(0.35, 0.25); sh.quadraticCurveTo(0.62, 0.3, 0.78, 0.62); sh.lineTo(0.95, 1.25); sh.lineTo(0.8, 1.28); sh.lineTo(0.6, 0.72);
+      sh.quadraticCurveTo(0.5, 0.52, 0.25, 0.5); sh.lineTo(-0.45, 0.5); sh.quadraticCurveTo(-0.55, 0.78, -0.75, 0.82); sh.lineTo(-1.25, 0.8); sh.quadraticCurveTo(-1.35, 0.55, -1.1, 0.25);
+      const body = new T.Mesh(new T.ExtrudeGeometry(sh, { depth: 0.36, bevelEnabled: true, bevelThickness: 0.05, bevelSize: 0.04, bevelSegments: 4, curveSegments: 18 }), paint); body.position.z = -0.18; g.add(body);
+      const seat = new T.Mesh(new T.BoxGeometry(0.75, 0.08, 0.34), dark); seat.position.set(-0.85, 0.86, 0); g.add(seat);
+      [[-0.95, 0.28], [0.9, 0.28]].forEach(([x, y]) => { const w = new T.Mesh(new T.TorusGeometry(0.24, 0.07, 16, 40), dark); w.position.set(x, y, 0); g.add(w); const hub = new T.Mesh(new T.CylinderGeometry(0.1, 0.1, 0.12, 20), new T.MeshStandardMaterial({ color: 0x9aa0a6, metalness: 0.9, roughness: 0.3 })); hub.rotation.x = Math.PI / 2; hub.position.set(x, y, 0); g.add(hub); g["wheel" + (x > 0 ? "F" : "R")] = w; });
+      const bar = new T.Mesh(new T.CylinderGeometry(0.025, 0.025, 0.8, 12), dark); bar.rotation.x = Math.PI / 2; bar.position.set(0.9, 1.28, 0); g.add(bar);
+      const c = document.createElement("canvas"); c.width = 256; c.height = 160; const ctx = c.getContext("2d"), tex = new T.CanvasTexture(c);
+      const dash = new T.Mesh(new T.PlaneGeometry(0.36, 0.22), new T.MeshBasicMaterial({ map: tex })); dash.position.set(0.86, 1.34, 0); dash.rotation.set(0, -Math.PI / 2 + 0.25, 0); dash.rotation.y = -1.2; g.add(dash);
+      g.scale.setScalar(1.25); g.position.y = -0.55;
+      let last = 0;
+      return { group: g, update(t, ex) {
+        if (t - last > 500) { last = t; const soc = J.scooter ? J.scooter.soc : 34, km = J.scooter ? J.scooter.km : 22; ctx.fillStyle = "#000"; ctx.fillRect(0, 0, 256, 160); ctx.fillStyle = "#fff"; ctx.textAlign = "center"; ctx.font = "600 64px Inter, Arial"; ctx.fillText(soc + "%", 128, 82); ctx.font = "500 22px Inter, Arial"; ctx.fillStyle = "#9aa0a6"; ctx.fillText(km + " km · tyres ok", 128, 122); ctx.fillStyle = `hsl(${ex.hue} 90% 60%)`; ctx.fillRect(40, 136, 176 * soc / 100, 6); tex.needsUpdate = true; }
+        g.wheelF.rotation.z = g.wheelR.rotation.z = -t / 400;
+      } };
     },
     perch() {
       const g = new T.Group();
@@ -122,5 +163,27 @@
     return { renderer, scene, cam, resize, onFrame: fn => updaters.push(fn) };
   }
 
-  window.JeevoWorld = { stage, orb, build: k => BUILD[k](), kinds: Object.keys(BUILD) };
+  // Tesla-style studio: soft light, contact shadow, background that fades between white and black.
+  function studio(canvas) {
+    const renderer = new T.WebGLRenderer({ canvas, antialias: true, alpha: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75)); renderer.setClearColor(0x000000, 0);
+    renderer.outputEncoding = T.sRGBEncoding; renderer.toneMapping = T.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.05;
+    const scene = new T.Scene(), host = canvas.parentNode;
+    host.style.transition = "background-color .7s cubic-bezier(.5,0,0,.75)"; host.style.backgroundColor = "#000";
+    const cam = new T.PerspectiveCamera(32, 1, 0.1, 200); cam.position.set(0, 1, 7);
+    const hemi = new T.HemisphereLight(0xffffff, 0x8a8f99, 0.9); scene.add(hemi);
+    const key = new T.DirectionalLight(0xffffff, 1.4); key.position.set(4, 6, 5); scene.add(key);
+    const rim = new T.DirectionalLight(0xffffff, 0.9); rim.position.set(-5, 3, -4); scene.add(rim);
+    const sc = document.createElement("canvas"); sc.width = sc.height = 128; const sx = sc.getContext("2d"); const gr = sx.createRadialGradient(64, 64, 4, 64, 64, 64); gr.addColorStop(0, "rgba(0,0,0,.45)"); gr.addColorStop(1, "rgba(0,0,0,0)"); sx.fillStyle = gr; sx.fillRect(0, 0, 128, 128);
+    const shadow = new T.Mesh(new T.PlaneGeometry(3.2, 1.6), new T.MeshBasicMaterial({ map: new T.CanvasTexture(sc), transparent: true, depthWrite: false })); shadow.rotation.x = -Math.PI / 2; shadow.position.y = -0.62; scene.add(shadow);
+    function resize() { const w = canvas.clientWidth, h = canvas.clientHeight; if (!w || !h) return; renderer.setSize(w, h, false); cam.aspect = w / h; cam.updateProjectionMatrix(); }
+    window.addEventListener("resize", resize); resize();
+    const updaters = []; let running = true;
+    function loop(t) { requestAnimationFrame(loop); if (!running) return; const ex = J.soul.express(); updaters.forEach(u => u(t, ex)); renderer.render(scene, cam); }
+    document.addEventListener("visibilitychange", () => { running = !document.hidden; });
+    requestAnimationFrame(loop);
+    return { renderer, scene, cam, shadow, onFrame: fn => updaters.push(fn), setDark(d) { host.style.backgroundColor = d ? "#000" : "#f4f4f4"; shadow.material.opacity = d ? 0.15 : 0.4; hemi.intensity = d ? 0.55 : 0.95; } };
+  }
+
+  window.JeevoWorld = { stage, studio, orb, build: k => BUILD[k](), kinds: Object.keys(BUILD) };
 })();

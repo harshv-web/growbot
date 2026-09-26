@@ -1,32 +1,28 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#05070d;color:#edf0f8}img{max-width:100%}[hidden]{display:none!important}</style></head><body><title>Jeevo Bodies</title>
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#ffffff;color:#171a20}img{max-width:100%}[hidden]{display:none!important}</style></head><body><title>Jeevo Models</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700&family=Instrument+Sans:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="assets/site.css">
 <nav class="nav" aria-label="Site"><div class="nav-in">
-  <a class="logo" href="index.html"><i aria-hidden="true"></i>JEEVO</a>
-  <div class="links"><a href="index.html">Home</a><a href="soul.html">Soul</a><a href="bodies.html">Bodies</a><a href="journey.html">Journey</a><a href="lab.html">Lab</a></div>
-  <span class="moodpill" title="The soul's mood, live">feels <span data-mood>content</span></span>
+  <a class="logo" href="index.html">JEEVO</a>
+  <div class="links"><a href="bodies.html">Models</a><a href="soul.html">Soul</a><a href="journey.html">Journey</a><a href="lab.html">Lab</a></div>
+  <div class="side"><span class="moodpill" title="The soul's mood, live"><span data-mood>Content</span></span></div>
 </div></nav>
-<main class="above wrap" style="padding-top:120px">
-  <div style="display:grid; gap:14px">
-    <span class="mono">The bodies</span>
-    <h1 style="font-size:clamp(2.2rem,6vw,4.4rem)">Same soul. Different bodies.</h1>
-    <p style="color:var(--ink2); max-width:60ch; font-size:1.08rem">Every body announces what it is when it connects (channels, sensors, screens, weight, leg length) and the soul decides how to live in it. Drag to turn them. The faces are live: they show the soul's mood right now.</p>
+<main class="above">
+  <div class="page-head wrap"><span class="mono">Models</span><h1>Same soul. Different bodies.</h1><p>Every body tells the soul what it is when it connects. The faces are live.</p></div>
+  <div class="tabs wrap" id="tabs"></div>
+  <div class="viewer" style="margin-top:22px"><canvas id="viewer" aria-label="3D model of the selected body"></canvas>
+    <div class="hud"><span id="vname">Strider</span><span class="mono">·</span><span data-mood>Content</span></div>
   </div>
-  <div class="tabs" id="tabs" style="margin-top:22px"></div>
-  <div class="viewer" style="margin-top:14px"><canvas id="viewer" aria-label="3D model of the selected body"></canvas>
-    <div class="hud"><span class="mono" id="vname">Strider</span><span class="mono" data-mood>Content</span></div>
-  </div>
-  <div class="row" style="margin-top:12px"><button class="btn small" type="button" id="walk">Walking: on</button><button class="btn small" type="button" id="spin">Auto-turn: on</button></div>
-  <section class="section" style="padding-top:40px">
-    <div class="spec">
-      <div class="glass pad" style="display:grid; gap:12px; align-content:start"><span class="mono" id="stag">Home body</span><h2 id="stitle">Strider</h2><p id="sfeel" style="color:var(--ink2)"></p><p id="sdoes" style="color:var(--ink2)"></p></div>
-      <div class="glass pad tbl"><table><tbody id="stable"></tbody></table></div>
+  <div class="row wrap" style="margin-top:18px"><button class="btn small" type="button" id="walk">Walking: on</button><button class="btn small" type="button" id="spin">Auto-turn: on</button></div>
+  <section class="section wrap">
+    <div class="spec-sheet">
+      <div style="display:grid; gap:12px; align-content:start"><span class="mono" id="stag">Home body</span><h2 id="stitle">Strider</h2><p id="sfeel" style="color:var(--ink2)"></p><p id="sdoes" style="color:var(--ink2)"></p></div>
+      <div class="tbl"><table><tbody id="stable"></tbody></table></div>
     </div>
   </section>
 </main>
 
-<footer><div class="wrap"><span>Jeevo · a personal project by Harsh, Bengaluru · built on the ideas of <a href="https://github.com/britcruise9/GrowBot" target="_blank" rel="noopener">GrowBot</a> by Brit Cruise</span><span>Prototype site · Sep 2026 · noncommercial</span></div></footer>
+<footer><span>Jeevo © 2026</span><span>Built in Bengaluru by Harsh</span><span><a href="https://github.com/britcruise9/GrowBot" target="_blank" rel="noopener">Grown from GrowBot</a></span><span>Noncommercial · Prototype</span></footer>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="assets/emotion.js"></script>
 <script>window.JEEVO_PAGE="bodies"</script>

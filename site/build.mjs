@@ -123,6 +123,7 @@ if (seedIdx > 0) {
     "09-decisions.md": ["decision", ["decisions"], "Decision log: what's decided, proposed and open."],
     "10-growbot-fusion.md": ["research", ["growbot", "soul-transfer", "learning", "emotion", "knowledge-packs", "v3"], "Concept v3: GrowBot's principles carried across many bodies — soul file v1, the embodiment lease, learning to walk in life with an on-device forward model, the emotion engine, full access and knowledge sharing."],
     "11-prototypes.md": ["research", ["prototypes", "strider", "walker", "pixel", "halo", "perch", "ather", "fire7"], "Every prototype with parts, wiring, firmware status and tests: Strider, Walker, Perch, Pixel keychain, Halo case, apps, and the Ather touchpoint."],
+    "13-life-os-v4.md": ["research", ["v4", "ather", "office", "messages", "orders", "habits", "models", "start-now"], "v4: Ather as the primary commute, the office, full access to messages and email, one input in many forms, Zepto and habits, more models, per-body emotions, simple-first answers, and what to build today with the parts on the desk."],
     "12-build-and-content-plan.md": ["research", ["plan", "content", "episodes", "journey"], "Build plan v3 (B0–B9) and the content journey: five acts, ten episodes, weekly rhythm, recurring segments."]
   };
   const files = readdirSync(join(root, "docs")).filter(f => meta[f]);

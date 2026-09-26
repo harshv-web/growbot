@@ -1,17 +1,17 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#05070d;color:#edf0f8}img{max-width:100%}[hidden]{display:none!important}</style></head><body><title>Jeevo Live Lab</title>
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#ffffff;color:#171a20}img{max-width:100%}[hidden]{display:none!important}</style></head><body><title>Jeevo Lab Live</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700&family=Instrument+Sans:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="assets/site.css">
 <nav class="nav" aria-label="Site"><div class="nav-in">
-  <a class="logo" href="index.html"><i aria-hidden="true"></i>JEEVO</a>
-  <div class="links"><a href="index.html">Home</a><a href="soul.html">Soul</a><a href="bodies.html">Bodies</a><a href="journey.html">Journey</a><a href="lab.html">Lab</a></div>
-  <span class="moodpill" title="The soul's mood, live">feels <span data-mood>content</span></span>
+  <a class="logo" href="index.html">JEEVO</a>
+  <div class="links"><a href="bodies.html">Models</a><a href="soul.html">Soul</a><a href="journey.html">Journey</a><a href="lab.html">Lab</a></div>
+  <div class="side"><span class="moodpill" title="The soul's mood, live"><span data-mood>Content</span></span></div>
 </div></nav>
 <main class="above wrap">
   <div class="labgrid">
     <div style="display:grid; gap:14px; align-content:start">
-      <span class="mono">Live lab · prototype 1</span>
-      <h1 style="font-size:clamp(2rem,5vw,3.6rem)">Watch it learn to walk.</h1>
+      <span class="mono">Lab · Prototype 1</span>
+      <h1>Watch it learn to walk.</h1>
       <p style="color:var(--ink2); max-width:60ch">The same learner that will run on the Fire 7: a rhythm with four numbers, tuned one stride at a time by an evolution strategy, while a tiny body model learns how it tips. The terrain and body here are simulated; the learning code is the real prototype.</p>
       <div class="sim"><canvas id="gait"></canvas></div>
       <div class="row" id="gaitctl">
@@ -32,21 +32,21 @@
   </div>
 
   <section class="section">
-    <div class="head lift"><span class="mono">Prototypes 2 and 3</span><h2>The keychain and the case, live.</h2><p>Both show the same soul as the page above and every other open tab. Tap the keychain to pet it, drag across it to make it look, shake it with the button. The case refreshes like e-paper: rarely, and in two colours.</p></div>
+    <div class="head lift"><span class="mono">Prototypes 2 and 3</span><h2>The key and the case. Live.</h2><p>Both show the same soul as the page above and every other open tab. Touch the key like the real one. The case refreshes like e-paper: rarely, and in two colours.</p></div>
     <div class="twin">
-      <div class="glass device lift"><span class="mono">Pixel · keychain</span><canvas class="keyring" id="pixel" width="440" height="440" aria-label="Keychain display"></canvas><div class="row"><button class="chip" type="button" id="shake">Shake</button><button class="chip" type="button" id="hold">Hold: come here</button></div></div>
-      <div class="glass device lift"><span class="mono">Halo · case back</span><canvas class="epaper" id="halo" width="200" height="200" aria-label="Case e-paper display"></canvas><p class="note" id="halonote">Refreshes when the mood changes.</p></div>
-      <div class="glass device lift" style="justify-items:start"><span class="mono">Sync</span><p style="color:var(--ink2)" data-lease>…</p><p class="note">Every page and tab is a presence. One holds the soul and thinks; the others are echoes that show it. Pull it anywhere.</p><button class="btn small" type="button" id="takeLab">Pull the soul here</button></div>
+      <div class="device lift" id="key"><span class="mono">Jeevo Key · OLED</span><canvas class="oled" id="pixel" width="128" height="64" aria-label="Keychain OLED display"></canvas><p class="note">Tap = tickled · hold = cosy · three taps = dizzy</p><div class="row"><button class="chip" type="button" id="shake">Shake</button><button class="chip" type="button" id="hold">Hold BOOT: come here</button></div></div>
+      <div class="device lift" id="halo-card"><span class="mono">Halo · case back</span><canvas class="epaper" id="halo" width="200" height="200" aria-label="Case e-paper display"></canvas><p class="note" id="halonote">Refreshes when the mood changes.</p></div>
+      <div class="device lift" style="justify-items:start"><span class="mono">Sync</span><p style="color:var(--ink2)" data-lease>…</p><p class="note">Every page and tab is a presence. One holds the soul and thinks; the others are echoes that show it. Pull it anywhere.</p><button class="btn small" type="button" id="takeLab">Pull the soul here</button></div>
     </div>
   </section>
 
   <section class="section">
-    <div class="head lift"><span class="mono">The research workspace</span><h2>My private lab.</h2><p>The full research (76 use cases, 38 integrations, the crew, the build board and the archive) lives in the private Jeevo Lab, synced across my devices. The code for every prototype is on GitHub.</p></div>
+    <div class="head lift"><span class="mono">The research workspace</span><h2>My private lab.</h2><p>The full research (79 use cases, 38 integrations, the crew, the build board and the archive) lives in the private Jeevo Lab, synced across my devices. The code for every prototype is on GitHub.</p></div>
     <div class="row lift"><a class="btn primary" href="https://claude.ai/artifact/XbvMeSCXwS7G48BkQ5ERCJ" target="_blank" rel="noopener">Open the Jeevo Lab (private)</a><a class="btn" href="https://github.com/harshv-web/growbot/tree/claude/relaxed-volta-mek7ih" target="_blank" rel="noopener">Code on GitHub</a></div>
   </section>
 </main>
 
-<footer><div class="wrap"><span>Jeevo · a personal project by Harsh, Bengaluru · built on the ideas of <a href="https://github.com/britcruise9/GrowBot" target="_blank" rel="noopener">GrowBot</a> by Brit Cruise</span><span>Prototype site · Sep 2026 · noncommercial</span></div></footer>
+<footer><span>Jeevo © 2026</span><span>Built in Bengaluru by Harsh</span><span><a href="https://github.com/britcruise9/GrowBot" target="_blank" rel="noopener">Grown from GrowBot</a></span><span>Noncommercial · Prototype</span></footer>
 <script src="assets/emotion.js"></script>
 <script src="assets/learner.js"></script>
 <script>window.JEEVO_PAGE="lab"</script>

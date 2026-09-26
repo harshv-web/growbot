@@ -8,22 +8,22 @@ import { fileURLToPath } from "node:url";
 const here = dirname(fileURLToPath(import.meta.url));
 const src = p => readFileSync(join(here, "src", p), "utf8");
 const THREE_URL = "https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js";
-const FONTS = "https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700&family=Instrument+Sans:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap";
-const SKEL = '<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#05070d;color:#edf0f8}img{max-width:100%}[hidden]{display:none!important}</style></head><body>';
+const FONTS = "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap";
+const SKEL = '<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#ffffff;color:#171a20}img{max-width:100%}[hidden]{display:none!important}</style></head><body>';
 
 const PAGES = [
   { file: "index.html", key: "home", title: "Jeevo", three: true },
   { file: "soul.html", key: "soul", title: "Jeevo Soul" },
-  { file: "bodies.html", key: "bodies", title: "Jeevo Bodies", three: true },
+  { file: "bodies.html", key: "bodies", title: "Jeevo Models", three: true },
   { file: "journey.html", key: "journey", title: "Jeevo Journey" },
-  { file: "lab.html", key: "lab", title: "Jeevo Live Lab", learn: true }
+  { file: "lab.html", key: "lab", title: "Jeevo Lab Live", learn: true }
 ];
 const nav = `<nav class="nav" aria-label="Site"><div class="nav-in">
-  <a class="logo" href="index.html"><i aria-hidden="true"></i>JEEVO</a>
-  <div class="links"><a href="index.html">Home</a><a href="soul.html">Soul</a><a href="bodies.html">Bodies</a><a href="journey.html">Journey</a><a href="lab.html">Lab</a></div>
-  <span class="moodpill" title="The soul's mood, live">feels <span data-mood>content</span></span>
+  <a class="logo" href="index.html">JEEVO</a>
+  <div class="links"><a href="bodies.html">Models</a><a href="soul.html">Soul</a><a href="journey.html">Journey</a><a href="lab.html">Lab</a></div>
+  <div class="side"><span class="moodpill" title="The soul's mood, live"><span data-mood>Content</span></span></div>
 </div></nav>`;
-const footer = `<footer><div class="wrap"><span>Jeevo · a personal project by Harsh, Bengaluru · built on the ideas of <a href="https://github.com/britcruise9/GrowBot" target="_blank" rel="noopener">GrowBot</a> by Brit Cruise</span><span>Prototype site · Sep 2026 · noncommercial</span></div></footer>`;
+const footer = `<footer><span>Jeevo © 2026</span><span>Built in Bengaluru by Harsh</span><span><a href="https://github.com/britcruise9/GrowBot" target="_blank" rel="noopener">Grown from GrowBot</a></span><span>Noncommercial · Prototype</span></footer>`;
 
 function page(p, threeUrl) {
   const scripts = [

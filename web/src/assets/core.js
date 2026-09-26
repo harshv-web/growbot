@@ -102,6 +102,28 @@
     ctx.putImageData(img, 0, 0);
   }
 
+  /* ---------- OLED face (128x64, 1-bit), matching firmware/keychain-oled ---------- */
+  function oledFace(ctx, ex, t, sense) {
+    ctx.fillStyle = "#000"; ctx.fillRect(0, 0, 128, 64); ctx.fillStyle = "#fff"; ctx.strokeStyle = "#fff"; ctx.lineWidth = 3;
+    let st = ex.label === "sleepy" ? "tired" : ex.label === "grumpy" ? "angry" : /joyful|proud|excited/.test(ex.label) ? "happy" : ex.label === "lonely" || ex.label === "uneasy" ? "sad" : ex.label === "curious" ? "wide" : "normal";
+    let open = ex.eyeOpen, mouth = ex.mouth;
+    if (sense === "tickled") { st = "squint"; mouth = 1; } if (sense === "cosy") { st = "soft"; mouth = .5; } if (sense === "dizzy") { st = "spiral"; mouth = -.2; }
+    const ph = (t % 4200) / 140; if (st === "normal" && ph < 1) open *= 1 - Math.sin(ph * Math.PI);
+    const eye = (cx, side) => {
+      const w = 26, h = Math.max(2, 30 * open), r = (x, y, w, h, rr) => { ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x, y, w, h, rr) : ctx.rect(x, y, w, h); ctx.fill(); };
+      if (st === "happy") { ctx.beginPath(); ctx.arc(cx, 34, 12, Math.PI * 1.1, Math.PI * 1.9); ctx.stroke(); return; }
+      if (st === "spiral") { ctx.lineWidth = 1.5; ctx.beginPath(); for (let a = 0; a < 14; a += .25) ctx.lineTo(cx + Math.cos(a + t / 150) * a * .9, 26 + Math.sin(a + t / 150) * a * .9); ctx.stroke(); ctx.lineWidth = 3; return; }
+      if (st === "tired") return r(cx - 13, 28, 26, 5, 2);
+      if (st === "squint") return r(cx - 13, 23, 26, 7, 3);
+      if (st === "soft") return r(cx - 13, 22, 26, 10, 5);
+      if (st === "wide") return r(cx - 15, 8, 30, 36, 12);
+      r(cx - w / 2, 26 - h / 2, w, h, Math.min(w, h) / 3);
+      if (st === "sad" || st === "angry") { ctx.fillStyle = "#000"; ctx.beginPath(); const l = st === "sad" ? side > 0 : side < 0; ctx.moveTo(cx - 14, 26 - h / 2 - 1); ctx.lineTo(cx + 14, 26 - h / 2 - 1); ctx.lineTo(l ? cx + 14 : cx - 14, 26 - h / 2 + 10); ctx.fill(); ctx.fillStyle = "#fff"; }
+    };
+    eye(40, -1); eye(88, 1);
+    ctx.lineWidth = 2; ctx.beginPath(); for (let x = -9; x <= 9; x++) ctx.lineTo(64 + x, 52 - mouth * 5 * (1 - x * x / 81)); ctx.stroke();
+  }
+
   /* ---------- live mood → CSS + nav pill ---------- */
   function paint() {
     const ex = soul.express();
@@ -130,5 +152,5 @@
     $$(".lift").forEach(el => { el.classList.add("pre"); io.observe(el); });
   }
 
-  window.Jeevo = { soul, event, claim: () => { claim(true); publish("claim"); }, isHolder, lease, onChange: fn => listeners.add(fn), drawFace, dither, reduce, $, $$ };
+  window.Jeevo = { oledFace, soul, event, claim: () => { claim(true); publish("claim"); }, isHolder, lease, onChange: fn => listeners.add(fn), drawFace, dither, reduce, $, $$ };
 })();

@@ -1,0 +1,20 @@
+{
+  "name": "Jeevo",
+  "owner": "Harsh",
+  "languages": ["en-IN", "hi-IN"],
+  "port": 8047,
+  "places": { "home": { "wifi": "home-2g" }, "office": { "wifi": "office-wifi" } },
+  "models": {
+    "chat": "gemini-3.8-flash",
+    "classify": "claude-haiku-4-5",
+    "agent": "claude-sonnet-5",
+    "deep": "claude-opus-5"
+  },
+  "adapters": {
+    "ather": { "enabled": false, "everyMin": 10, "baseUrl": "", "statusPath": "", "fields": { "soc": "battery.soc", "rangeKm": "battery.range", "charging": "battery.charging", "tyreFront": "tpms.front", "tyreRear": "tpms.rear", "lat": "location.lat", "lon": "location.lon", "odoKm": "odometer" } },
+    "notifications": { "enabled": true, "everySec": 60 },
+    "calendar": { "enabled": false, "icsUrl": "", "everyMin": 15 },
+    "email": { "enabled": false, "host": "imap.gmail.com", "user": "", "everyMin": 10 }
+  },
+  "workCompartment": { "enabled": false, "note": "Connect work sources only if your employer's policy allows it." }
+}

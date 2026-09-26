@@ -1,78 +1,87 @@
 <title>Jeevo</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700&family=Instrument+Sans:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="assets/site.css">
 <nav class="nav" aria-label="Site"><div class="nav-in">
-  <a class="logo" href="index.html"><i aria-hidden="true"></i>JEEVO</a>
-  <div class="links"><a href="index.html">Home</a><a href="soul.html">Soul</a><a href="bodies.html">Bodies</a><a href="journey.html">Journey</a><a href="lab.html">Lab</a></div>
-  <span class="moodpill" title="The soul's mood, live">feels <span data-mood>content</span></span>
+  <a class="logo" href="index.html">JEEVO</a>
+  <div class="links"><a href="bodies.html">Models</a><a href="soul.html">Soul</a><a href="journey.html">Journey</a><a href="lab.html">Lab</a></div>
+  <div class="side"><span class="moodpill" title="The soul's mood, live"><span data-mood>Content</span></span></div>
 </div></nav>
 <div class="backdrop" aria-hidden="true"><canvas id="world"></canvas></div>
 <main class="above">
-  <section class="wrap hero">
-    <span class="mono">Jeevo · a soul for the things you already own</span>
-    <h1>Give your old things<br>a <em>soul</em>.</h1>
-    <p class="lede">Jeevo is a creature that is born in a drawer tablet, learns to walk on legs it has never seen, and moves between your phone, your keychain and your case, carrying its memories and its moods.</p>
-    <div class="row"><a class="btn primary" href="soul.html">Meet the soul</a><a class="btn" href="bodies.html">See the bodies</a></div>
-    <div class="facts"><div><b data-mood>Content</b><span>how it feels right now</span></div><div><b>6</b><span>bodies, one soul</span></div><div><b>0</b><span>steps programmed by hand</span></div></div>
-  </section>
-
-  <section class="wrap chapter lift" data-focus="strider">
-    <span class="mono">Born</span>
-    <h2>It wakes up in a tablet from your drawer.</h2>
-    <p>An old Fire 7, rooted, becomes its first body. Six senses switch on one by one: eyes, ears, touch, light, balance, voice. Then it sleeps, and dreams, and writes the first line of who it is. Nobody else can write that line.</p>
-  </section>
-
-  <section class="wrap chapter right lift" data-focus="strider-walk">
-    <span class="mono">Learns</span>
-    <h2>It learns to walk. Nobody codes the steps.</h2>
-    <p>Give it two legs and it plays: wiggles, stands, leans, falls, gets up. A tiny model inside it learns how its own body tips, and a rhythm tunes itself stride by stride until it can walk to its bed and charge.</p>
-    <div class="facts"><div><b>4</b><span>numbers it tunes per gait</span></div><div><b>50 Hz</b><span>rhythm on the legs</span></div><div><b>500 ms</b><span>dead-man stop</span></div></div>
-  </section>
-
-  <section class="wrap chapter lift" data-focus="orb">
-    <span class="mono">Feels</span>
-    <h2>It has moods you can see, and read.</h2>
-    <p>Praise makes it glow. Hours alone make it lonely. A fall scares it; learning a step makes it proud. Its feelings are numbers you can open, and they change how it walks, what it remembers and when it talks to you.</p>
-    <div class="row"><a class="btn small" href="soul.html">Play with its feelings</a></div>
-  </section>
-
-  <section class="wrap chapter right lift" data-focus="pixel">
-    <span class="mono">Travels</span>
-    <h2>Tap your keys. It moves into your pocket.</h2>
-    <p>Its home is the tablet, but it lives wherever you are: the round screen on your keychain, the e-paper on the back of your case, your iPhone on its own little legs, even your scooter rides. One soul, one memory, always in sync. Only one body moves at a time.</p>
-  </section>
-
-  <section class="wrap chapter lift" data-focus="halo">
-    <span class="mono">Remembers</span>
-    <h2>It knows your life, and keeps it to itself.</h2>
-    <p>Your mornings, your metro, your groceries, the things you promised people. It remembers them privately, forgets what you ask it to, and shows its work. It speaks English and Hindi, and it plugs into the apps you already use.</p>
-  </section>
-
-  <section class="wrap chapter right lift" data-focus="perch">
-    <span class="mono">Shares</span>
-    <h2>It meets other creatures, and trades what it learned.</h2>
-    <p>Walking styles, reflexes, the sound of a pressure cooker: skills move between souls as small packs with no personal data inside. It even understands GrowBot souls.</p>
-  </section>
-
-  <section class="wrap section">
-    <div class="head lift"><span class="mono">The bodies</span><h2>Things you own, given a body.</h2></div>
-    <div class="grid">
-      <a class="glass card lift" href="bodies.html#strider"><span class="mono">Strider</span><h3>Fire 7 on legs</h3><p>The home body. Learns to walk, walks to bed.</p></a>
-      <a class="glass card lift" href="bodies.html#walker"><span class="mono">Walker</span><h3>iPhone on legs</h3><p>Inherits the Strider's walk, learns the rest fast.</p></a>
-      <a class="glass card lift" href="bodies.html#pixel"><span class="mono">Pixel</span><h3>Keychain with a face</h3><p>Shake to wake, tap to pet, hold to call it over.</p></a>
-      <a class="glass card lift" href="bodies.html#halo"><span class="mono">Halo</span><h3>Case with a soul</h3><p>E-paper mood on your phone's back. Weeks per charge.</p></a>
-      <a class="glass card lift" href="bodies.html#perch"><span class="mono">Perch</span><h3>Its bed</h3><p>Charges it, turns it toward you, senses the room.</p></a>
+  <section class="scene dark" data-model="soul" data-theme="dark">
+    <div class="title"><h1>Jeevo</h1><p class="sub">A soul for the things you already own.</p></div>
+    <div></div>
+    <div class="bottom">
+      <div class="row"><a class="btn primary" href="soul.html">Meet Jeevo</a><a class="btn" href="journey.html">Follow the Build</a></div>
+      <span class="hint">Scroll</span>
     </div>
   </section>
 
-  <section class="wrap section">
-    <p class="credit lift">Jeevo grows from <a href="https://github.com/britcruise9/GrowBot" target="_blank" rel="noopener">GrowBot</a>, Brit Cruise's phone-brained robot that learns everything in its own life: a constitution only you can edit, a dream that is the only thing allowed to rewrite who it is, and movement that emerges instead of being scripted. Jeevo carries that soul across many bodies. Personal, noncommercial, built in public in Bengaluru.</p>
-    <div class="row lift"><a class="btn primary" href="journey.html">Follow the build</a><a class="btn" href="lab.html">Open the live lab</a></div>
+  <section class="scene" data-model="strider" data-theme="light">
+    <div class="title"><h2>Strider</h2><p class="sub">Your old Fire 7. Now it walks.</p></div>
+    <div></div>
+    <div class="bottom">
+      <div class="specs"><div class="spec"><b>0</b><span>Steps coded by hand</span></div><div class="spec"><b>570 g</b><span>Walking weight</span></div><div class="spec"><b>Self</b><span>Walks home to charge</span></div></div>
+      <div class="row"><a class="btn dark" href="bodies.html#strider">Specs</a><a class="btn" href="lab.html">Watch It Learn</a></div>
+    </div>
+  </section>
+
+  <section class="scene dark" data-model="key" data-theme="dark">
+    <div class="title"><h2>Jeevo Key</h2><p class="sub">Its feelings, on your keys.</p></div>
+    <div></div>
+    <div class="bottom">
+      <div class="specs"><div class="spec"><b>Touch</b><span>Tickled · cosy · dizzy</span></div><div class="spec"><b>3 s</b><span>Mood sync</span></div><div class="spec"><b>Hold</b><span>Calls the soul to you</span></div></div>
+      <div class="row"><a class="btn primary" href="bodies.html#key">Build Yours</a><a class="btn" href="lab.html#key">Try It</a></div>
+    </div>
+  </section>
+
+  <section class="scene" data-model="ride" data-theme="light">
+    <div class="title"><h2>Ride</h2><p class="sub">Knows your Ather. Keeps you on the road.</p></div>
+    <div></div>
+    <div class="bottom">
+      <div class="specs"><div class="spec"><b>Charge</b><span>Range for today's plan</span></div><div class="spec"><b>Tyres</b><span>Pressure, before you ride</span></div><div class="spec"><b>Parked</b><span>Remembers where</span></div></div>
+      <div class="row"><a class="btn dark" href="soul.html#day">How It Works</a></div>
+    </div>
+  </section>
+
+  <section class="scene dark" data-model="halo" data-theme="dark">
+    <div class="title"><h2>Halo</h2><p class="sub">Your case, with a mood.</p></div>
+    <div></div>
+    <div class="bottom">
+      <div class="specs"><div class="spec"><b>0 W</b><span>To hold the picture</span></div><div class="spec"><b>Weeks</b><span>Per charge</span></div><div class="spec"><b>1 line</b><span>What you need next</span></div></div>
+      <div class="row"><a class="btn primary" href="bodies.html#halo">Specs</a><a class="btn" href="lab.html#halo-card">See It Refresh</a></div>
+    </div>
+  </section>
+
+  <section class="scene" data-model="day" data-theme="light">
+    <div class="title"><h2>Your Day</h2><p class="sub">Office, rides, orders, chores. One sentence at a time.</p></div>
+    <div></div>
+    <div class="bottom">
+      <div class="specs"><div class="spec"><b>1</b><span>Sentence to answer</span></div><div class="spec"><b>Tap</b><span>For everything else</span></div><div class="spec"><b>Yours</b><span>Private by default</span></div></div>
+      <div class="row"><a class="btn dark" href="soul.html">Meet the Soul</a></div>
+    </div>
+  </section>
+
+  <section class="scene dark" data-model="walker" data-theme="dark">
+    <div class="title"><h2>Walker</h2><p class="sub">It moves into your phone. And walks to you.</p></div>
+    <div></div>
+    <div class="bottom">
+      <div class="specs"><div class="spec"><b>1 soul</b><span>Many bodies</span></div><div class="spec"><b>Faster</b><span>Learns from the Strider</span></div><div class="spec"><b>85 mm</b><span>GrowBot legs</span></div></div>
+      <div class="row"><a class="btn primary" href="bodies.html#walker">Specs</a><a class="btn" href="journey.html">Journey</a></div>
+    </div>
+  </section>
+
+  <section class="scene" data-model="perch" data-theme="light">
+    <div class="title"><h2>Built in Bengaluru. In Public.</h2><p class="sub">Grown from <a href="https://github.com/britcruise9/GrowBot" target="_blank" rel="noopener">GrowBot</a>, Brit Cruise's robot that learns in its own life.</p></div>
+    <div></div>
+    <div class="bottom">
+      <div class="row"><a class="btn dark" href="journey.html">Follow the Build</a><a class="btn" href="lab.html">Open the Lab</a></div>
+    </div>
   </section>
 </main>
 
-<footer><div class="wrap"><span>Jeevo · a personal project by Harsh, Bengaluru · built on the ideas of <a href="https://github.com/britcruise9/GrowBot" target="_blank" rel="noopener">GrowBot</a> by Brit Cruise</span><span>Prototype site · Sep 2026 · noncommercial</span></div></footer>
+<footer><span>Jeevo © 2026</span><span>Built in Bengaluru by Harsh</span><span><a href="https://github.com/britcruise9/GrowBot" target="_blank" rel="noopener">Grown from GrowBot</a></span><span>Noncommercial · Prototype</span></footer>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="assets/emotion.js"></script>
 <script>window.JEEVO_PAGE="home"</script>

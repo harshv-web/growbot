@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<title>Jeevo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap">
+<style>
+  :root{--bg:#000;--ink:#f4f4f4;--dim:#8e8e8e;--line:rgba(255,255,255,.12);--blue:#3e6ae1;--glass:rgba(23,26,32,.72);--f:"Inter","Helvetica Neue",Arial,sans-serif}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%;margin:0;background:var(--bg);color:var(--ink);font-family:var(--f);overflow:hidden}
+  #face{position:fixed;inset:0;width:100%;height:100%;display:block}
+  .top{position:fixed;top:calc(env(safe-area-inset-top,0px) + 14px);left:22px;right:22px;display:flex;justify-content:space-between;align-items:center;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);font-weight:500}
+  .top b{color:var(--ink);font-weight:500}
+  .dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#555;margin-right:8px;vertical-align:1px}
+  .dot.on{background:#35d07f}
+  .line{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 118px);width:min(760px,92vw);text-align:center;font-size:clamp(18px,2.6vw,28px);font-weight:400;letter-spacing:-.01em;line-height:1.3;cursor:pointer;transition:opacity .4s}
+  .line small{display:block;margin-top:8px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+  .specs{position:fixed;left:0;right:0;bottom:calc(env(safe-area-inset-bottom,0px) + 22px);display:flex;justify-content:center;gap:clamp(18px,6vw,70px)}
+  .spec{text-align:center;min-width:90px}
+  .spec b{display:block;font-size:22px;font-weight:500;letter-spacing:-.01em}
+  .spec span{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+  .deep{position:fixed;left:50%;bottom:0;transform:translate(-50%,105%);width:min(720px,100vw);max-height:62vh;overflow:auto;background:var(--glass);-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);border:1px solid var(--line);border-bottom:0;border-radius:18px 18px 0 0;padding:26px 26px calc(env(safe-area-inset-bottom,0px) + 26px);transition:transform .45s cubic-bezier(.2,.8,.2,1);font-size:15px;line-height:1.6;color:#d6d6d6}
+  .deep.open{transform:translate(-50%,0)}
+  .deep h4{margin:0 0 10px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);font-weight:500}
+  .deep pre{white-space:pre-wrap;font-size:12px;background:rgba(255,255,255,.04);padding:10px;border-radius:8px}
+  .ask{position:fixed;right:22px;top:calc(env(safe-area-inset-top,0px) + 46px);display:flex;gap:8px}
+  .pill{font:500 13px var(--f);padding:10px 18px;border-radius:999px;border:0;cursor:pointer;background:rgba(244,244,244,.12);color:var(--ink)}
+  .pill.primary{background:var(--blue);color:#fff}
+  .pill.listening{background:#fff;color:#000}
+  form{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 190px);width:min(560px,90vw);display:none}
+  form.open{display:flex;gap:8px}
+  form input{flex:1;font:400 16px var(--f);padding:12px 16px;border-radius:999px;border:1px solid var(--line);background:rgba(23,26,32,.9);color:var(--ink);outline:none}
+</style>
+</head>
+<body>
+<canvas id="face" aria-label="Jeevo's face"></canvas>
+<div class="top"><span><span class="dot" id="conn"></span><b>Jeevo</b> · <span id="mood">Content</span></span><span id="clock">--:--</span></div>
+<div class="ask"><button class="pill" id="typeBtn" type="button">Type</button><button class="pill primary" id="talkBtn" type="button">Talk</button></div>
+<form id="form"><input id="q" placeholder="Ask anything, or tell me something to remember" autocomplete="off"><button class="pill primary" type="submit">Send</button></form>
+<div class="line" id="line" role="status">Hi Harsh.<small>Tap for more</small></div>
+<div class="specs" id="specs"></div>
+<div class="deep" id="deep" role="dialog" aria-label="Details"></div>
+<script>
+(() => {
+  const $ = s => document.querySelector(s);
+  const qs = new URLSearchParams(location.search), token = qs.get("token") || localStorage.getItem("jeevo-token") || "";
+  if (qs.get("token")) localStorage.setItem("jeevo-token", token);
+  let state = null, ws, deepText = null, lang = localStorage.getItem("jeevo-lang") || "en-IN", speak = localStorage.getItem("jeevo-speak") !== "0";
+  const ex0 = { eyes: "normal", eyeOpen: .8, mouth: .3, hue: 42, text: "Content", blinkEvery: 4, tempo: 1, bounce: .2, glow: false };
+
+  // ---------- face renderer: 14 eye styles ----------
+  const c = $("#face"), ctx = c.getContext("2d");
+  function fit() { const r = Math.min(devicePixelRatio || 1, 2); c.width = innerWidth * r; c.height = innerHeight * r; }
+  addEventListener("resize", fit); fit();
+  let lookX = 0, lookY = 0, talkUntil = 0;
+  function eye(x, y, w, h, style, side, t, ex) {
+    const col = "#fff"; ctx.fillStyle = col; ctx.strokeStyle = col; ctx.lineCap = "round"; ctx.lineWidth = w * .16;
+    const rr = (x, y, w, h, r) => { ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x, y, w, h, r) : ctx.rect(x, y, w, h); ctx.fill(); };
+    switch (style) {
+      case "happy": ctx.beginPath(); ctx.arc(x, y + h * .15, w * .45, Math.PI * 1.1, Math.PI * 1.9); ctx.stroke(); return;
+      case "squint": ctx.beginPath(); ctx.moveTo(x - w * .45, y - h * .1 * side); ctx.lineTo(x + w * .45, y); ctx.lineTo(x - w * .45, y + h * .12 * side); ctx.stroke(); return;
+      case "heart": { const s = w * .5; ctx.beginPath(); ctx.moveTo(x, y + s * .9); ctx.bezierCurveTo(x - s * 1.4, y - s * .1, x - s * .6, y - s * 1.1, x, y - s * .35); ctx.bezierCurveTo(x + s * .6, y - s * 1.1, x + s * 1.4, y - s * .1, x, y + s * .9); ctx.fillStyle = "#ff4d6d"; ctx.fill(); return; }
+      case "spiral": { ctx.lineWidth = w * .07; ctx.beginPath(); for (let a = 0; a < 18; a += .2) { const r = a * w * .028, ang = a + t / 180; ctx.lineTo(x + Math.cos(ang) * r, y + Math.sin(ang) * r); } ctx.stroke(); return; }
+      case "tired": rr(x - w / 2, y, w, h * .18, h * .09); return;
+      case "sad": rr(x - w / 2, y - h * .25, w, h * .6, w * .3); ctx.fillStyle = "#000"; ctx.beginPath(); ctx.moveTo(x - w * .6, y - h * .55); ctx.lineTo(x + w * .6, y - h * .55 + (side > 0 ? h * .35 : -h * .1) * side); ctx.lineTo(x + w * .6, y - h * .6); ctx.fill(); return;
+      case "angry": rr(x - w / 2, y - h * .3, w, h * .7, w * .3); ctx.fillStyle = "#000"; ctx.beginPath(); ctx.moveTo(x - w * .6, y - h * .5 + (side > 0 ? h * .35 : 0)); ctx.lineTo(x + w * .6, y - h * .5 + (side > 0 ? 0 : h * .35)); ctx.lineTo(x + w * .6, y - h); ctx.lineTo(x - w * .6, y - h); ctx.fill(); return;
+      case "narrow": rr(x - w / 2, y - h * .12, w, h * .3, h * .15); return;
+      case "soft": rr(x - w / 2, y - h * .15, w, h * .4, h * .2); return;
+      case "up": rr(x - w / 2 + w * .12, y - h / 2 - h * .1, w * .76, h * .9, w * .3); return;
+      case "wide": rr(x - w * .55, y - h * .6, w * 1.1, h * 1.2, w * .5); return;
+      default: rr(x - w / 2, y - h / 2, w, h, w * .35);
+    }
+  }
+  function frame(t) {
+    const ex = (state && state.bodies && state.bodies.tablet) || ex0, W = c.width, H = c.height, s = Math.min(W, H);
+    ctx.fillStyle = "#000"; ctx.fillRect(0, 0, W, H);
+    if (ex.glow) { const g = ctx.createRadialGradient(W / 2, H * .42, s * .05, W / 2, H * .42, s * .6); g.addColorStop(0, `hsla(${ex.hue},90%,60%,.16)`); g.addColorStop(1, "transparent"); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H); }
+    const period = (ex.blinkEvery || 4) * 1000, ph = (t % period) / 150, blink = ph < 1 && ex.eyes === "normal" ? Math.sin(ph * Math.PI) : 0;
+    lookX += (Math.sin(t / 2600) * .4 - lookX) * .02; lookY += (Math.cos(t / 3900) * .2 - lookY) * .02;
+    const bob = Math.sin(t / 1000 * Math.PI * (ex.tempo || 1)) * s * .006 * (.4 + (ex.bounce || 0));
+    const w = s * .16, h = s * .24 * Math.max(.06, (ex.eyeOpen || .8) * (1 - blink)), gap = s * .15, cy = H * .4 + bob;
+    [-1, 1].forEach(side => eye(W / 2 + side * (gap + w / 2) + lookX * w * .25, cy + lookY * h * .2, w, h, ex.eyes || "normal", side, t, ex));
+    // mouth
+    ctx.strokeStyle = "#fff"; ctx.lineWidth = s * .012; ctx.lineCap = "round";
+    const my = H * .4 + s * .2 + bob, mw = s * .07, talking = ex.talk || t < talkUntil;
+    if (ex.o) { ctx.beginPath(); ctx.arc(W / 2, my, s * .025, 0, 7); ctx.stroke(); }
+    else if (talking) { const o = (Math.sin(t / 70) + 1) * s * .018; ctx.beginPath(); ctx.ellipse(W / 2, my, mw * .6, o + 2, 0, 0, 7); ctx.stroke(); }
+    else { const cc = (ex.mouth || 0) * s * .04; ctx.beginPath(); ctx.moveTo(W / 2 - mw, my - cc * .3); ctx.quadraticCurveTo(W / 2, my + cc, W / 2 + mw, my - cc * .3); ctx.stroke(); }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+
+  // ---------- UI ----------
+  const setLine = (line, deep) => { $("#line").innerHTML = ""; $("#line").append(line); if (deep) { const sm = document.createElement("small"); sm.textContent = "Tap for more"; $("#line").append(sm); } deepText = deep || null; };
+  function sayAloud(line) {
+    talkUntil = performance.now() + Math.min(8000, 400 + line.length * 55);
+    if (!speak || !("speechSynthesis" in window)) return;
+    const u = new SpeechSynthesisUtterance(line); u.lang = /[ऀ-ॿ]/.test(line) ? "hi-IN" : lang; u.rate = 1.02; speechSynthesis.cancel(); speechSynthesis.speak(u);
+  }
+  $("#line").onclick = () => { if (!deepText) return; const d = $("#deep"); d.innerHTML = "<h4>Details</h4>"; const p = document.createElement("div"); p.style.whiteSpace = "pre-wrap"; p.textContent = deepText; d.append(p); d.classList.add("open"); };
+  $("#deep").onclick = () => $("#deep").classList.remove("open");
+  function specs() {
+    const st = state?.status || {}, sc = st.scooter, cal = st.calendar?.today?.[0], chores = (st.chores || []).filter(x => x.due);
+    const items = [[sc?.soc != null ? sc.soc + "%" : "—", sc?.rangeKm != null ? `Scooter · ${sc.rangeKm} km` : "Scooter"], [cal ? cal.time : "—", cal ? cal.summary.slice(0, 18) : "Next event"], [String(chores.length), "Chores due"]];
+    $("#specs").innerHTML = ""; items.forEach(([b, s]) => { const d = document.createElement("div"); d.className = "spec"; const bb = document.createElement("b"); bb.textContent = b; const ss = document.createElement("span"); ss.textContent = s; d.append(bb, ss); $("#specs").append(d); });
+  }
+  setInterval(() => { $("#clock").textContent = new Date().toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" }); }, 5000);
+
+  function connect() {
+    ws = new WebSocket((location.protocol === "https:" ? "wss://" : "ws://") + location.host + "/ws?body=tablet" + (token ? "&token=" + encodeURIComponent(token) : ""));
+    ws.onopen = () => $("#conn").classList.add("on");
+    ws.onclose = () => { $("#conn").classList.remove("on"); setTimeout(connect, 2000); };
+    ws.onmessage = e => {
+      const m = JSON.parse(e.data);
+      if (m.t === "state") { state = m; $("#mood").textContent = m.bodies.tablet.text; specs(); }
+      if (m.t === "reply" || m.t === "nudge") { setLine(m.line, m.deep); sayAloud(m.line); }
+    };
+  }
+  connect();
+  function send(text, kind = "text") { if (ws && ws.readyState === 1) ws.send(JSON.stringify({ t: "input", kind, text })); setLine("…"); }
+  $("#typeBtn").onclick = () => { $("#form").classList.toggle("open"); $("#q").focus(); };
+  $("#form").onsubmit = e => { e.preventDefault(); const v = $("#q").value.trim(); if (v) send(v); $("#q").value = ""; $("#form").classList.remove("open"); };
+  // voice: browser speech recognition where present (Android WebView/Chrome); long-press Talk toggles Hindi
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  let pressT;
+  $("#talkBtn").onpointerdown = () => { pressT = setTimeout(() => { lang = lang === "en-IN" ? "hi-IN" : "en-IN"; localStorage.setItem("jeevo-lang", lang); setLine(lang === "hi-IN" ? "Hindi mode." : "English mode."); pressT = null; }, 700); };
+  $("#talkBtn").onpointerup = () => {
+    if (!pressT) return; clearTimeout(pressT);
+    if (!SR) { $("#form").classList.add("open"); $("#q").focus(); return; }
+    const r = new SR(); r.lang = lang; r.interimResults = false;
+    $("#talkBtn").classList.add("listening"); $("#talkBtn").textContent = "Listening";
+    if (ws && ws.readyState === 1) ws.send(JSON.stringify({ t: "sense", name: "listening" }));
+    r.onresult = e => send(e.results[0][0].transcript, "voice");
+    r.onend = () => { $("#talkBtn").classList.remove("listening"); $("#talkBtn").textContent = "Talk"; };
+    r.start();
+  };
+  // touch the face = pet it
+  c.addEventListener("click", () => { if (ws && ws.readyState === 1) ws.send(JSON.stringify({ t: "input", kind: "touch", data: {} })); });
+  specs();
+})();
+</script>
+</body>
+</html>

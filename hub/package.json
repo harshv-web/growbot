@@ -1,0 +1,11 @@
+{
+  "name": "jeevo-hub",
+  "version": "0.1.0",
+  "description": "Jeevo's local soul hub. Runs on the rooted Fire 7 (Termux) or any laptop.",
+  "type": "module",
+  "private": true,
+  "scripts": { "start": "node src/server.mjs", "test": "node test/smoke.mjs" },
+  "engines": { "node": ">=20" },
+  "dependencies": { "@anthropic-ai/sdk": "^0.128.0", "ws": "^8.22.0" },
+  "optionalDependencies": { "imapflow": "^2.0.7" }
+}

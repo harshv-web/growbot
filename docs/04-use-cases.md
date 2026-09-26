@@ -2,7 +2,7 @@
 
 <!-- Generated from site/src/data.js by site/build.mjs. Edit the data, not this file. -->
 
-75 use cases. Status: Works today 45 · DIY hardware 15 · Workaround 3 · Experimental 10 · Waiting 2.
+79 use cases. Status: Works today 47 · DIY hardware 15 · Workaround 5 · Experimental 10 · Waiting 2.
 
 - **Works today**: Official APIs or built-in platform features.
 - **DIY hardware**: Works once you build the part (ESP32, sensor, print).
@@ -192,6 +192,22 @@
 - Community reverse-engineered Ather APIs are unofficial: read-only at most, and your account is at risk.
 
 **Uses:** Energy-monitoring smart plug, Ather app notifications (Fire 7, root)
+
+### The day's rhythm
+
+*Works today · P1 · All day · Tablet, Keychain, iPhone · crew: Chief of Staff, Coach*
+
+**Trigger.** Morning, lunch, the ride home, late nights, Sunday.
+
+**What happens.** It lives a 24-year-old designer's Bengaluru day with you: chai first, 'did you eat?' past 2, 'laundry's due' when you get home, 'save the file' after the fourth late night, a Sunday check on how the week really felt.
+
+**Edge cases**
+
+- At most six unasked nudges a day; quiet hours respected.
+- Says it once, kindly, then lets it go.
+- Your answers about how you feel stay private.
+
+**Uses:** Profile, Chores list, Calendar
 
 ## Listen
 
@@ -495,6 +511,22 @@
 
 ## Food
 
+### What did I order today?
+
+*Workaround · P1 · Anytime · Tablet, iPhone, Chat · crew: Librarian, Treasurer*
+
+**Trigger.** You ask, or it notices a pattern.
+
+**What happens.** Orders are assembled from app notifications, emails and bank SMS: app, time, amount, items when shown. It spots habits: late-night Zepto four times a week, milk every two days, average basket ₹340.
+
+**Edge cases**
+
+- No Zepto API: only what reaches you is used.
+- The same order from three sources is merged into one.
+- Habits are observations, never judgements.
+
+**Uses:** Zepto / Swiggy / Blinkit notifications, Order emails, Bank SMS
+
 ### What's for dinner
 
 *Works today · P3 · Evening · Tablet, AI apps · crew: Concierge, Jeevo*
@@ -571,6 +603,22 @@
 **Uses:** Swiggy Dineout MCP
 
 ## Work
+
+### Office day, learned
+
+*Works today · P2 · 09:30 · iPhone, Tablet, Keychain · crew: Chief of Staff, Librarian*
+
+**Trigger.** Your ride ends near the office, or your iPhone joins office Wi-Fi.
+
+**What happens.** One line: first meeting and a focus block. Through the day it catches promises you say out loud; at 6:30 pm it lists what's still open, then it's time to ride home.
+
+**Edge cases**
+
+- Company mail and chat stay in a separate Work compartment, and only if your employer's policy allows it.
+- Work-from-home days: learned from no ride + calendar.
+- Meeting-heavy days: it drops non-urgent nudges.
+
+**Uses:** Ather ride end, Shortcuts: office Wi-Fi, Calendar ICS
 
 ### Desk focus buddy
 
@@ -778,6 +826,22 @@
 - Every reflex is listed and undoable in the Soul Inspector.
 
 **Uses:** Dreamer, Reflex table
+
+### What needs you, from every app
+
+*Workaround · P1 · Anytime · Tablet, iPhone, Keychain · crew: Librarian, Guardian*
+
+**Trigger.** WhatsApp, Gmail, Telegram and other notifications land on the always-on Fire 7.
+
+**What happens.** A small model marks each one 'needs you' or not. You get one line: 'Amma asked about Sunday. Priya sent the file. Nothing else needs you.' Tap for the list.
+
+**Edge cases**
+
+- Read-only: replies are drafts you send yourself.
+- Group chats are summarised, not read out.
+- OTPs and bank alerts are never read out loud.
+
+**Uses:** Termux:API notifications (Fire 7), WhatsApp companion device, IMAP email
 
 ### One memory in every AI
 

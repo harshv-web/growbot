@@ -20,6 +20,14 @@ This repo holds the concept, the research, and the Lab site. It's a personal pro
 | [10 · GrowBot fusion (concept v3)](docs/10-growbot-fusion.md) | Soul file v1, one soul across many bodies, learning to walk in life, the emotion engine, full access, knowledge sharing |
 | [11 · Prototypes](docs/11-prototypes.md) | Strider, Walker, Perch, Pixel keychain, Halo case, apps, Ather touchpoint |
 | [12 · Build and content plan](docs/12-build-and-content-plan.md) | Phases B0–B9 and the ten-episode content journey |
+| [13 · Life OS (v4)](docs/13-life-os-v4.md) | Ather as primary commute, the office, messages and email, one input many ways, orders and habits, more models, per-body emotions, what to build today |
+
+## Start today
+
+- `hub/`: the local soul for the Fire 7 (Termux) or a laptop. `npm install && npm start`, then open the face at `http://localhost:8047`. `npm test` runs 13 end-to-end checks. See `hub/README.md`.
+- `firmware/keychain-oled/`: ESP32-S3 + OLED Jeevo Key with pixel-eye emotions and its own feelings (tickled, cosy, dizzy).
+- `firmware/desk-node/`: ESP32 pet pad + "keys on the desk" presence.
+- `shortcuts/README.md`: iPhone Shortcut recipes (Ask Jeevo, Ather ride start/end, office, bank SMS, NFC taps).
 
 ## Prototypes
 

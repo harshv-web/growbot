@@ -6,43 +6,50 @@
 
   /* ================= HOME ================= */
   if (PAGE === "home") {
-    const canvas = $("#world");
-    if (!W) { canvas.parentNode.style.display = "none"; return; }
-    const st = W.stage(canvas, { fog: 0.05 });
-    const orb = W.orb(); orb.group.position.set(0, 1.3, 0); orb.group.scale.setScalar(0.75); st.scene.add(orb.group);
-    const B = {};
-    const place = { strider: [-3.4, 0, 0.6, 0.5], walker: [3.3, 0, 0.4, -0.5], pixel: [2.2, 2.6, -1.6, -0.3], halo: [-2.4, 2.4, -1.8, 0.35], perch: [0, -0.48, -3.6, 0] };
-    Object.keys(place).forEach(k => { const b = W.build(k); const p = place[k]; b.group.position.set(p[0], p[1], p[2]); b.group.rotation.y = p[3]; b.home = b.group.position.clone(); st.scene.add(b.group); B[k] = b; });
-    B.strider.group.scale.setScalar(0.9); B.walker.group.scale.setScalar(0.95); B.pixel.group.scale.setScalar(0.7); B.halo.group.scale.setScalar(0.85);
-    const FOCUS = {
-      hero:            { cam: [-1.2, 1.7, 9.4], look: [-3.0, 1.0, 0] },
-      strider:         { cam: [-2.2, 1.0, 4.2], look: [-3.4, 0.5, 0.6] },
-      "strider-walk":  { cam: [-1.2, 0.6, 4.6], look: [-2.6, 0.4, 0.6] },
-      orb:             { cam: [0.4, 1.5, 3.8], look: [0, 1.3, 0] },
-      pixel:           { cam: [1.4, 2.8, 1.6], look: [2.2, 2.5, -1.6] },
-      halo:            { cam: [-1.6, 2.5, 1.4], look: [-2.4, 2.3, -1.8] },
-      perch:           { cam: [0, 1.4, 1.2], look: [0, -0.3, -3.6] }
+    document.documentElement.classList.add("snap");
+    const canvas = $("#world"), nav = $(".nav");
+    J.scooter = { soc: 34, km: 22 };
+    J.dayLine = () => { const h = new Date().getHours(); return h < 11 ? "Morning. Scooter 34%. First call 10:30." : h < 17 ? "Two promises open. Lunch?" : h < 22 ? "Welcome home. Laundry's due." : "Save the file. Sleep soon."; };
+    if (!W) { canvas.parentNode.style.background = "#000"; }
+    const st = W ? W.studio(canvas) : null;
+    const M = {}, PRESET = {
+      soul:    { cam: [0, 0.3, 7.6], look: [0, 0.05, 0], s: 0.72, y: -0.1 },
+      strider: { cam: [2.4, 1.2, 5.6], look: [0, 0.35, 0], s: 1.0, y: 0.05 },
+      key:     { cam: [0, 0.3, 5.0], look: [0, 0.15, 0], s: 1.0, y: 0.1 },
+      ride:    { cam: [-4.6, 1.4, 6.2], look: [0, 0.05, 0], s: 1.0, y: -0.8 },
+      halo:    { cam: [1.2, 0.6, 4.6], look: [0, 0.3, 0], s: 1.2, y: 0.35 },
+      day:     { cam: [0, 0.6, 5.0], look: [0, 0.25, 0], s: 1.0, y: 0.3 },
+      walker:  { cam: [1.8, 1.0, 5.0], look: [0, 0.45, 0], s: 1.0, y: 0.15 },
+      perch:   { cam: [0, 2.6, 5.4], look: [0, -0.2, 0], s: 1.0, y: -0.3 }
     };
-    let focus = "hero", walkX = 0;
-    const cam = st.cam, cur = { p: new THREE.Vector3(...FOCUS.hero.cam), l: new THREE.Vector3(...FOCUS.hero.look) };
-    const mouse = { x: 0, y: 0 };
-    window.addEventListener("pointermove", e => { mouse.x = e.clientX / innerWidth - 0.5; mouse.y = e.clientY / innerHeight - 0.5; }, { passive: true });
-    function pick() {
-      let best = "hero", bd = Infinity, mid = innerHeight * 0.5;
-      $$("[data-focus]").forEach(s => { const r = s.getBoundingClientRect(); const d = Math.abs(r.top + r.height / 2 - mid); if (r.bottom > 0 && r.top < innerHeight && d < bd) { bd = d; best = s.dataset.focus; } });
-      if (scrollY < innerHeight * 0.35) best = "hero";
-      focus = best;
+    if (st) {
+      const make = { soul: () => W.orb(), strider: () => W.build("strider"), key: () => W.build("key"), ride: () => W.build("scooter"), halo: () => W.build("halo"), day: () => W.build("tablet"), walker: () => W.build("walker"), perch: () => W.build("perch") };
+      Object.keys(make).forEach(k => { const m = make[k](); m.group.visible = false; m.group.scale.setScalar(0.001); st.scene.add(m.group); M[k] = m; });
     }
-    window.addEventListener("scroll", pick, { passive: true }); pick();
-    st.onFrame((t, ex) => {
-      orb.update(t, ex);
-      Object.keys(B).forEach(k => B[k].update(t, ex));
-      if (focus === "strider-walk") { walkX = lerp(walkX, Math.sin(t / 2600) * 1.2, 0.02); B.strider.group.position.x = B.strider.home.x + walkX; }
-      Object.keys(B).forEach(k => { if (k !== "strider" && k !== "perch") B[k].group.position.y = B[k].home.y + Math.sin(t / 1400 + B[k].home.x) * 0.06; });
-      const f = FOCUS[focus] || FOCUS.hero, k = J.reduce ? 1 : 0.035;
-      cur.p.lerp(new THREE.Vector3(f.cam[0] + mouse.x * 0.6, f.cam[1] - mouse.y * 0.3, f.cam[2]), k);
-      cur.l.lerp(new THREE.Vector3(...f.look), k);
-      cam.position.copy(cur.p); cam.lookAt(cur.l);
+    let active = "soul", shown = null, grow = 0;
+    const cur = st ? { p: new THREE.Vector3(...PRESET.soul.cam), l: new THREE.Vector3(...PRESET.soul.look) } : null;
+    const mouse = { x: 0, y: 0 }; addEventListener("pointermove", e => { mouse.x = e.clientX / innerWidth - .5; mouse.y = e.clientY / innerHeight - .5; }, { passive: true });
+    const scenes = $$(".scene");
+    function pick() {
+      let best = scenes[0], bd = Infinity; const mid = innerHeight / 2;
+      scenes.forEach(s => { const r = s.getBoundingClientRect(), d = Math.abs(r.top + r.height / 2 - mid); if (d < bd) { bd = d; best = s; } });
+      active = best.dataset.model;
+      const dark = best.dataset.theme === "dark";
+      nav.classList.toggle("dark", dark);
+      if (st) st.setDark(dark);
+      else canvas.parentNode.style.background = dark ? "#000" : "#f4f4f4";
+    }
+    addEventListener("scroll", pick, { passive: true }); pick();
+    if (st) st.onFrame((t, ex) => {
+      if (shown !== active) {                      // swap: shrink the old one, then grow the new one
+        if (shown && M[shown].group.scale.x > 0.02) { M[shown].group.scale.multiplyScalar(0.8); }
+        else { if (shown) M[shown].group.visible = false; shown = active; grow = 0; M[shown].group.visible = true; }
+      } else if (grow < 1) grow = Math.min(1, grow + (J.reduce ? 1 : 0.05));
+      if (shown && shown === active) { const P = PRESET[shown], e = 1 - Math.pow(1 - grow, 3); M[shown].group.scale.setScalar(Math.max(0.001, P.s * (0.9 + 0.1 * e) * (grow ? 1 : 0.001))); M[shown].group.position.y = P.y; M[shown].group.rotation.y = (J.reduce ? 0.35 : Math.sin(t / 5200) * 0.45) + mouse.x * 0.4; }
+      if (shown) M[shown].update(t, ex);
+      const P = PRESET[active], k = J.reduce ? 1 : 0.045;
+      cur.p.lerp(new THREE.Vector3(P.cam[0], P.cam[1] - mouse.y * 0.25, P.cam[2]), k); cur.l.lerp(new THREE.Vector3(...P.look), k);
+      st.cam.position.copy(cur.p); st.cam.lookAt(cur.l);
     });
   }
 
@@ -80,14 +87,18 @@
         rows: [["Brain", "Rooted Fire 7 (LineageOS): face, ears, eyes; Termux body daemon with root"], ["Legs", "2× MG996R or DS3218, ~110 mm, textured TPU feet"], ["Controller", "Pico 2 W, 50 Hz rhythm, 500 ms dead-man stop"], ["Power", "2S 7.4 V LiPo → 6 V 5 A regulator"], ["Link", "USB-OTG serial to the tablet; Wi-Fi fallback"], ["Weight", "≈ 570 g"], ["Parts", "≈ ₹3,000–3,800"]] },
       walker: { tag: "Pocket body · iPhone on legs", title: "Walker", feel: "The magic moment: the soul leaves the tablet, moves into your phone, and walks over to you.", does: "GrowBot V1 geometry mounted on the Halo case's rail. Starts from the Strider's learned walk, scaled to its size, so it learns fast.",
         rows: [["Brain", "Your iPhone (web app + companion app)"], ["Legs", "2× MG90S 180° metal gear, 85 mm"], ["Controller", "Pico 2 W, GrowBot-compatible messages"], ["Power", "4× AA lithium"], ["Mount", "Halo case rail, no foam tape"], ["Parts", "≈ ₹2,250"]] },
-      pixel: { tag: "Keychain", title: "Pixel", feel: "The pet you carry. Shake it awake, tap to pet it, hold to call the soul into your pocket.", does: "A round colour screen shows the soul's live face. Eyes follow gravity when you tilt it. It buzzes for leave-now and forgot-your-keys, and its Bluetooth doubles as the keys-at-home beacon.",
+      key: { tag: "Keychain · build it today", title: "Jeevo Key", feel: "Small, cute, honest. Its eyes show the soul's mood, and it has feelings of its own: tickled, cosy, dizzy.", does: "An ESP32-S3 and a 0.96-inch OLED in a printed fob. Touch the copper pad to pet it, tap three times to make it dizzy, hold BOOT to call the soul to you. USB-powered today; a 400 mAh cell next.",
+        rows: [["Board", "ESP32-S3 (you have it)"], ["Screen", "128×64 OLED, I2C (you have it)"], ["Touch", "A wire or copper tape on GPIO4"], ["Link", "Wi-Fi WebSocket to the hub; BLE beacon for the desk"], ["Firmware", "firmware/keychain-oled"], ["Next", "400 mAh LiPo + TP4056, ≈ ₹250"]] },
+      ride: { tag: "Your Ather", title: "Ride", feel: "It knows your scooter the way it knows you: when it's hungry, when a tyre is soft, where you left it.", does: "Reads charge, range, tyres and location through the unofficial app API with your own token (read-only), plus ride mode from your iPhone's Bluetooth link to the dash.",
+        rows: [["Data", "Charge · range · tyres · location · odometer"], ["How", "Your Ather token, polled every 5–15 min"], ["Ride mode", "Shortcuts: Bluetooth to the dash"], ["Parking", "Saved when the ride ends"], ["Charging", "Energy-monitoring plug on the charger"], ["Caveat", "Unofficial API; can change without notice"]] },
+      pixel: { tag: "Keychain Pro · next", title: "Pixel", feel: "The pet you carry. Shake it awake, tap to pet it, hold to call the soul into your pocket.", does: "A round colour screen shows the soul's live face. Eyes follow gravity when you tilt it. It buzzes for leave-now and forgot-your-keys, and its Bluetooth doubles as the keys-at-home beacon.",
         rows: [["Board", "ESP32-S3 with 1.28\" round 240×240 touch display, IMU, LiPo charger"], ["Extras", "250–400 mAh LiPo, vibration motor, NFC sticker"], ["Sync", "BLE to the iOS companion; the Perch at home"], ["Battery", "A day or two with glances; sleeps after 20 s"], ["Size", "≈ 40 mm round, ~12 mm thick"], ["Parts", "≈ ₹2,200–2,500"]] },
       halo: { tag: "Phone case", title: "Halo", feel: "The creature on your phone's back that strangers notice. Calm, slow, always there.", does: "A 1.54\" e-paper on the back of a printed case shows a 1-bit face, its mood and one line (next metro, rain at 4). E-paper holds the picture with no power.",
         rows: [["Display", "1.54\" 200×200 black/white e-paper"], ["Brain", "ESP32-C3, wakes every 10 min, redraws only on change"], ["Battery", "150 mAh, weeks per charge, USB-C on the edge"], ["Case", "Printed TPU, ~7 mm back-pack, MagSafe ring kept"], ["Sync", "Home Wi-Fi now; BLE via the companion app next"], ["Parts", "≈ ₹1,900"]] },
       perch: { tag: "Dock", title: "Perch", feel: "Its bed. The Strider walks home to sleep here; the dream runs while it charges.", does: "Charges the Fire 7 and the iPhone, turns whatever sits on it to face you, and senses the room: presence radar, IR for the AC, lights, power cuts.",
         rows: [["Motion", "Lazy-susan bearing, NEMA17 + TMC2209 (silent)"], ["Senses", "ESP32-S3, mmWave radar, temperature, BLE scanner"], ["Hands", "IR for AC and fans; Wi-Fi bulbs over the LAN"], ["Charging", "USB for the Fire 7, MagSafe for the iPhone"], ["Parts", "≈ ₹3,300"]] }
     };
-    const order = ["strider", "walker", "pixel", "halo", "perch"];
+    const order = ["strider", "key", "ride", "walker", "pixel", "halo", "perch"];
     let cur = (location.hash || "").slice(1); if (!SPECS[cur]) cur = "strider";
     const tabs = $("#tabs");
     order.forEach(k => { const b = document.createElement("button"); b.className = "chip"; b.type = "button"; b.textContent = SPECS[k].title; b.onclick = () => select(k); b.dataset.k = k; tabs.append(b); });
@@ -97,10 +108,11 @@
     const canvas = $("#viewer");
     let st = null, models = {}, holder = null, rotY = 0.4, vel = 0, drag = null;
     if (W) {
-      st = W.stage(canvas, { fog: 0.08, stars: true });
+      st = W.studio(canvas); st.setDark(false);
       st.cam.position.set(0, 1.1, 5.2);
       holder = new THREE.Group(); st.scene.add(holder);
-      order.forEach(k => { const m = W.build(k); models[k] = m; m.group.visible = false; holder.add(m.group); });
+      order.forEach(k => { const m = W.build(k === "ride" ? "scooter" : k); models[k] = m; m.group.visible = false; holder.add(m.group); });
+      J.scooter = { soc: 34, km: 22 };
       const still = ex => Object.assign({}, ex, { gait: { freqScale: 0.0001, ampScale: 0 }, bounce: 0, tempo: 0.3 });
       st.onFrame((t, ex) => {
         const m = models[cur]; m.update(t, walking ? ex : still(ex));
@@ -117,7 +129,7 @@
       $$("#tabs .chip").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.k === k)));
       const s = SPECS[k]; $("#vname").textContent = s.title; $("#stag").textContent = s.tag; $("#stitle").textContent = s.title; $("#sfeel").textContent = s.feel; $("#sdoes").textContent = s.does;
       const tb = $("#stable"); tb.textContent = ""; s.rows.forEach(r => { const tr = document.createElement("tr"); const a = document.createElement("td"), b = document.createElement("td"); a.textContent = r[0]; b.textContent = r[1]; tr.append(a, b); tb.append(tr); });
-      if (W) { Object.keys(models).forEach(m => models[m].group.visible = m === k); models[k].group.position.y = k === "perch" ? -0.2 : k === "pixel" || k === "halo" ? 0.5 : 0; st.cam.position.set(0, k === "perch" ? 2.2 : 1.1, k === "strider" || k === "perch" ? 5.2 : 4.2); }
+      if (W) { Object.keys(models).forEach(m => models[m].group.visible = m === k); models[k].group.position.y = k === "perch" ? -0.2 : k === "pixel" || k === "halo" || k === "key" ? 0.5 : k === "ride" ? -0.55 : 0; st.cam.position.set(0, k === "perch" ? 2.2 : 1.1, k === "strider" || k === "perch" ? 5.2 : k === "ride" ? 6.4 : 4.2); }
     }
     select(cur);
   }
@@ -217,15 +229,18 @@
       requestAnimationFrame(draw);
     })(0);
 
-    // keychain
-    const pc = $("#pixel"), pctx = pc.getContext("2d"); let look = null, jig = 0;
-    pc.addEventListener("pointermove", e => { const r = pc.getBoundingClientRect(); look = { x: ((e.clientX - r.left) / r.width - 0.5) * 2, y: ((e.clientY - r.top) / r.height - 0.5) * 2 }; });
-    pc.addEventListener("pointerleave", () => { look = null; });
-    pc.addEventListener("click", () => J.event("petted"));
-    $("#shake").onclick = () => { jig = 1; J.event("greeted"); };
+    // Jeevo Key (OLED) — same behaviour as firmware/keychain-oled
+    const pc = $("#pixel"), pctx = pc.getContext("2d"); let sense = null, senseUntil = 0, taps = 0, lastTap = 0, downAt = 0;
+    const feel = (n, ms) => { sense = n; senseUntil = performance.now() + ms; };
+    pc.addEventListener("pointerdown", () => { downAt = performance.now(); });
+    pc.addEventListener("pointerup", () => { const now = performance.now(), held = now - downAt;
+      if (held > 900) { feel("cosy", 6000); J.event("petted"); return; }
+      taps = now - lastTap < 450 ? taps + 1 : 1; lastTap = now;
+      if (taps >= 3) { feel("dizzy", 4000); J.event("played"); taps = 0; } else { feel("tickled", 2000); J.event("petted"); } });
+    $("#shake").onclick = () => { feel("dizzy", 4000); J.event("greeted"); };
     $("#hold").onclick = () => { J.claim(); };
     $("#takeLab").onclick = () => J.claim();
-    (function kd(t) { pctx.save(); pctx.translate(220 + Math.sin(t / 30) * 14 * jig, 220); pctx.translate(-220, -220); J.drawFace(pctx, 440, 440, J.soul.express(), t, { style: "round", look: look || undefined, bg: "#03050a" }); pctx.restore(); jig *= 0.93; requestAnimationFrame(kd); })(0);
+    (function kd(t) { J.oledFace(pctx, J.soul.express(), t, performance.now() < senseUntil ? sense : null); requestAnimationFrame(kd); })(0);
 
     // case e-paper
     const hc = $("#halo"), hctx = hc.getContext("2d"); let shown = null;
