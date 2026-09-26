@@ -117,11 +117,11 @@ A presence is any device connected to the soul. Each one announces what it can d
 
 1. Microphone → **Silero VAD** in the browser (ONNX): only speech frames continue.
 2. **Sound events** in the browser (YAMNet plus a small classifier trained on your own clips): doorbell, knock, cooker whistle, water overflow.
-3. **Language ID and route** (Scribe): English/Hindi → Whisper large-v3-turbo on Workers AI (about $0.03 an hour, and roughly 3.5 hours a day fit in the free allowance); Kannada or code-mixed → Sarvam Saaras or Gemini audio.
+3. **Language ID and route** (Scribe): English/Hindi → Whisper large-v3-turbo on Workers AI (about $0.03 an hour, and roughly 3.5 hours a day fit in the free allowance); Hinglish or noisy → Sarvam Saaras or Gemini audio.
 4. **Drop raw audio.** An optional 24-hour ring buffer on the tablet only, for "what did he just say?".
 5. **Event** into the Soul Core with tier P2.
 
-Android Chrome's built-in speech recognition (en-IN, hi-IN, kn-IN) is the zero-cost option for commands, but it sends audio to Google and stops on silence, so it suits "On call" mode, not ambient capture.
+Android Chrome's built-in speech recognition (en-IN, hi-IN) is the zero-cost option for commands, but it sends audio to Google and stops on silence, so it suits "On call" mode, not ambient capture.
 
 ### What the lifelog holds
 
@@ -166,7 +166,7 @@ Legal note (not legal advice): India's DPDP Act does not apply to processing "by
 | Housekeeper | Presence, power, IR, lights, Swivel, cooker | Reflexes · Flash-Lite | Won't switch off if someone's home |
 | Guardian | Consent, injection screening, approvals, budget, retention, audit | Rules · Haiku 4.5 / Flash-Lite | Can stop any agent |
 | Scout | Research into the Lab archive | Claude with web search (in-app) | Dated sources |
-| Coach | Kannada from your day, habits, diary | Gemini Flash · Bulbul v3 | No medical claims |
+| Coach | Hindi from your day, habits, diary | Gemini Flash · Bulbul v3 | No medical claims |
 
 ### How they cooperate
 
@@ -183,7 +183,7 @@ Legal note (not legal advice): India's DPDP Act does not apply to processing "by
 | Live conversation | Gemini 3.x Flash | Audio-native, fast, handles Hinglish | Haiku 4.5 |
 | Should-I-interrupt, classify | Gemini 2.5 Flash-Lite | $0.10 / $0.40 per M tokens | Rules |
 | English/Hindi transcription | Whisper large-v3-turbo (Workers AI) | ~$0.03/h, ~3.5 h/day free | Gemini audio |
-| Kannada / code-mixed speech | Sarvam Saaras / Gemini audio | Whisper is weak here | Ask again |
+| Hinglish / noisy speech | Sarvam Saaras / Gemini audio | Whisper struggles with Hinglish | Ask again |
 | Voice out | Device TTS | Free | Sarvam Bulbul v3 |
 | Nightly reflection | Claude Sonnet 5, Batch API | Judgment per rupee; batch is half price | Haiku 4.5 batch |
 | Weekly review | Claude Opus 5, or in your Claude app | Deepest reasoning, weekly | Sonnet 5 |

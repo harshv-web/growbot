@@ -1,0 +1,38 @@
+<main class="above wrap">
+  <div class="labgrid">
+    <div style="display:grid; gap:14px; align-content:start">
+      <span class="mono">Live lab · prototype 1</span>
+      <h1 style="font-size:clamp(2rem,5vw,3.6rem)">Watch it learn to walk.</h1>
+      <p style="color:var(--ink2); max-width:60ch">The same learner that will run on the Fire 7: a rhythm with four numbers, tuned one stride at a time by an evolution strategy, while a tiny body model learns how it tips. The terrain and body here are simulated; the learning code is the real prototype.</p>
+      <div class="sim"><canvas id="gait"></canvas></div>
+      <div class="row" id="gaitctl">
+        <button class="chip" type="button" data-body="strider" aria-pressed="true">Strider (Fire 7)</button>
+        <button class="chip" type="button" data-body="walker" aria-pressed="false">Walker (iPhone)</button>
+        <button class="btn small primary" type="button" id="learn">Learn from scratch</button>
+        <button class="btn small" type="button" id="transfer">Move the soul to the Walker</button>
+      </div>
+      <p class="note" id="gaitnote">Pick a body and press Learn.</p>
+    </div>
+    <div class="glass pad" style="display:grid; gap:16px; align-content:start">
+      <div class="stat"><span class="mono">Trials</span><b id="trials">0</b></div>
+      <div class="stat"><span class="mono">Best speed</span><b id="speed">—</b></div>
+      <div class="stat"><span class="mono">Body-model surprise</span><b id="surprise">—</b></div>
+      <div class="stat"><span class="mono">Its mood</span><b data-mood>Content</b></div>
+      <p class="note">Falls make it uneasy; improvements make it proud. Moving the soul to the Walker starts it from the Strider's gait, scaled by leg length and weight, so it should get there in far fewer trials.</p>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="head lift"><span class="mono">Prototypes 2 and 3</span><h2>The keychain and the case, live.</h2><p>Both show the same soul as the page above and every other open tab. Tap the keychain to pet it, drag across it to make it look, shake it with the button. The case refreshes like e-paper: rarely, and in two colours.</p></div>
+    <div class="twin">
+      <div class="glass device lift"><span class="mono">Pixel · keychain</span><canvas class="keyring" id="pixel" width="440" height="440" aria-label="Keychain display"></canvas><div class="row"><button class="chip" type="button" id="shake">Shake</button><button class="chip" type="button" id="hold">Hold: come here</button></div></div>
+      <div class="glass device lift"><span class="mono">Halo · case back</span><canvas class="epaper" id="halo" width="200" height="200" aria-label="Case e-paper display"></canvas><p class="note" id="halonote">Refreshes when the mood changes.</p></div>
+      <div class="glass device lift" style="justify-items:start"><span class="mono">Sync</span><p style="color:var(--ink2)" data-lease>…</p><p class="note">Every page and tab is a presence. One holds the soul and thinks; the others are echoes that show it. Pull it anywhere.</p><button class="btn small" type="button" id="takeLab">Pull the soul here</button></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="head lift"><span class="mono">The research workspace</span><h2>My private lab.</h2><p>The full research (76 use cases, 38 integrations, the crew, the build board and the archive) lives in the private Jeevo Lab, synced across my devices. The code for every prototype is on GitHub.</p></div>
+    <div class="row lift"><a class="btn primary" href="https://claude.ai/artifact/XbvMeSCXwS7G48BkQ5ERCJ" target="_blank" rel="noopener">Open the Jeevo Lab (private)</a><a class="btn" href="https://github.com/harshv-web/growbot/tree/claude/relaxed-volta-mek7ih" target="_blank" rel="noopener">Code on GitHub</a></div>
+  </section>
+</main>

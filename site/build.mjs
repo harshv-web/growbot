@@ -120,7 +120,10 @@ if (seedIdx > 0) {
     "06-build-plan.md": ["research", ["plan", "phases", "budget"], "Eight phases with tasks, demos, done-when tests and running costs."],
     "07-risks-and-edge-cases.md": ["research", ["risks", "safety", "privacy"], "Platform limits, service catches, listening and privacy risks, hardware safety, project risks."],
     "08-research-log.md": ["log", ["discord", "growbot", "research-log"], "What the GrowBot Discord, the Field Brief and the v1 business plan taught us, plus the Sep 2026 integration findings."],
-    "09-decisions.md": ["decision", ["decisions"], "Decision log: what's decided, proposed and open."]
+    "09-decisions.md": ["decision", ["decisions"], "Decision log: what's decided, proposed and open."],
+    "10-growbot-fusion.md": ["research", ["growbot", "soul-transfer", "learning", "emotion", "knowledge-packs", "v3"], "Concept v3: GrowBot's principles carried across many bodies — soul file v1, the embodiment lease, learning to walk in life with an on-device forward model, the emotion engine, full access and knowledge sharing."],
+    "11-prototypes.md": ["research", ["prototypes", "strider", "walker", "pixel", "halo", "perch", "ather", "fire7"], "Every prototype with parts, wiring, firmware status and tests: Strider, Walker, Perch, Pixel keychain, Halo case, apps, and the Ather touchpoint."],
+    "12-build-and-content-plan.md": ["research", ["plan", "content", "episodes", "journey"], "Build plan v3 (B0–B9) and the content journey: five acts, ten episodes, weekly rhythm, recurring segments."]
   };
   const files = readdirSync(join(root, "docs")).filter(f => meta[f]);
   const batch = [];

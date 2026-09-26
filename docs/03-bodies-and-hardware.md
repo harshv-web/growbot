@@ -4,35 +4,36 @@
 
 Your old tablet and iPhone do most of the work. Everything else is optional and adds up to about ₹9,415 over four months (estimates; check Robu or Robocraze).
 
-## Tablet · home body (Phase 0)
+## Fire 7 · home body (rooted, LineageOS) (Phase 0)
 
-The always-on face, ears and eyes at home. Runs the Jeevo web app full-screen.
+Your rooted Fire 7 (likely the 2019 'mustang': 7-inch 1024×600, MT8163, 1 GB RAM, ~290 g) is the always-on face, ears and eyes at home. Root means the soul gets real system access, not a browser sandbox.
 
 **Does**
 
-- Animated face and ambient display (clock, next metro, today)
-- Far-field listening with on-device VAD and sound events
+- Animated face full-screen (kiosk WebView), always on, dimmed at night
+- Far-field listening with on-device voice detection; sound events
 - Camera only when the radar says someone's there
-- Speaks in English, Hindi, Kannada
+- Root powers: charge limit via sysfs, boot-start services, no Doze, notification access, USB-OTG serial to the legs, screen and volume control
 
 **Build**
 
-- Android: Chrome installed as an app, or Fully Kiosk Browser; keep screen on at low brightness
-- iPad: Safari home-screen app + Guided Access
-- Mount: printed stand with a camera shutter; later the Swivel base
-- Battery: charge window 40–80% via smart plug, or Samsung 'Protect battery'
+- Termux + Termux:Boot + Termux:API: a small 'body daemon' (Node or Python) that holds the WebSocket to the Soul Core
+- Magisk + ACC (Advanced Charging Controller) to hold the battery at 40–80%
+- Face UI in a kiosk WebView; check the WebView version with the Lab's Device Check
+- Legs: the Strider base (Phase 5); the Fire 7's light weight lets MG996R-class servos walk it
 
 | Part | ₹ | Note |
 |---|---:|---|
-| Old tablet | ₹0 | You have it |
-| Smart plug (Tuya/Wipro/Tapo) | ₹900 | For the charge window |
+| Fire 7 (rooted) | ₹0 | You have it |
 | Printed stand + shutter | ₹60 | PLA |
+| USB-OTG cable | ₹150 | Tablet ↔ Pico for wired legs |
 
 **Limits**
 
-- Doze kills background sockets: keep the screen on and plugged in
-- Constant sensors heat old batteries: temperature guard
-- Old Android may be stuck on an old Chrome
+- 1 GB RAM: the brain stays in the cloud; the tablet only senses, shows and speaks
+- Unofficial ROM: keep a TWRP backup before changing anything
+- Mic and speaker are small: an external USB/3.5 mm mic helps far-field
+- No NFC on the Fire 7
 
 ## iPhone · pocket presence (Phase 1–2)
 
@@ -175,15 +176,15 @@ The GrowBot-style body for your old phone. Same soul, different body.
 
 ## What each device can do
 
-| Capability | Android tablet (Chrome) | iPad (Safari) | iPhone web app | iPhone Shortcuts | ESP32 dock |
+| Capability | Fire 7 · LineageOS (root) | iPad (Safari) | iPhone web app | iPhone Shortcuts | ESP32 dock |
 |---|---|---|---|---|---|
 | Always on at home | yes | yes | no | — | yes |
 | Listen in background | yes (screen on) | yes (screen on) | no | dictation on demand | with mic node |
-| Speech recognition | Web Speech en/hi/kn-IN | Safari, not standalone | unreliable | Siri dictation | — |
+| Speech recognition | Web Speech en/hi-IN | Safari, not standalone | unreliable | Siri dictation | — |
 | Bluetooth LE | Web Bluetooth | no | no | no | yes |
-| NFC | if hardware | no | no | tag automations | PN532 add-on |
+| NFC | no (no hardware) | no | no | tag automations | PN532 add-on |
 | Push notifications | yes | iPadOS 16.4+ app | iOS 16.4+ app | — | — |
-| Local LAN (UDP/TCP) | via Termux | no | no | no | yes |
+| Local LAN (UDP/TCP) | yes (Termux, root) | no | no | no | yes |
 | Motors, IR, radar | no | no | no | no | yes |
 | Knows your location | — | — | no | arrive/leave, Wi-Fi | — |
 | Reads bank SMS | — | — | no | Message trigger | — |

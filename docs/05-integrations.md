@@ -19,6 +19,7 @@
 | **BMTC buses** | Works today | Official GTFS on the common portal; the unofficial Vonter/bmtc-gtfs dataset as a backup. | Free | Realtime promised later; treat times as schedules. | [Vonter/bmtc-gtfs](https://github.com/Vonter/bmtc-gtfs) |
 | **Google Maps Routes API** | Works today | Traffic-aware ETAs for walking, driving and transit. | 10,000 free Essentials calls/month | Beyond that, paid tiers. Cache aggressively. | [Routes API billing](https://developers.google.com/maps/documentation/routes/usage-and-billing) |
 | **Uber · Namma Yatri · Rapido** | Workaround | Deep links open the app with pickup and drop filled. | Free | No fare estimates (Uber's are restricted). | [Namma Yatri (open source)](https://github.com/nammayatri) |
+| **Ather scooter** | Workaround | No public API. Jeevo uses what's allowed: the iPhone's Bluetooth connection to the dash (Shortcuts) for ride mode, a helmet NFC tag, an energy-monitoring plug on the charger, and optionally the Ather app's notifications on the rooted Fire 7. Ather's own Alexa skill (beta) answers charge and range questions. | Free | Community reverse-engineered APIs exist in forums but are unofficial: read-only at most, account risk. | [Ather Community: Alexa skill](https://forum.atherenergy.com/t/ather-alexa-skill-for-alexa-enabled-devices/45613) |
 
 ## Data
 
@@ -55,8 +56,8 @@
 | **ChatGPT developer mode** | Works today | Add MCP servers as connectors (how Swiggy's integration is used). | Plan-dependent | Developer mode must be on. | [Medianama, Jan 2026](https://www.medianama.com/2026/01/223-ordering-chatgpt-swiggy-services-working/) |
 | **Gemini API** | Works today | 3.x Flash for conversation and vision; 2.5 / 3.5 Flash-Lite for cheap classification; Live API for realtime voice. | Flash $0.75/$3.75 per M until 31 Dec 2026, then $1.50/$7.50; 2.5 Flash-Lite $0.10/$0.40; Live ≈ $0.005/min in | Free tier data may be used to improve Google's products: not for your lifelog. | [Gemini pricing](https://ai.google.dev/gemini-api/docs/pricing) |
 | **Claude API** | Works today | Sonnet 5 for reflection and tool-heavy work; Haiku 4.5 for fast classification; Batch API at half price for the nightly dream. | Haiku 4.5 $1/$5 · Sonnet 5 $2/$10 · Opus 5 $5/$25 per M tokens | Or run deep work inside your Claude subscription through the connector. | [Anthropic pricing](https://docs.anthropic.com/en/docs/about-claude/pricing) |
-| **Sarvam AI** | Works today | Bulbul v3 voices in 11 Indian languages including Kannada; Saaras speech-to-text in 22. | TTS ₹30 per 10k characters (beta); ₹100 free credits | Check data-use terms for lifelog audio. | [Sarvam pricing](https://www.sarvam.ai/api-pricing) |
-| **Workers AI (Cloudflare)** | Works today | Whisper large-v3-turbo transcription and bge-m3 multilingual embeddings next to the Soul Core. | Whisper $0.00051/min; 10,000 free neurons/day ≈ 3.5 h of Whisper; bge-m3 $0.01 per M tokens | Whisper is weak on Kannada and code-mixed speech. | [Workers AI: Whisper](https://developers.cloudflare.com/workers-ai/models/whisper-large-v3-turbo/) |
+| **Sarvam AI** | Works today | Bulbul v3 voices in 11 Indian languages including Hindi; Saaras speech-to-text in 22. | TTS ₹30 per 10k characters (beta); ₹100 free credits | Check data-use terms for lifelog audio. | [Sarvam pricing](https://www.sarvam.ai/api-pricing) |
+| **Workers AI (Cloudflare)** | Works today | Whisper large-v3-turbo transcription and bge-m3 multilingual embeddings next to the Soul Core. | Whisper $0.00051/min; 10,000 free neurons/day ≈ 3.5 h of Whisper; bge-m3 $0.01 per M tokens | Whisper is weak on Hinglish and noisy speech. | [Workers AI: Whisper](https://developers.cloudflare.com/workers-ai/models/whisper-large-v3-turbo/) |
 
 ## Platform
 
@@ -66,7 +67,7 @@
 | **Cloudflare Email Routing** | Works today | Your own address; an Email Worker parses every forwarded mail. | Free | Needs a domain on Cloudflare (~₹600–900/year). | [Email Workers](https://developers.cloudflare.com/email-routing/email-workers/) |
 | **Apple Shortcuts** | Works today | Automations on Alarm, Wi-Fi, NFC, Message, Email, Focus, Charger, Bluetooth/CarPlay, arrive/leave; 'Use Model' runs Apple's model on-device on Apple Intelligence iPhones. | Free | Your iPhone model decides Action button and on-device model support. | [Apple: Intelligence in Shortcuts](https://support.apple.com/guide/iphone/use-apple-intelligence-in-shortcuts-iph78c41eaf8/26/ios/26) |
 | **iOS web app (PWA)** | Works today | Home-screen web app with Web Push (iOS 16.4+). | Free | No Web Bluetooth or NFC; audio stops when locked or in the background; speech recognition unreliable in standalone mode. | [PWA iOS limits, 2026](https://www.magicbell.com/blog/pwa-ios-limitations-safari-support-complete-guide) |
-| **Android tablet (Chrome)** | Works today | Web Bluetooth, Web Speech (en-IN, hi-IN, kn-IN), Wake Lock, Battery Status, Web Share; Termux for local bridges. | Free | Old Android may be stuck on an older Chrome: run the Device Check. | [caniuse: Web Bluetooth](https://caniuse.com/web-bluetooth) |
+| **Android tablet (Chrome)** | Works today | Web Bluetooth, Web Speech (en-IN, hi-IN), Wake Lock, Battery Status, Web Share; Termux for local bridges. | Free | Old Android may be stuck on an older Chrome: run the Device Check. | [caniuse: Web Bluetooth](https://caniuse.com/web-bluetooth) |
 
 ## Home
 

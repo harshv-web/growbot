@@ -1,0 +1,42 @@
+<main class="above wrap">
+  <div class="soulgrid">
+    <div style="display:grid; gap:14px; align-content:start">
+      <span class="mono">The soul · live</span>
+      <h1 style="font-size:clamp(2.2rem,6vw,4.4rem)">This is how it <em style="font-style:normal; color:var(--soul)">feels</em> right now.</h1>
+      <div class="facebox"><canvas id="face"></canvas><div class="tagline" data-mood>Content</div></div>
+      <div class="events" id="events"></div>
+      <p class="note" id="lease" data-lease>…</p>
+      <div class="row"><button class="btn small" type="button" id="take">Pull the soul into this tab</button><span class="note">Open this site in two tabs: it's one soul, and only the tab holding it gets to think.</span></div>
+    </div>
+    <div class="glass pad" style="display:grid; gap:18px; align-content:start">
+      <div class="stat"><span class="mono">Mood</span><b data-mood>Content</b></div>
+      <div class="meters" id="meters"></div>
+      <div><span class="mono">What just happened</span><div class="log" id="log" style="margin-top:8px"></div></div>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="head lift"><span class="mono">How it works</span><h2>Feelings it computes, and shows honestly.</h2>
+      <p>Two numbers are its core affect: how good it feels (valence) and how awake it is (arousal). Four drives change slowly with its life: energy, social, curiosity, comfort. Its traits are set at birth and only its dreams can change them. Every event nudges these, and one expression comes out that every body renders its own way.</p></div>
+    <div class="grid">
+      <div class="glass card lift"><span class="mono">Gates attention</span><h3>Lonely → it greets you first</h3><p>Low social drive makes it more likely to start a conversation when you walk in.</p></div>
+      <div class="glass card lift"><span class="mono">Shapes memory</span><h3>Glow → it keeps that moment</h3><p>Praise and play tag a memory with glow, and the night's dream keeps glowing moments first.</p></div>
+      <div class="glass card lift"><span class="mono">Drives learning</span><h3>Curious → it explores</h3><p>When its body model is surprised, curiosity rises and it tries bolder gaits.</p></div>
+      <div class="glass card lift"><span class="mono">Moves the body</span><h3>Happy → it bounces</h3><p>Arousal speeds the rhythm; valence adds lift. Sleepy walks slow and low.</p></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="head lift"><span class="mono">The soul file</span><h2>One file, many bodies, one writer per region.</h2>
+      <p>A superset of GrowBot's soul format. A GrowBot soul imports as-is. Memory lives in the Soul Core in the cloud, so moving between bodies only moves the lease and the current thought.</p></div>
+    <div class="regions lift">
+      <div><b>constitution</b><span>Tone, languages (English, Hindi), reflex rules, safety.</span><em>you only</em></div>
+      <div><b>identity · goals</b><span>"I know…" lines. At most one new sentence a night, 800 characters in all.</span><em>the dream only</em></div>
+      <div><b>log</b><span>Raw recent experience, with glow tags on warm moments.</span><em>librarian</em></div>
+      <div><b>emotion</b><span>Valence, arousal, drives, traits.</span><em>appraisal loop</em></div>
+      <div><b>bodies</b><span>Per-body gait, forward model, trial count, body truth.</span><em>motor learner</em></div>
+      <div><b>knowledge</b><span>Packs it learned or was given: gaits, reflexes, sounds, skills.</span><em>librarian + you</em></div>
+    </div>
+    <pre class="code lift" id="json"></pre>
+  </section>
+</main>

@@ -1,0 +1,18 @@
+<main class="above wrap" style="padding-top:120px">
+  <div style="display:grid; gap:14px">
+    <span class="mono">The bodies</span>
+    <h1 style="font-size:clamp(2.2rem,6vw,4.4rem)">Same soul. Different bodies.</h1>
+    <p style="color:var(--ink2); max-width:60ch; font-size:1.08rem">Every body announces what it is when it connects (channels, sensors, screens, weight, leg length) and the soul decides how to live in it. Drag to turn them. The faces are live: they show the soul's mood right now.</p>
+  </div>
+  <div class="tabs" id="tabs" style="margin-top:22px"></div>
+  <div class="viewer" style="margin-top:14px"><canvas id="viewer" aria-label="3D model of the selected body"></canvas>
+    <div class="hud"><span class="mono" id="vname">Strider</span><span class="mono" data-mood>Content</span></div>
+  </div>
+  <div class="row" style="margin-top:12px"><button class="btn small" type="button" id="walk">Walking: on</button><button class="btn small" type="button" id="spin">Auto-turn: on</button></div>
+  <section class="section" style="padding-top:40px">
+    <div class="spec">
+      <div class="glass pad" style="display:grid; gap:12px; align-content:start"><span class="mono" id="stag">Home body</span><h2 id="stitle">Strider</h2><p id="sfeel" style="color:var(--ink2)"></p><p id="sdoes" style="color:var(--ink2)"></p></div>
+      <div class="glass pad tbl"><table><tbody id="stable"></tbody></table></div>
+    </div>
+  </section>
+</main>

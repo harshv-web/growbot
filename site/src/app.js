@@ -137,7 +137,7 @@
     const B = D.budget;
     const whisper = Math.max(0, p.listenHours * 60 - B.whisperFreeMinPerDay) * B.whisperPerMin * 30 * fx;
     const kn = p.kannadaEngine === "sarvam" ? p.kannadaMin / 60 * B.sarvamPerHourINR * 30 : p.kannadaMin / 60 * B.geminiAudioPerHour * 30 * fx;
-    rows.push({ name: "Transcription", inr: whisper }, { name: "Kannada speech", inr: kn }, { name: "Domain", inr: B.fixedINR });
+    rows.push({ name: "Transcription", inr: whisper }, { name: "Hinglish speech", inr: kn }, { name: "Domain", inr: B.fixedINR });
     return { rows, total: rows.reduce((a, r) => a + r.inr, 0) };
   }
   const leanTotal = budgetCalc(D.budget.presets.lean, false).total;
@@ -358,7 +358,7 @@
     try { if (n.storage && n.storage.estimate) { const e = await n.storage.estimate(); storage = e.quota ? Math.round(e.quota / 1e9 * 10) / 10 + " GB quota" : null; } } catch (e) {}
     let battery = null;
     try { if (n.getBattery) { const b = await n.getBattery(); battery = Math.round(b.level * 100) + "%" + (b.charging ? ", charging" : ", on battery"); } } catch (e) {}
-    const voices = (await voicesReady()).filter(v => /^(en-IN|hi|kn|ta|te|ml|mr|bn|gu|pa)/i.test(v.lang)).map(v => v.lang + " · " + v.name);
+    const voices = (await voicesReady()).filter(v => /^(en-IN|hi)/i.test(v.lang)).map(v => v.lang + " · " + v.name);
     const cores = n.hardwareConcurrency || null, mem = n.deviceMemory || null;
     const scr = Math.round(screen.width) + "×" + Math.round(screen.height) + " @" + (window.devicePixelRatio || 1) + "x";
     const hasKn = voices.some(v => /^kn/i.test(v)), hasHi = voices.some(v => /^hi/i.test(v));
@@ -367,7 +367,7 @@
       pocket.push("Pocket presence: web app + Shortcuts + Siri. Web Push works once installed to the home screen.", "No Bluetooth or NFC from the web, and listening stops when locked: keychain haptics and NFC run through Shortcuts.");
       home.push("Not the home body. Use the tablet for always-on listening.");
     } else {
-      home.push(has["Speech synthesis"] ? "Can speak." + (hasKn ? " Kannada voice installed." : " No Kannada voice: Sarvam Bulbul v3 fills in.") + (hasHi ? " Hindi voice installed." : "") : "No speech synthesis: use Sarvam or Gemini TTS audio.");
+      home.push(has["Speech synthesis"] ? "Can speak." + (hasHi ? " Hindi voice installed." : " No Hindi voice: Sarvam Bulbul v3 fills in.") : "No speech synthesis: use Sarvam or Gemini TTS audio.");
       home.push(has["Speech recognition"] ? "Browser speech recognition present: fine for 'On call' mode." : "No browser speech recognition: record audio and send it to the Scribe.");
       home.push(has["Screen Wake Lock"] ? "Wake Lock available: the face can stay on." : "No Wake Lock: use a kiosk browser or the system's stay-awake setting.");
       home.push(has["Web Bluetooth"] ? "Web Bluetooth present: can hear the keychain beacon directly (the dock can too)." : "No Web Bluetooth: the ESP32 dock handles BLE.");
@@ -514,7 +514,7 @@
     const out = $("#bg-out"); out.textContent = "";
     out.append(h("span", { class: "eyebrow", text: "Per month · " + (BG.y27 ? "2027 prices" : "Sep 2026 prices") }),
       h("div", { class: "big", text: inr(res.total) }),
-      h("span", { class: "muted", style: "font-size:.88rem", text: "≈ " + inr(res.total / 30) + " a day · models, transcription, Kannada speech and the domain" }),
+      h("span", { class: "muted", style: "font-size:.88rem", text: "≈ " + inr(res.total / 30) + " a day · models, transcription, Hinglish speech and the domain" }),
       h("div", { class: "bars" }, res.rows.slice().sort((a, b) => b.inr - a.inr).map(r => h("div", { class: "bar-row" },
         h("span", { text: r.name }), h("span", { class: "bt" }, h("span", { class: "bf", style: "display:block; width:" + (r.inr / max * 100).toFixed(1) + "%" })), h("span", { class: "bv", text: inr(r.inr) })))),
       h("p", { class: "muted", style: "font-size:.84rem", text: "Free tiers aren't counted for private data: the Guardian keeps your life log off any provider that may train on it. 'Inside your Claude app' costs nothing extra beyond your subscription." }));

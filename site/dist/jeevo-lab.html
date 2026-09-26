@@ -1,7 +1,7 @@
 <title>Jeevo Lab</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Mukta:wght@400;500;600;700&family=Martian+Mono:wght@400;500&family=Anek+Kannada:wght@500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Mukta:wght@400;500;600;700&family=Martian+Mono:wght@400;500&display=swap">
 <style>
 /* Jeevo Lab — night console, Namma Metro line colours as the data palette. */
 :root{
@@ -434,7 +434,7 @@ footer .srcs{display:grid; gap:4px; grid-template-columns:repeat(auto-fit,minmax
         <div class="hero-copy">
           <span class="eyebrow"><b>DCK</b> · Personal ambient intelligence · Bengaluru node · concept v2</span>
           <h1>One soul.<br><span>Every surface.</span></h1>
-          <div class="tagline"><span class="kn" lang="kn">ಒಂದೇ ಜೀವ. ಎಲ್ಲಾ ಕಡೆ.</span><span lang="hi">एक जीव. हर जगह.</span></div>
+          <div class="tagline"><span class="kn" lang="hi">एक जीव. हर जगह.</span></div>
           <p class="lede">Jeevo is my own AI with <strong>one memory and many bodies</strong>: an old tablet at home that listens, sees and talks; my iPhone; a keychain; a printed case; and an ESP32 that gives the house senses. A crew of agents on different models remembers everything around me, reflects on it overnight, and plugs into the Bengaluru services I use: Namma Metro, Swiggy and Instamart, Alexa, UPI, WhatsApp and Claude.</p>
           <div class="row">
             <a class="btn primary" href="#lab">Open the Lab</a>
@@ -482,7 +482,7 @@ footer .srcs{display:grid; gap:4px; grid-template-columns:repeat(auto-fit,minmax
           <div class="panel pillar" style="--c:var(--amber)"><span class="eyebrow">Ears + lifelog</span><h3>It listens and keeps your life</h3><p>Voice detection on the tablet, a pendant keychain outside, sound events like the cooker whistle. Transcripts, places, money, orders and more in one searchable life log.</p></div>
           <div class="panel pillar" style="--c:var(--purple)"><span class="eyebrow">Model of Me</span><h3>It learns you</h3><p>From what you tell it, what it notices, and what you do with its nudges. Every fact has evidence, confidence and a delete button. It reflects on your day every night at 03:00.</p></div>
           <div class="panel pillar" style="--c:var(--green)"><span class="eyebrow">Multi-agent</span><h3>A crew of eleven</h3><p>Jeevo talks; the Scribe hears; the Librarian remembers; the Dreamer reflects; the Guardian protects. They share one memory and one writer.</p></div>
-          <div class="panel pillar" style="--c:var(--blue)"><span class="eyebrow">Multi-model</span><h3>The right model per job</h3><p>Gemini Flash for live voice, Whisper for cheap transcripts, Sarvam for Kannada, Claude Sonnet 5 for the nightly dream, Apple's on-device model for bank SMS, and rules wherever a rule is enough.</p></div>
+          <div class="panel pillar" style="--c:var(--blue)"><span class="eyebrow">Multi-model</span><h3>The right model per job</h3><p>Gemini Flash for live voice, Whisper for cheap transcripts, Sarvam for Hinglish, Claude Sonnet 5 for the nightly dream, Apple's on-device model for bank SMS, and rules wherever a rule is enough.</p></div>
         </div>
       </div>
 
@@ -653,7 +653,7 @@ footer .srcs{display:grid; gap:4px; grid-template-columns:repeat(auto-fit,minmax
         <p>Every one is buildable by you, and each says honestly whether it works today, needs your hardware, needs a workaround, is experimental, or is waiting on a platform. Tap a card for the flow and the edge cases.</p>
       </div>
       <div class="panel filters">
-        <input class="search" type="search" id="uc-q" placeholder="Search: metro, Kannada, Swiggy, cooker, OTP…" aria-label="Search use cases">
+        <input class="search" type="search" id="uc-q" placeholder="Search: metro, Hindi, Swiggy, cooker, OTP…" aria-label="Search use cases">
         <div class="fl"><span>Domain</span><div class="chips" id="uc-dom"></div></div>
         <div class="fl"><span>Status</span><div class="chips" id="uc-st"></div></div>
         <div class="fl"><span>Surface</span><div class="chips" id="uc-sf"></div></div>
@@ -747,8 +747,8 @@ footer .srcs{display:grid; gap:4px; grid-template-columns:repeat(auto-fit,minmax
             <div class="tbl budget-tbl"><table class="mid"><thead><tr><th>Agent</th><th>Model</th><th>Calls/day</th><th>In tok</th><th>Out tok</th><th>Batch</th></tr></thead><tbody id="bg-rows"></tbody></table></div>
             <div class="fgrid">
               <label class="f"><span>Speech heard / day (h)</span><input type="number" id="bg-hours" min="0" max="16" step="0.5"></label>
-              <label class="f"><span>Kannada / mixed (min/day)</span><input type="number" id="bg-kn" min="0" max="600" step="5"></label>
-              <label class="f"><span>Kannada engine</span><select id="bg-kne"><option value="gemini">Gemini audio</option><option value="sarvam">Sarvam (₹30/h)</option></select></label>
+              <label class="f"><span>Hinglish, hard audio (min/day)</span><input type="number" id="bg-kn" min="0" max="600" step="5"></label>
+              <label class="f"><span>Hinglish engine</span><select id="bg-kne"><option value="gemini">Gemini audio</option><option value="sarvam">Sarvam (₹30/h)</option></select></label>
               <label class="f"><span>₹ per US$</span><input type="number" id="bg-fx" min="50" max="150" step="0.5"></label>
               <label class="f" style="align-content:end"><span>Prices</span><span class="row" style="gap:8px"><input type="checkbox" id="bg-27"> <span style="font-size:.9rem; color:var(--ink-2)">2027 Gemini prices</span></span></label>
             </div>
@@ -860,7 +860,7 @@ footer .srcs{display:grid; gap:4px; grid-template-columns:repeat(auto-fit,minmax
       guard: "Cannot pay, order or message anyone without Guardian + your tap" },
     { id: "scribe", name: "Scribe", role: "Ears",
       does: "Voice-activity detection, language ID, transcription routing, speaker labels, and sound events (doorbell, cooker whistle, knock).",
-      models: "Silero VAD + YAMNet on-device · Whisper large-v3-turbo on Workers AI (English/Hindi) · Sarvam Saaras or Gemini audio for Kannada and code-mixed speech",
+      models: "Silero VAD + YAMNet on-device · Whisper large-v3-turbo on Workers AI (English/Hindi) · Sarvam Saaras or Gemini audio for Hinglish and noisy speech",
       triggers: "Audio from the tablet, the pendant keychain, or Siri dictation",
       tools: "transcribe, classify_sound, diarize, drop_raw_audio",
       guard: "Raw audio is dropped after transcription unless you turn on the 24-hour ring buffer" },
@@ -913,8 +913,8 @@ footer .srcs{display:grid; gap:4px; grid-template-columns:repeat(auto-fit,minmax
       tools: "web_search, archive_write",
       guard: "Results are marked with sources and dates; no source, no claim" },
     { id: "coach", name: "Coach", role: "Learning and habits",
-      does: "Kannada phrases from your day, habit nudges that learn which ones you act on, the energy diary.",
-      models: "Gemini Flash (voice) · Sarvam Bulbul v3 for Kannada speech",
+      does: "Habit nudges that learn which ones you act on, the energy diary.",
+      models: "Gemini Flash (voice) · Sarvam Bulbul v3 for Hindi speech",
       triggers: "Evening, and after nudges you ignore",
       tools: "phrasebook, practice, habit_stats",
       guard: "No medical or therapy claims" }
@@ -932,8 +932,8 @@ footer .srcs{display:grid; gap:4px; grid-template-columns:repeat(auto-fit,minmax
     { task: "Live conversation", pick: "Gemini 3.x Flash", why: "Audio-native, fast first token, handles Hinglish", fallback: "Claude Haiku 4.5" },
     { task: "Quick classify / should-I-interrupt", pick: "Gemini 2.5 Flash-Lite", why: "$0.10 / $0.40 per M tokens", fallback: "Rules only" },
     { task: "English/Hindi transcription", pick: "Whisper large-v3-turbo (Workers AI)", why: "~$0.03 per hour; ~3.5 h/day inside the free allowance", fallback: "Gemini audio" },
-    { task: "Kannada or code-mixed speech", pick: "Sarvam Saaras / Gemini audio", why: "Whisper is weak on Kannada and mixed speech", fallback: "Ask you to repeat" },
-    { task: "Kannada / Hindi voice out", pick: "Device TTS voice", why: "Free, instant", fallback: "Sarvam Bulbul v3 (₹30 per 10k chars)" },
+    { task: "Hinglish or noisy speech", pick: "Sarvam Saaras / Gemini audio", why: "Whisper struggles with code-mixed Hinglish", fallback: "Ask you to repeat" },
+    { task: "Hindi voice out", pick: "Device TTS voice", why: "Free, instant", fallback: "Sarvam Bulbul v3 (₹30 per 10k chars)" },
     { task: "Nightly reflection", pick: "Claude Sonnet 5 · Batch API", why: "Best judgment per rupee; batch is half price and nobody's waiting", fallback: "Claude Haiku 4.5 batch" },
     { task: "Weekly life review", pick: "Claude Opus 5 · or inside your Claude app", why: "Deepest reasoning once a week; free in-app", fallback: "Sonnet 5" },
     { task: "Tool-heavy errands", pick: "Claude Sonnet 5 · or inside your Claude app", why: "Reliable multi-step tool use", fallback: "Gemini Flash" },
@@ -992,7 +992,7 @@ footer .srcs{display:grid; gap:4px; grid-template-columns:repeat(auto-fit,minmax
       out: { tab: "Good morning. 24°, rain after 4 pm. First call 10:30. Leave by 8:12 for the 8:24 Purple Line.", iph: null, key: null, alexa: null, dock: "Lights warm 30%" },
       why: "You're home and awake. The tablet is the calmest loud surface; the phone stays quiet." },
     { t: "07:30", title: "Cook arrives", trig: "Staff hours · mmWave presence in kitchen", agents: ["Housekeeper", "Coach"],
-      out: { tab: "Reads today's bisi bele bath recipe aloud in Kannada.", iph: null, key: null, alexa: null, dock: "Camera off (staff hours)" },
+      out: { tab: "Reads today's bisi bele bath recipe aloud in Hindi.", iph: null, key: null, alexa: null, dock: "Camera off (staff hours)" },
       why: "Staff privacy rule: no camera and no voice learning while she's here." },
     { t: "07:52", title: "Cooker whistle", trig: "Scribe · sound event ×3", agents: ["Scribe", "Housekeeper"],
       out: { tab: null, iph: null, key: null, alexa: "Third whistle. Turn off the gas for the dal.", dock: null },
@@ -1064,7 +1064,7 @@ footer .srcs{display:grid; gap:4px; grid-template-columns:repeat(auto-fit,minmax
     U("ledger", "Household ledger", "Home", "Anytime", ["tab", "iph", "chat"], ["UPI deep links"], "live", "P1", ["Treasurer"],
       "'Didi didn't come today', 'two extra milk packets', 'paid the paperwala'.",
       "Entries land in a monthly ledger; on the 1st you get leaves, extras and dues, with UPI links to pay.",
-      ["Advances and half days.", "Festival bonus reminders (Diwali, Ugadi).", "Staff privacy: never record or learn their voices.", "Read the summary aloud to them in Kannada or Hindi if you like."]),
+      ["Advances and half days.", "Festival bonus reminders (Diwali, Ugadi).", "Staff privacy: never record or learn their voices.", "Read the summary aloud to them in Hindi if you like."]),
     U("motor", "Water motor timer", "Home", "Day", ["alexa", "key", "iph"], ["Voice Monkey"], "hack", "P3", ["Housekeeper"],
       "'Motor on.'",
       "A 25-minute timer. Alexa announces in the kitchen and the keychain buzzes; if you're out, the iPhone gets it.",
@@ -1085,7 +1085,7 @@ footer .srcs{display:grid; gap:4px; grid-template-columns:repeat(auto-fit,minmax
     U("what-said", "What did they say?", "Listen", "Anytime", ["tab", "iph", "ai"], ["Scribe transcripts", "Librarian search"], "exp", "P3", ["Librarian", "Scribe"],
       "'What did the electrician say about the MCB?'",
       "The Librarian finds Tuesday's conversation, quotes the two lines, and links the transcript in the Soul Inspector.",
-      ["Others' words are Sensitive tier: summaries kept, raw text expires after 30 days.", "Needs 'Ambient · conversations' mode with the ring light on; 'Ambient · me' keeps only your side.", "Kannada-English mix: routed to Sarvam or Gemini, not Whisper."]),
+      ["Others' words are Sensitive tier: summaries kept, raw text expires after 30 days.", "Needs 'Ambient · conversations' mode with the ring light on; 'Ambient · me' keeps only your side.", "Hinglish mix: routed to Sarvam or Gemini, not Whisper."]),
     U("promises", "Promise keeper", "Listen", "Anytime", ["iph", "tab"], ["Scribe", "Chief of Staff"], "exp", "P3", ["Chief of Staff", "Scribe"],
       "You say 'I'll send you the photos tonight' at home or into the pendant.",
       "The Chief of Staff drafts a task with a deadline into 'Proposed'. One tap confirms; it nudges you at 9 pm.",
@@ -1136,6 +1136,14 @@ footer .srcs{display:grid; gap:4px; grid-template-columns:repeat(auto-fit,minmax
       "Saves the spot. PUC, insurance and FASTag low-balance SMS become reminders.",
       ["Basement with no GPS: say the floor.", "Two-wheeler without Bluetooth: the helmet tag."]),
 
+    U("ather-ride", "Ather ride mode", "Commute", "Anytime", ["iph", "key", "case"], ["Shortcuts: Bluetooth (Ather dash)", "Helmet NFC tag"], "live", "P2", ["Concierge", "Guardian"],
+      "Your iPhone connects to the Ather dashboard over Bluetooth (or you tap the helmet tag).",
+      "Ride mode: notifications held, only turn-critical things spoken through your helmet headset, the Halo case shows 'riding', and on disconnect Jeevo saves where you parked and logs the trip.",
+      ["Never show anything on the keychain or case while moving; eyes on the road.", "Short stops at signals shouldn't end the ride: wait 3 minutes after disconnect.", "Pillion rider using your phone: ride mode keys off the dash connection, not the phone."]),
+    U("ather-charge", "Ather charge manager", "Home", "Night", ["dock", "iph"], ["Energy-monitoring smart plug", "Ather app notifications (Fire 7, root)"], "diy", "P4", ["Housekeeper", "Treasurer"],
+      "You plug the portable charger into an energy-monitoring smart plug at home.",
+      "Jeevo watches the plug's power draw: it knows when charging starts and when it tapers, can stop around 80% on normal days for battery health, charges fully before long rides on your calendar, and logs the rupees per charge from your BESCOM tariff.",
+      ["Estimating charge from power draw is approximate: calibrate against the dash once.", "Optional: the Ather app on the rooted Fire 7 lets Jeevo read its notifications (charge complete, theft alerts) — check Ather's terms first.", "Community reverse-engineered Ather APIs are unofficial: read-only at most, and your account is at risk."]),
     U("sms-ledger", "Bank SMS → expense ledger", "Money", "Anytime", ["iph"], ["Shortcuts: Message trigger", "Apple on-device model"], "live", "P2", ["Treasurer", "Guardian"],
       "A debit or credit SMS from your bank or UPI app.",
       "On the phone, the Shortcut pulls amount, merchant and last four digits and sends only those. Weekly: 'Swiggy ₹3,400 this month.'",
@@ -1167,8 +1175,8 @@ footer .srcs{display:grid; gap:4px; grid-template-columns:repeat(auto-fit,minmax
       ["Swiggy's MCP is cash on delivery (Swiggy Money added Sep 2026) and orders can't be cancelled: confirmation is mandatory.", "Swiggy doesn't permit third-party apps, so Jeevo never calls Swiggy itself; the AI app does.", "Keep the Swiggy app closed during the session (session conflicts).", "Out of stock: the list stores preferences ('Aashirvaad, 5 kg')."]),
     U("cook-recipe", "Recipe read aloud for the cook", "Food", "Morning", ["tab"], ["Device TTS voices", "Sarvam Bulbul v3"], "live", "P1", ["Coach"],
       "Your cook arrives.",
-      "The tablet reads today's recipe in Kannada or Hindi, slowly, in katori and chamach measures.",
-      ["No Kannada voice on the device: Sarvam Bulbul v3.", "Camera off during staff hours."]),
+      "The tablet reads today's recipe in Hindi, slowly, in katori and chamach measures.",
+      ["No Hindi voice on the device: Sarvam Bulbul v3.", "Camera off during staff hours."]),
     U("menu", "Weekly menu and list", "Food", "Sunday", ["tab", "ai"], ["Instamart flow"], "live", "P3", ["Chief of Staff"],
       "Sunday review.",
       "A seven-day menu from your favourites and the season; the list feeds the Instamart flow.",
@@ -1203,9 +1211,9 @@ footer .srcs{display:grid; gap:4px; grid-template-columns:repeat(auto-fit,minmax
       "'Rohan's daughter Anaya loves dinosaurs.'",
       "Before you meet Rohan: when you last met, what you promised, what matters to him.",
       ["Facts about other people are Sensitive tier and forgettable on request."]),
-    U("parents-mode", "Parents visiting mode", "People", "Anytime", ["tab", "alexa"], ["Hindi/Kannada TTS", "Voice Monkey"], "live", "P3", ["Jeevo", "Guardian"],
+    U("parents-mode", "Parents visiting mode", "People", "Anytime", ["tab", "alexa"], ["Hindi TTS", "Voice Monkey"], "live", "P3", ["Jeevo", "Guardian"],
       "'Parents are here till Sunday.'",
-      "Bigger text, slower Hindi or Kannada voice, medicine reminders on Alexa, no face memory, one-tap 'call Harsh'.",
+      "Bigger text, slower Hindi voice, medicine reminders on Alexa, no face memory, one-tap 'call Harsh'.",
       ["Ask them first, and turn it off together."]),
 
     U("wind-down", "Wind-down", "Health", "22:45", ["iph", "tab", "alexa", "dock"], ["Shortcuts: Sleep Focus"], "live", "P2", ["Housekeeper"],
@@ -1254,10 +1262,6 @@ footer .srcs{display:grid; gap:4px; grid-template-columns:repeat(auto-fit,minmax
       "'Late Swiggy orders came before 3 of your 4 worst-sleep nights.' Each pattern shows its evidence; keep, tweak or dismiss it.",
       ["Correlation, not cause: phrased as a question.", "Small samples are flagged as weak."]),
 
-    U("kannada", "Kannada from my day", "Learn", "Evening", ["tab", "iph"], ["Coach", "Sarvam / Gemini"], "exp", "P6", ["Coach"],
-      "Two minutes in the evening.",
-      "Three phrases you needed today (auto driver, vendor, neighbour), with pronunciation practice and feedback.",
-      ["Bengaluru Kannada, not textbook Kannada.", "Skips days the energy check says you're tired."]),
 
     U("chat-door", "Chat front door", "Voice", "Anytime", ["chat"], ["Telegram Bot API", "WhatsApp Cloud API"], "live", "P1", ["Jeevo"],
       "Message Jeevo on Telegram or WhatsApp.",
@@ -1294,7 +1298,7 @@ footer .srcs{display:grid; gap:4px; grid-template-columns:repeat(auto-fit,minmax
       ["Delayed streams: a spoiler delay setting.", "Free score APIs have daily limits; check their terms."]),
     U("festival", "Festival modes", "Play", "Seasonal", ["tab", "dock"], ["WiZ"], "diy", "P6", ["Housekeeper"],
       "Diwali, Ganesh Chaturthi, Ugadi, Onam.",
-      "Lights, greetings in Kannada or Hindi, a rangoli judge on camera.",
+      "Lights, greetings in Hindi, a rangoli judge on camera.",
       ["Dates shift every year: computed."]),
     U("case-tap", "Case tap-card", "Play", "Anytime", ["case"], ["NTAG215", "Soul Core"], "live", "P5", ["Guardian"],
       "A friend taps their phone on your case.",
@@ -1354,6 +1358,7 @@ footer .srcs{display:grid; gap:4px; grid-template-columns:repeat(auto-fit,minmax
     I("BMTC buses", "Transit", "live", "Official GTFS on the common portal; the unofficial Vonter/bmtc-gtfs dataset as a backup.", "Free", "Realtime promised later; treat times as schedules.", "https://github.com/Vonter/bmtc-gtfs", "Vonter/bmtc-gtfs"),
     I("Google Maps Routes API", "Transit", "live", "Traffic-aware ETAs for walking, driving and transit.", "10,000 free Essentials calls/month", "Beyond that, paid tiers. Cache aggressively.", "https://developers.google.com/maps/documentation/routes/usage-and-billing", "Routes API billing"),
     I("Uber · Namma Yatri · Rapido", "Transit", "hack", "Deep links open the app with pickup and drop filled.", "Free", "No fare estimates (Uber's are restricted).", "https://github.com/nammayatri", "Namma Yatri (open source)"),
+    I("Ather scooter", "Transit", "hack", "No public API. Jeevo uses what's allowed: the iPhone's Bluetooth connection to the dash (Shortcuts) for ride mode, a helmet NFC tag, an energy-monitoring plug on the charger, and optionally the Ather app's notifications on the rooted Fire 7. Ather's own Alexa skill (beta) answers charge and range questions.", "Free", "Community reverse-engineered APIs exist in forums but are unofficial: read-only at most, account risk.", "https://forum.atherenergy.com/t/ather-alexa-skill-for-alexa-enabled-devices/45613", "Ather Community: Alexa skill"),
     I("Open-Meteo", "Data", "live", "Weather, rain windows and air quality with no API key.", "Free (non-commercial)", "Modelled AQI, not a sensor reading.", "https://open-meteo.com/", "open-meteo.com"),
     I("UPI deep links", "Payments", "live", "upi://pay links open your UPI app with payee, amount and note filled; you enter the PIN.", "Free", "Behaviour differs per app on iOS; fallback is copying the UPI ID.", "https://www.npci.org.in/", "NPCI"),
     I("NPCI agent payments", "Payments", "future", "UPI Circle and Reserve Pay let a user delegate small payments; NPCI's Unified Agent Protocol was expected around Global Fintech Fest 2026. ChatGPT + Razorpay piloted it.", "—", "Not available to individuals yet. Pine Labs P3P (Jun 2026) and Mastercard Agent Pay (Feb 2026) are merchant-side.", "https://www.business-standard.com/finance/news/india-may-allow-agentic-ai-led-upi-transactions-under-new-npci-protocol-126070801343_1.html", "Business Standard, Jul 2026"),
@@ -1367,13 +1372,13 @@ footer .srcs{display:grid; gap:4px; grid-template-columns:repeat(auto-fit,minmax
     I("ChatGPT developer mode", "AI", "live", "Add MCP servers as connectors (how Swiggy's integration is used).", "Plan-dependent", "Developer mode must be on.", "https://www.medianama.com/2026/01/223-ordering-chatgpt-swiggy-services-working/", "Medianama, Jan 2026"),
     I("Gemini API", "AI", "live", "3.x Flash for conversation and vision; 2.5 / 3.5 Flash-Lite for cheap classification; Live API for realtime voice.", "Flash $0.75/$3.75 per M until 31 Dec 2026, then $1.50/$7.50; 2.5 Flash-Lite $0.10/$0.40; Live ≈ $0.005/min in", "Free tier data may be used to improve Google's products: not for your lifelog.", "https://ai.google.dev/gemini-api/docs/pricing", "Gemini pricing"),
     I("Claude API", "AI", "live", "Sonnet 5 for reflection and tool-heavy work; Haiku 4.5 for fast classification; Batch API at half price for the nightly dream.", "Haiku 4.5 $1/$5 · Sonnet 5 $2/$10 · Opus 5 $5/$25 per M tokens", "Or run deep work inside your Claude subscription through the connector.", "https://docs.anthropic.com/en/docs/about-claude/pricing", "Anthropic pricing"),
-    I("Sarvam AI", "AI", "live", "Bulbul v3 voices in 11 Indian languages including Kannada; Saaras speech-to-text in 22.", "TTS ₹30 per 10k characters (beta); ₹100 free credits", "Check data-use terms for lifelog audio.", "https://www.sarvam.ai/api-pricing", "Sarvam pricing"),
-    I("Workers AI (Cloudflare)", "AI", "live", "Whisper large-v3-turbo transcription and bge-m3 multilingual embeddings next to the Soul Core.", "Whisper $0.00051/min; 10,000 free neurons/day ≈ 3.5 h of Whisper; bge-m3 $0.01 per M tokens", "Whisper is weak on Kannada and code-mixed speech.", "https://developers.cloudflare.com/workers-ai/models/whisper-large-v3-turbo/", "Workers AI: Whisper"),
+    I("Sarvam AI", "AI", "live", "Bulbul v3 voices in 11 Indian languages including Hindi; Saaras speech-to-text in 22.", "TTS ₹30 per 10k characters (beta); ₹100 free credits", "Check data-use terms for lifelog audio.", "https://www.sarvam.ai/api-pricing", "Sarvam pricing"),
+    I("Workers AI (Cloudflare)", "AI", "live", "Whisper large-v3-turbo transcription and bge-m3 multilingual embeddings next to the Soul Core.", "Whisper $0.00051/min; 10,000 free neurons/day ≈ 3.5 h of Whisper; bge-m3 $0.01 per M tokens", "Whisper is weak on Hinglish and noisy speech.", "https://developers.cloudflare.com/workers-ai/models/whisper-large-v3-turbo/", "Workers AI: Whisper"),
     I("Cloudflare Workers + Durable Objects", "Platform", "live", "The Soul Core: one Durable Object per soul, WebSockets, alarms, SQLite storage, the Agents SDK for the crew.", "Free plan ≈ 100k requests/day; SQLite storage not billed on Free", "Heavy CPU per request needs the paid plan ($5/month).", "https://developers.cloudflare.com/workers/platform/pricing/", "Workers pricing"),
     I("Cloudflare Email Routing", "Platform", "live", "Your own address; an Email Worker parses every forwarded mail.", "Free", "Needs a domain on Cloudflare (~₹600–900/year).", "https://developers.cloudflare.com/email-routing/email-workers/", "Email Workers"),
     I("Apple Shortcuts", "Platform", "live", "Automations on Alarm, Wi-Fi, NFC, Message, Email, Focus, Charger, Bluetooth/CarPlay, arrive/leave; 'Use Model' runs Apple's model on-device on Apple Intelligence iPhones.", "Free", "Your iPhone model decides Action button and on-device model support.", "https://support.apple.com/guide/iphone/use-apple-intelligence-in-shortcuts-iph78c41eaf8/26/ios/26", "Apple: Intelligence in Shortcuts"),
     I("iOS web app (PWA)", "Platform", "live", "Home-screen web app with Web Push (iOS 16.4+).", "Free", "No Web Bluetooth or NFC; audio stops when locked or in the background; speech recognition unreliable in standalone mode.", "https://www.magicbell.com/blog/pwa-ios-limitations-safari-support-complete-guide", "PWA iOS limits, 2026"),
-    I("Android tablet (Chrome)", "Platform", "live", "Web Bluetooth, Web Speech (en-IN, hi-IN, kn-IN), Wake Lock, Battery Status, Web Share; Termux for local bridges.", "Free", "Old Android may be stuck on an older Chrome: run the Device Check.", "https://caniuse.com/web-bluetooth", "caniuse: Web Bluetooth"),
+    I("Android tablet (Chrome)", "Platform", "live", "Web Bluetooth, Web Speech (en-IN, hi-IN), Wake Lock, Battery Status, Web Share; Termux for local bridges.", "Free", "Old Android may be stuck on an older Chrome: run the Device Check.", "https://caniuse.com/web-bluetooth", "caniuse: Web Bluetooth"),
     I("Philips WiZ", "Home", "live", "Local UDP JSON on port 38899.", "Free", "Send from the ESP32 or Termux, not the browser.", "https://github.com/sbidy/pywizlight", "pywizlight"),
     I("Tuya devices (Wipro, Syska…)", "Home", "hack", "tinytuya over the LAN after a one-time key pull.", "Free", "Tuya's cloud developer trial needs renewal; LAN keys change if you re-pair.", "https://github.com/jasonacox/tinytuya", "tinytuya"),
     I("TP-Link Tapo", "Home", "hack", "Community Python/Rust libraries; no published local API.", "Free", "Firmware updates can break it.", "https://github.com/mihai-dinculescu/tapo", "mihai-dinculescu/tapo"),
@@ -1387,12 +1392,12 @@ footer .srcs{display:grid; gap:4px; grid-template-columns:repeat(auto-fit,minmax
 
   /* ---------- bodies ---------- */
   D.bodies = [
-    { id: "tab", name: "Tablet · home body", tag: "Phase 0",
-      role: "The always-on face, ears and eyes at home. Runs the Jeevo web app full-screen.",
-      does: ["Animated face and ambient display (clock, next metro, today)", "Far-field listening with on-device VAD and sound events", "Camera only when the radar says someone's there", "Speaks in English, Hindi, Kannada"],
-      build: ["Android: Chrome installed as an app, or Fully Kiosk Browser; keep screen on at low brightness", "iPad: Safari home-screen app + Guided Access", "Mount: printed stand with a camera shutter; later the Swivel base", "Battery: charge window 40–80% via smart plug, or Samsung 'Protect battery'"],
-      parts: [["Old tablet", 0, "You have it"], ["Smart plug (Tuya/Wipro/Tapo)", 900, "For the charge window"], ["Printed stand + shutter", 60, "PLA"]],
-      limits: ["Doze kills background sockets: keep the screen on and plugged in", "Constant sensors heat old batteries: temperature guard", "Old Android may be stuck on an old Chrome"] },
+    { id: "tab", name: "Fire 7 · home body (rooted, LineageOS)", tag: "Phase 0",
+      role: "Your rooted Fire 7 (likely the 2019 'mustang': 7-inch 1024×600, MT8163, 1 GB RAM, ~290 g) is the always-on face, ears and eyes at home. Root means the soul gets real system access, not a browser sandbox.",
+      does: ["Animated face full-screen (kiosk WebView), always on, dimmed at night", "Far-field listening with on-device voice detection; sound events", "Camera only when the radar says someone's there", "Root powers: charge limit via sysfs, boot-start services, no Doze, notification access, USB-OTG serial to the legs, screen and volume control"],
+      build: ["Termux + Termux:Boot + Termux:API: a small 'body daemon' (Node or Python) that holds the WebSocket to the Soul Core", "Magisk + ACC (Advanced Charging Controller) to hold the battery at 40–80%", "Face UI in a kiosk WebView; check the WebView version with the Lab's Device Check", "Legs: the Strider base (Phase 5); the Fire 7's light weight lets MG996R-class servos walk it"],
+      parts: [["Fire 7 (rooted)", 0, "You have it"], ["Printed stand + shutter", 60, "PLA"], ["USB-OTG cable", 150, "Tablet ↔ Pico for wired legs"]],
+      limits: ["1 GB RAM: the brain stays in the cloud; the tablet only senses, shows and speaks", "Unofficial ROM: keep a TWRP backup before changing anything", "Mic and speaker are small: an external USB/3.5 mm mic helps far-field", "No NFC on the Fire 7"] },
     { id: "iph", name: "iPhone · pocket presence", tag: "Phase 1–2",
       role: "Jeevo in your pocket: Siri, Shortcuts, notifications, NFC reader, and the phone that knows where you are.",
       does: ["'Hey Siri, ask Jeevo' and the Action button (15 Pro and later) or Back Tap", "Automations: alarm, Wi-Fi, Focus, charger, NFC, bank SMS, arrive/leave", "Web Push from the Jeevo web app", "On-device SMS parsing with Apple's model on Apple Intelligence iPhones"],
@@ -1426,15 +1431,15 @@ footer .srcs{display:grid; gap:4px; grid-template-columns:repeat(auto-fit,minmax
   ];
 
   D.capability = {
-    cols: ["Android tablet (Chrome)", "iPad (Safari)", "iPhone web app", "iPhone Shortcuts", "ESP32 dock"],
+    cols: ["Fire 7 · LineageOS (root)", "iPad (Safari)", "iPhone web app", "iPhone Shortcuts", "ESP32 dock"],
     rows: [
       ["Always on at home", "yes", "yes", "no", "—", "yes"],
       ["Listen in background", "yes (screen on)", "yes (screen on)", "no", "dictation on demand", "with mic node"],
-      ["Speech recognition", "Web Speech en/hi/kn-IN", "Safari, not standalone", "unreliable", "Siri dictation", "—"],
+      ["Speech recognition", "Web Speech en/hi-IN", "Safari, not standalone", "unreliable", "Siri dictation", "—"],
       ["Bluetooth LE", "Web Bluetooth", "no", "no", "no", "yes"],
-      ["NFC", "if hardware", "no", "no", "tag automations", "PN532 add-on"],
+      ["NFC", "no (no hardware)", "no", "no", "tag automations", "PN532 add-on"],
       ["Push notifications", "yes", "iPadOS 16.4+ app", "iOS 16.4+ app", "—", "—"],
-      ["Local LAN (UDP/TCP)", "via Termux", "no", "no", "no", "yes"],
+      ["Local LAN (UDP/TCP)", "yes (Termux, root)", "no", "no", "no", "yes"],
       ["Motors, IR, radar", "no", "no", "no", "no", "yes"],
       ["Knows your location", "—", "—", "no", "arrive/leave, Wi-Fi", "—"],
       ["Reads bank SMS", "—", "—", "no", "Message trigger", "—"]
@@ -1446,8 +1451,8 @@ footer .srcs{display:grid; gap:4px; grid-template-columns:repeat(auto-fit,minmax
     { id: "P0", name: "Wake the tablet", weeks: "Week 1", color: "amber",
       goal: "The old tablet becomes a face that listens and talks back in three languages.",
       build: ["Run the Lab's Device Check on the tablet and the iPhone; save both reports", "Decide the tablet path (Android Chrome vs iPad Safari)", "Face web app: animated eyes, clock, wake lock, dim schedule", "Talk loop: browser speech → Gemini → device voice, with local memory", "Battery guard: charge window + temperature check", "Say 'Jeevo' 50 times with the TV on: does it hear 'Jio'?"],
-      demo: "“My old tablet woke up and spoke Kannada.”",
-      done: "It answers a Hindi question and a Kannada question from across the room.",
+      demo: "“My old tablet woke up and spoke Hindi.”",
+      done: "It answers a Hindi question and a Hindi question from across the room.",
       cost: "₹0–900" },
     { id: "P1", name: "One soul", weeks: "Weeks 2–3", color: "purple",
       goal: "A Soul Core in the cloud that every device shares: one memory, one writer.",
@@ -1469,7 +1474,7 @@ footer .srcs{display:grid; gap:4px; grid-template-columns:repeat(auto-fit,minmax
       cost: "≈ ₹300–600/month + domain" },
     { id: "P4", name: "Nervous system", weeks: "Weeks 8–10", color: "pink",
       goal: "The house gets senses and hands: radar, sound, IR, lights, power, and a head that turns.",
-      build: ["ESP32-S3 dock: LD2410C, AHT20, IR, BLE scan, WiZ/Tuya bridge, heartbeat", "Swivel base: bearing + NEMA17 + TMC2209; MediaPipe face tracking on the tablet", "Scribe v1: Whisper on Workers AI, Sarvam/Gemini for Kannada; sound events (doorbell, cooker)", "Housekeeper reflexes: arrival, AC curve, lights, power-cut log", "Privacy switch + ring light"],
+      build: ["ESP32-S3 dock: LD2410C, AHT20, IR, BLE scan, WiZ/Tuya bridge, heartbeat", "Swivel base: bearing + NEMA17 + TMC2209; MediaPipe face tracking on the tablet", "Scribe v1: Whisper on Workers AI, Sarvam/Gemini for Hindi; sound events (doorbell, cooker)", "Housekeeper reflexes: arrival, AC curve, lights, power-cut log", "Privacy switch + ring light"],
       demo: "“It turned to look at me when I walked in.” · “It counted my cooker's whistles.”",
       done: "A week of arrivals, power cuts and AC nights handled with no manual step.",
       cost: "≈ ₹3,500 parts" },
@@ -1481,7 +1486,7 @@ footer .srcs{display:grid; gap:4px; grid-template-columns:repeat(auto-fit,minmax
       cost: "≈ ₹2,500 parts" },
     { id: "P6", name: "Learn and play", weeks: "Month 4", color: "amber",
       goal: "Jeevo starts noticing things about you, and shows off.",
-      build: ["Model of Me review loop: proposed facts, routines, patterns", "Learned reflexes; routine drift; Kannada coach; voice diary", "Walker body for the old phone; two Jeevos meet", "Cricket buddy, festival modes"],
+      build: ["Model of Me review loop: proposed facts, routines, patterns", "Learned reflexes; routine drift; Hindi coach; voice diary", "Walker body for the old phone; two Jeevos meet", "Cricket buddy, festival modes"],
       demo: "“The same soul, now with legs.” · “What Jeevo learned about me in 30 days.”",
       done: "Ten accepted facts and two approved reflexes the Dreamer found by itself.",
       cost: "≈ ₹2,300 parts" },
@@ -1581,7 +1586,7 @@ footer .srcs{display:grid; gap:4px; grid-template-columns:repeat(auto-fit,minmax
     { k: "Humans pay, send and order", v: "Jeevo prepares; you tap. Money, messages and orders always pass the Guardian and you." },
     { k: "Every surface optional", v: "Lose the keychain, the dock or the internet and the rest keeps working." },
     { k: "Show your work", v: "Every action has a reason trace. Every fact has evidence. Everything is forgettable." },
-    { k: "Your language", v: "English, Hindi, Kannada and the mix you actually speak, in and out." },
+    { k: "Your language", v: "English, Hindi and the Hinglish mix you actually speak, in and out." },
     { k: "Built in public", v: "Each phase ends in a demo you can post." }
   ];
 
@@ -1768,7 +1773,7 @@ footer .srcs{display:grid; gap:4px; grid-template-columns:repeat(auto-fit,minmax
     const B = D.budget;
     const whisper = Math.max(0, p.listenHours * 60 - B.whisperFreeMinPerDay) * B.whisperPerMin * 30 * fx;
     const kn = p.kannadaEngine === "sarvam" ? p.kannadaMin / 60 * B.sarvamPerHourINR * 30 : p.kannadaMin / 60 * B.geminiAudioPerHour * 30 * fx;
-    rows.push({ name: "Transcription", inr: whisper }, { name: "Kannada speech", inr: kn }, { name: "Domain", inr: B.fixedINR });
+    rows.push({ name: "Transcription", inr: whisper }, { name: "Hinglish speech", inr: kn }, { name: "Domain", inr: B.fixedINR });
     return { rows, total: rows.reduce((a, r) => a + r.inr, 0) };
   }
   const leanTotal = budgetCalc(D.budget.presets.lean, false).total;
@@ -1989,7 +1994,7 @@ footer .srcs{display:grid; gap:4px; grid-template-columns:repeat(auto-fit,minmax
     try { if (n.storage && n.storage.estimate) { const e = await n.storage.estimate(); storage = e.quota ? Math.round(e.quota / 1e9 * 10) / 10 + " GB quota" : null; } } catch (e) {}
     let battery = null;
     try { if (n.getBattery) { const b = await n.getBattery(); battery = Math.round(b.level * 100) + "%" + (b.charging ? ", charging" : ", on battery"); } } catch (e) {}
-    const voices = (await voicesReady()).filter(v => /^(en-IN|hi|kn|ta|te|ml|mr|bn|gu|pa)/i.test(v.lang)).map(v => v.lang + " · " + v.name);
+    const voices = (await voicesReady()).filter(v => /^(en-IN|hi)/i.test(v.lang)).map(v => v.lang + " · " + v.name);
     const cores = n.hardwareConcurrency || null, mem = n.deviceMemory || null;
     const scr = Math.round(screen.width) + "×" + Math.round(screen.height) + " @" + (window.devicePixelRatio || 1) + "x";
     const hasKn = voices.some(v => /^kn/i.test(v)), hasHi = voices.some(v => /^hi/i.test(v));
@@ -1998,7 +2003,7 @@ footer .srcs{display:grid; gap:4px; grid-template-columns:repeat(auto-fit,minmax
       pocket.push("Pocket presence: web app + Shortcuts + Siri. Web Push works once installed to the home screen.", "No Bluetooth or NFC from the web, and listening stops when locked: keychain haptics and NFC run through Shortcuts.");
       home.push("Not the home body. Use the tablet for always-on listening.");
     } else {
-      home.push(has["Speech synthesis"] ? "Can speak." + (hasKn ? " Kannada voice installed." : " No Kannada voice: Sarvam Bulbul v3 fills in.") + (hasHi ? " Hindi voice installed." : "") : "No speech synthesis: use Sarvam or Gemini TTS audio.");
+      home.push(has["Speech synthesis"] ? "Can speak." + (hasHi ? " Hindi voice installed." : " No Hindi voice: Sarvam Bulbul v3 fills in.") : "No speech synthesis: use Sarvam or Gemini TTS audio.");
       home.push(has["Speech recognition"] ? "Browser speech recognition present: fine for 'On call' mode." : "No browser speech recognition: record audio and send it to the Scribe.");
       home.push(has["Screen Wake Lock"] ? "Wake Lock available: the face can stay on." : "No Wake Lock: use a kiosk browser or the system's stay-awake setting.");
       home.push(has["Web Bluetooth"] ? "Web Bluetooth present: can hear the keychain beacon directly (the dock can too)." : "No Web Bluetooth: the ESP32 dock handles BLE.");
@@ -2145,7 +2150,7 @@ footer .srcs{display:grid; gap:4px; grid-template-columns:repeat(auto-fit,minmax
     const out = $("#bg-out"); out.textContent = "";
     out.append(h("span", { class: "eyebrow", text: "Per month · " + (BG.y27 ? "2027 prices" : "Sep 2026 prices") }),
       h("div", { class: "big", text: inr(res.total) }),
-      h("span", { class: "muted", style: "font-size:.88rem", text: "≈ " + inr(res.total / 30) + " a day · models, transcription, Kannada speech and the domain" }),
+      h("span", { class: "muted", style: "font-size:.88rem", text: "≈ " + inr(res.total / 30) + " a day · models, transcription, Hinglish speech and the domain" }),
       h("div", { class: "bars" }, res.rows.slice().sort((a, b) => b.inr - a.inr).map(r => h("div", { class: "bar-row" },
         h("span", { text: r.name }), h("span", { class: "bt" }, h("span", { class: "bf", style: "display:block; width:" + (r.inr / max * 100).toFixed(1) + "%" })), h("span", { class: "bv", text: inr(r.inr) })))),
       h("p", { class: "muted", style: "font-size:.84rem", text: "Free tiers aren't counted for private data: the Guardian keeps your life log off any provider that may train on it. 'Inside your Claude app' costs nothing extra beyond your subscription." }));

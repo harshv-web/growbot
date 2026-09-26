@@ -2,7 +2,7 @@
 
 <!-- Generated from site/src/data.js by site/build.mjs. Edit the data, not this file. -->
 
-74 use cases. Status: Works today 44 · DIY hardware 14 · Workaround 3 · Experimental 11 · Waiting 2.
+75 use cases. Status: Works today 45 · DIY hardware 15 · Workaround 3 · Experimental 10 · Waiting 2.
 
 - **Works today**: Official APIs or built-in platform features.
 - **DIY hardware**: Works once you build the part (ESP32, sensor, print).
@@ -143,7 +143,7 @@
 - Advances and half days.
 - Festival bonus reminders (Diwali, Ugadi).
 - Staff privacy: never record or learn their voices.
-- Read the summary aloud to them in Kannada or Hindi if you like.
+- Read the summary aloud to them in Hindi if you like.
 
 **Uses:** UPI deep links
 
@@ -176,6 +176,22 @@
 - Monsoon: rain forecast suppresses reminders.
 
 **Uses:** Capacitive soil sensor, Open-Meteo
+
+### Ather charge manager
+
+*DIY hardware · P4 · Night · Dock, iPhone · crew: Housekeeper, Treasurer*
+
+**Trigger.** You plug the portable charger into an energy-monitoring smart plug at home.
+
+**What happens.** Jeevo watches the plug's power draw: it knows when charging starts and when it tapers, can stop around 80% on normal days for battery health, charges fully before long rides on your calendar, and logs the rupees per charge from your BESCOM tariff.
+
+**Edge cases**
+
+- Estimating charge from power draw is approximate: calibrate against the dash once.
+- Optional: the Ather app on the rooted Fire 7 lets Jeevo read its notifications (charge complete, theft alerts) — check Ather's terms first.
+- Community reverse-engineered Ather APIs are unofficial: read-only at most, and your account is at risk.
+
+**Uses:** Energy-monitoring smart plug, Ather app notifications (Fire 7, root)
 
 ## Listen
 
@@ -222,7 +238,7 @@
 
 - Others' words are Sensitive tier: summaries kept, raw text expires after 30 days.
 - Needs 'Ambient · conversations' mode with the ring light on; 'Ambient · me' keeps only your side.
-- Kannada-English mix: routed to Sarvam or Gemini, not Whisper.
+- Hinglish mix: routed to Sarvam or Gemini, not Whisper.
 
 **Uses:** Scribe transcripts, Librarian search
 
@@ -381,6 +397,22 @@
 
 **Uses:** Shortcuts: Bluetooth/CarPlay, NFC tag on helmet
 
+### Ather ride mode
+
+*Works today · P2 · Anytime · iPhone, Keychain, Case · crew: Concierge, Guardian*
+
+**Trigger.** Your iPhone connects to the Ather dashboard over Bluetooth (or you tap the helmet tag).
+
+**What happens.** Ride mode: notifications held, only turn-critical things spoken through your helmet headset, the Halo case shows 'riding', and on disconnect Jeevo saves where you parked and logs the trip.
+
+**Edge cases**
+
+- Never show anything on the keychain or case while moving; eyes on the road.
+- Short stops at signals shouldn't end the ride: wait 3 minutes after disconnect.
+- Pillion rider using your phone: ride mode keys off the dash connection, not the phone.
+
+**Uses:** Shortcuts: Bluetooth (Ather dash), Helmet NFC tag
+
 ## Money
 
 ### Bank SMS → expense ledger
@@ -501,11 +533,11 @@
 
 **Trigger.** Your cook arrives.
 
-**What happens.** The tablet reads today's recipe in Kannada or Hindi, slowly, in katori and chamach measures.
+**What happens.** The tablet reads today's recipe in Hindi, slowly, in katori and chamach measures.
 
 **Edge cases**
 
-- No Kannada voice on the device: Sarvam Bulbul v3.
+- No Hindi voice on the device: Sarvam Bulbul v3.
 - Camera off during staff hours.
 
 **Uses:** Device TTS voices, Sarvam Bulbul v3
@@ -635,13 +667,13 @@
 
 **Trigger.** 'Parents are here till Sunday.'
 
-**What happens.** Bigger text, slower Hindi or Kannada voice, medicine reminders on Alexa, no face memory, one-tap 'call Harsh'.
+**What happens.** Bigger text, slower Hindi voice, medicine reminders on Alexa, no face memory, one-tap 'call Harsh'.
 
 **Edge cases**
 
 - Ask them first, and turn it off together.
 
-**Uses:** Hindi/Kannada TTS, Voice Monkey
+**Uses:** Hindi TTS, Voice Monkey
 
 ## Health
 
@@ -837,23 +869,6 @@
 
 **Uses:** Dreamer
 
-## Learn
-
-### Kannada from my day
-
-*Experimental · P6 · Evening · Tablet, iPhone · crew: Coach*
-
-**Trigger.** Two minutes in the evening.
-
-**What happens.** Three phrases you needed today (auto driver, vendor, neighbour), with pronunciation practice and feedback.
-
-**Edge cases**
-
-- Bengaluru Kannada, not textbook Kannada.
-- Skips days the energy check says you're tired.
-
-**Uses:** Coach, Sarvam / Gemini
-
 ## Voice
 
 ### Chat front door
@@ -982,7 +997,7 @@
 
 **Trigger.** Diwali, Ganesh Chaturthi, Ugadi, Onam.
 
-**What happens.** Lights, greetings in Kannada or Hindi, a rangoli judge on camera.
+**What happens.** Lights, greetings in Hindi, a rangoli judge on camera.
 
 **Edge cases**
 

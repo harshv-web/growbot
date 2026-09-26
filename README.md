@@ -1,6 +1,6 @@
 # Jeevo
 
-**One soul. Every surface.** A personal, multi-agent AI that lives in an old tablet at home, an iPhone, a keychain, a printed phone case and an ESP32 dock. It listens, keeps a private life log, learns about its owner, reflects every night, and plugs into the Bengaluru services he uses: Namma Metro, Swiggy and Instamart, Alexa, UPI and bank SMS, WhatsApp and Telegram, and Claude and ChatGPT through an MCP connector.
+**Give your old things a soul.** A personal, multi-agent AI creature, built on GrowBot's principles, that is born in a rooted Fire 7, learns to walk on legs, and moves between an iPhone, a keychain with a face, a phone case with an e-paper back and an ESP32 dock. It listens, keeps a private life log, learns about its owner, reflects every night, and plugs into the Bengaluru services he uses: Namma Metro, Swiggy and Instamart, Alexa, UPI and bank SMS, WhatsApp and Telegram, and Claude and ChatGPT through an MCP connector.
 
 This repo holds the concept, the research, and the Lab site. It's a personal project (concept v2, 27 Sep 2026), inspired by Brit Cruise's [GrowBot](https://github.com/britcruise9/GrowBot).
 
@@ -17,6 +17,17 @@ This repo holds the concept, the research, and the Lab site. It's a personal pro
 | [07 · Risks and edge cases](docs/07-risks-and-edge-cases.md) | Platform limits, service catches, privacy, hardware safety |
 | [08 · Research log](docs/08-research-log.md) | What the GrowBot Discord (14,390 messages) and earlier briefs taught us |
 | [09 · Decisions](docs/09-decisions.md) | Decided, proposed and open |
+| [10 · GrowBot fusion (concept v3)](docs/10-growbot-fusion.md) | Soul file v1, one soul across many bodies, learning to walk in life, the emotion engine, full access, knowledge sharing |
+| [11 · Prototypes](docs/11-prototypes.md) | Strider, Walker, Perch, Pixel keychain, Halo case, apps, Ather touchpoint |
+| [12 · Build and content plan](docs/12-build-and-content-plan.md) | Phases B0–B9 and the ten-episode content journey |
+
+## Prototypes
+
+`prototypes/` holds the first code: `soul/emotion.js` (emotion engine), `legs/learner.js` (gait learner + on-device forward model), `legs/gait_cpg.py` (Pico rhythm firmware, GrowBot-compatible), `keychain-pixel/pixel.ino`, `case-halo/halo.ino`, and `fire7/` (Termux body daemon + setup). The JS modules are smoke-tested; the firmware is untested.
+
+## The product site
+
+`web/` builds a five-page Three.js site (Home, Soul, Bodies, Journey, Live Lab) that runs the real emotion engine and learner in the browser: `node web/build.mjs` → `web/dist` (publish) and `web/preview` (local; drop `three.min.js` r128 into `web/preview/assets`).
 
 ## The Lab site
 

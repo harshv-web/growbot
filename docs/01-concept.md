@@ -19,7 +19,7 @@ Your note on 27 Sep ("listen, think about me, private, personalised, save everyt
 1. **Ears and a lifelog.** Jeevo listens at home and, when you choose, through the pendant keychain. It keeps transcripts, sounds, places, money, orders and more as one searchable life log.
 2. **A Model of Me.** It learns about you from what you tell it, what it observes, and what you do with its nudges. Every fact has evidence, a confidence and an off switch.
 3. **A crew, not one bot.** Eleven agents (Jeevo, Scribe, Librarian, Dreamer, Chief of Staff, Concierge, Treasurer, Housekeeper, Guardian, Scout, Coach) share one memory and one writer.
-4. **Many models.** A router picks the model per call by task, language, privacy tier, latency and the day's budget: Gemini Flash for live voice, Whisper on Cloudflare for cheap transcription, Sarvam for Kannada, Claude Sonnet 5 on the batch lane for the nightly dream, Apple's on-device model for your bank SMS, and plain rules wherever a rule is enough.
+4. **Many models.** A router picks the model per call by task, language, privacy tier, latency and the day's budget: Gemini Flash for live voice, Whisper on Cloudflare for cheap transcription, Sarvam for Hinglish, Claude Sonnet 5 on the batch lane for the nightly dream, Apple's on-device model for your bank SMS, and plain rules wherever a rule is enough.
 
 ## Principles
 
@@ -29,7 +29,7 @@ Your note on 27 Sep ("listen, think about me, private, personalised, save everyt
 4. **Humans pay, send and order.** Jeevo prepares; you tap.
 5. **Every surface is optional.** Lose the keychain, the dock or the internet and the rest keeps working.
 6. **Show your work.** Every action has a reason trace, every fact has evidence, everything is forgettable.
-7. **Your language.** English, Hindi, Kannada and the mix you actually speak.
+7. **Your language.** English, Hindi and the Hinglish mix you actually speak.
 8. **Built in public.** Each phase ends in a demo worth posting.
 
 ## The cast
@@ -50,7 +50,7 @@ Your note on 27 Sep ("listen, think about me, private, personalised, save everyt
 
 One demo per phase, each a reel:
 
-1. "My old tablet woke up and spoke Kannada."
+1. "My old tablet woke up and spoke Hindi."
 2. "I told the tablet. My phone remembered."
 3. "My alarm briefed my tablet, and my keychain told me when to leave for the metro."
 4. "Claude ordered my Jeevo grocery list on Instamart." · "Alexa, ask Jeevo…"

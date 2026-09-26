@@ -1,7 +1,7 @@
 <title>Jeevo Lab</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Mukta:wght@400;500;600;700&family=Martian+Mono:wght@400;500&family=Anek+Kannada:wght@500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Mukta:wght@400;500;600;700&family=Martian+Mono:wght@400;500&display=swap">
 <style>
 /*__CSS__*/
 </style>
@@ -33,7 +33,7 @@
         <div class="hero-copy">
           <span class="eyebrow"><b>DCK</b> · Personal ambient intelligence · Bengaluru node · concept v2</span>
           <h1>One soul.<br><span>Every surface.</span></h1>
-          <div class="tagline"><span class="kn" lang="kn">ಒಂದೇ ಜೀವ. ಎಲ್ಲಾ ಕಡೆ.</span><span lang="hi">एक जीव. हर जगह.</span></div>
+          <div class="tagline"><span class="kn" lang="hi">एक जीव. हर जगह.</span></div>
           <p class="lede">Jeevo is my own AI with <strong>one memory and many bodies</strong>: an old tablet at home that listens, sees and talks; my iPhone; a keychain; a printed case; and an ESP32 that gives the house senses. A crew of agents on different models remembers everything around me, reflects on it overnight, and plugs into the Bengaluru services I use: Namma Metro, Swiggy and Instamart, Alexa, UPI, WhatsApp and Claude.</p>
           <div class="row">
             <a class="btn primary" href="#lab">Open the Lab</a>
@@ -81,7 +81,7 @@
           <div class="panel pillar" style="--c:var(--amber)"><span class="eyebrow">Ears + lifelog</span><h3>It listens and keeps your life</h3><p>Voice detection on the tablet, a pendant keychain outside, sound events like the cooker whistle. Transcripts, places, money, orders and more in one searchable life log.</p></div>
           <div class="panel pillar" style="--c:var(--purple)"><span class="eyebrow">Model of Me</span><h3>It learns you</h3><p>From what you tell it, what it notices, and what you do with its nudges. Every fact has evidence, confidence and a delete button. It reflects on your day every night at 03:00.</p></div>
           <div class="panel pillar" style="--c:var(--green)"><span class="eyebrow">Multi-agent</span><h3>A crew of eleven</h3><p>Jeevo talks; the Scribe hears; the Librarian remembers; the Dreamer reflects; the Guardian protects. They share one memory and one writer.</p></div>
-          <div class="panel pillar" style="--c:var(--blue)"><span class="eyebrow">Multi-model</span><h3>The right model per job</h3><p>Gemini Flash for live voice, Whisper for cheap transcripts, Sarvam for Kannada, Claude Sonnet 5 for the nightly dream, Apple's on-device model for bank SMS, and rules wherever a rule is enough.</p></div>
+          <div class="panel pillar" style="--c:var(--blue)"><span class="eyebrow">Multi-model</span><h3>The right model per job</h3><p>Gemini Flash for live voice, Whisper for cheap transcripts, Sarvam for Hinglish, Claude Sonnet 5 for the nightly dream, Apple's on-device model for bank SMS, and rules wherever a rule is enough.</p></div>
         </div>
       </div>
 
@@ -252,7 +252,7 @@
         <p>Every one is buildable by you, and each says honestly whether it works today, needs your hardware, needs a workaround, is experimental, or is waiting on a platform. Tap a card for the flow and the edge cases.</p>
       </div>
       <div class="panel filters">
-        <input class="search" type="search" id="uc-q" placeholder="Search: metro, Kannada, Swiggy, cooker, OTP…" aria-label="Search use cases">
+        <input class="search" type="search" id="uc-q" placeholder="Search: metro, Hindi, Swiggy, cooker, OTP…" aria-label="Search use cases">
         <div class="fl"><span>Domain</span><div class="chips" id="uc-dom"></div></div>
         <div class="fl"><span>Status</span><div class="chips" id="uc-st"></div></div>
         <div class="fl"><span>Surface</span><div class="chips" id="uc-sf"></div></div>
@@ -346,8 +346,8 @@
             <div class="tbl budget-tbl"><table class="mid"><thead><tr><th>Agent</th><th>Model</th><th>Calls/day</th><th>In tok</th><th>Out tok</th><th>Batch</th></tr></thead><tbody id="bg-rows"></tbody></table></div>
             <div class="fgrid">
               <label class="f"><span>Speech heard / day (h)</span><input type="number" id="bg-hours" min="0" max="16" step="0.5"></label>
-              <label class="f"><span>Kannada / mixed (min/day)</span><input type="number" id="bg-kn" min="0" max="600" step="5"></label>
-              <label class="f"><span>Kannada engine</span><select id="bg-kne"><option value="gemini">Gemini audio</option><option value="sarvam">Sarvam (₹30/h)</option></select></label>
+              <label class="f"><span>Hinglish, hard audio (min/day)</span><input type="number" id="bg-kn" min="0" max="600" step="5"></label>
+              <label class="f"><span>Hinglish engine</span><select id="bg-kne"><option value="gemini">Gemini audio</option><option value="sarvam">Sarvam (₹30/h)</option></select></label>
               <label class="f"><span>₹ per US$</span><input type="number" id="bg-fx" min="50" max="150" step="0.5"></label>
               <label class="f" style="align-content:end"><span>Prices</span><span class="row" style="gap:8px"><input type="checkbox" id="bg-27"> <span style="font-size:.9rem; color:var(--ink-2)">2027 Gemini prices</span></span></label>
             </div>

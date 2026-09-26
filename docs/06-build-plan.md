@@ -15,9 +15,9 @@ The old tablet becomes a face that listens and talks back in three languages.
 - [ ] Battery guard: charge window + temperature check
 - [ ] Say 'Jeevo' 50 times with the TV on: does it hear 'Jio'?
 
-**Demo:** “My old tablet woke up and spoke Kannada.”
+**Demo:** “My old tablet woke up and spoke Hindi.”
 
-**Done when:** It answers a Hindi question and a Kannada question from across the room.
+**Done when:** It answers a Hindi question and a Hindi question from across the room.
 
 **Cost:** ₹0–900
 
@@ -76,7 +76,7 @@ The house gets senses and hands: radar, sound, IR, lights, power, and a head tha
 
 - [ ] ESP32-S3 dock: LD2410C, AHT20, IR, BLE scan, WiZ/Tuya bridge, heartbeat
 - [ ] Swivel base: bearing + NEMA17 + TMC2209; MediaPipe face tracking on the tablet
-- [ ] Scribe v1: Whisper on Workers AI, Sarvam/Gemini for Kannada; sound events (doorbell, cooker)
+- [ ] Scribe v1: Whisper on Workers AI, Sarvam/Gemini for Hindi; sound events (doorbell, cooker)
 - [ ] Housekeeper reflexes: arrival, AC curve, lights, power-cut log
 - [ ] Privacy switch + ring light
 
@@ -106,7 +106,7 @@ The keychain and the case make Jeevo physical outside the house.
 Jeevo starts noticing things about you, and shows off.
 
 - [ ] Model of Me review loop: proposed facts, routines, patterns
-- [ ] Learned reflexes; routine drift; Kannada coach; voice diary
+- [ ] Learned reflexes; routine drift; Hindi coach; voice diary
 - [ ] Walker body for the old phone; two Jeevos meet
 - [ ] Cricket buddy, festival modes
 
