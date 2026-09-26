@@ -1,0 +1,419 @@
+<title>Jeevo Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Mukta:wght@400;500;600;700&family=Martian+Mono:wght@400;500&family=Anek+Kannada:wght@500;600&display=swap">
+<style>
+/*__CSS__*/
+</style>
+
+<div class="shell">
+  <header class="bar">
+    <div class="bar-in">
+      <a class="brand" href="#deck" aria-label="Jeevo Lab home"><span class="mark" aria-hidden="true"></span><span class="bname">JEEVO</span><span class="bsub">LAB</span></a>
+      <nav class="stations" aria-label="Sections">
+        <ol>
+          <li><a href="#deck" data-v="deck"><span class="dot"></span><span class="code">DCK</span><span class="lbl">Deck</span></a></li>
+          <li><a href="#system" data-v="system"><span class="dot"></span><span class="code">SYS</span><span class="lbl">System</span></a></li>
+          <li><a href="#bodies" data-v="bodies"><span class="dot"></span><span class="code">BOD</span><span class="lbl">Bodies</span></a></li>
+          <li><a href="#uses" data-v="uses"><span class="dot"></span><span class="code">USE</span><span class="lbl">Use cases</span></a></li>
+          <li><a href="#links" data-v="links"><span class="dot"></span><span class="code">INT</span><span class="lbl">Integrations</span></a></li>
+          <li><a href="#plan" data-v="plan"><span class="dot"></span><span class="code">PLN</span><span class="lbl">Plan</span></a></li>
+          <li><a href="#lab" data-v="lab"><span class="dot"></span><span class="code">LAB</span><span class="lbl">Lab</span></a></li>
+          <li><a href="#archive" data-v="archive"><span class="dot"></span><span class="code">ARC</span><span class="lbl">Archive</span></a></li>
+        </ol>
+      </nav>
+      <div class="status"><span class="clock" id="clock">--:-- IST</span><span class="sync" id="sync">Connecting</span></div>
+    </div>
+  </header>
+
+  <main>
+    <!-- DECK -->
+    <section class="view" id="v-deck" data-view="deck">
+      <div class="hero">
+        <div class="hero-copy">
+          <span class="eyebrow"><b>DCK</b> · Personal ambient intelligence · Bengaluru node · concept v2</span>
+          <h1>One soul.<br><span>Every surface.</span></h1>
+          <div class="tagline"><span class="kn" lang="kn">ಒಂದೇ ಜೀವ. ಎಲ್ಲಾ ಕಡೆ.</span><span lang="hi">एक जीव. हर जगह.</span></div>
+          <p class="lede">Jeevo is my own AI with <strong>one memory and many bodies</strong>: an old tablet at home that listens, sees and talks; my iPhone; a keychain; a printed case; and an ESP32 that gives the house senses. A crew of agents on different models remembers everything around me, reflects on it overnight, and plugs into the Bengaluru services I use: Namma Metro, Swiggy and Instamart, Alexa, UPI, WhatsApp and Claude.</p>
+          <div class="row">
+            <a class="btn primary" href="#lab">Open the Lab</a>
+            <a class="btn" href="#plan">See the build plan</a>
+            <a class="btn ghost" href="#archive">Archive</a>
+          </div>
+          <div class="stats" id="stats"></div>
+        </div>
+
+        <div class="panel sim" id="sim" aria-label="A day with Jeevo, simulated">
+          <div class="sim-top">
+            <div>
+              <span class="eyebrow">A day with Jeevo · simulation</span>
+              <div class="sim-time" id="sim-time">08:12</div>
+            </div>
+            <div style="flex:1 1 220px; display:grid; gap:4px; min-width:0">
+              <div class="sim-title" id="sim-title">Leave now</div>
+              <div class="sim-trig" id="sim-trig">Metro coach · walk 9 min + next train 8:24</div>
+            </div>
+          </div>
+          <div class="track" id="sim-track" role="group" aria-label="Moments of the day"><ol></ol></div>
+          <div class="surfs" id="sim-surfs">
+            <div class="surf s-tab" data-s="tab"><div class="sh2"><span class="nm">Tablet · home</span><span class="led"></span></div><div class="eyes" aria-hidden="true"><i></i><i></i></div><div class="msg">—</div></div>
+            <div class="surf s-iph" data-s="iph"><div class="sh2"><span class="nm">iPhone</span><span class="led"></span></div><div class="msg">—</div></div>
+            <div class="surf s-key" data-s="key"><div class="sh2"><span class="nm">Keychain</span><span class="led"></span></div><div class="msg">—</div></div>
+            <div class="surf s-alexa" data-s="alexa"><div class="sh2"><span class="nm">Alexa</span><span class="led"></span></div><div class="msg">—</div></div>
+            <div class="surf s-dock" data-s="dock"><div class="sh2"><span class="nm">Dock</span><span class="led"></span></div><div class="msg">—</div></div>
+          </div>
+          <div class="dreamline" id="sim-dream" hidden></div>
+          <div class="sim-why" id="sim-why">You're moving and the phone is in your pocket. A haptic is enough.</div>
+          <div class="sim-foot">
+            <div class="chips" id="sim-agents"></div>
+            <div class="row">
+              <button class="btn small" type="button" id="sim-prev" aria-label="Previous moment">←</button>
+              <button class="btn small" type="button" id="sim-play">Play the day</button>
+              <button class="btn small" type="button" id="sim-next" aria-label="Next moment">→</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sect">
+        <div class="sh"><h2>Four upgrades from your note</h2><span class="eyebrow">listen · learn · crew · models</span></div>
+        <div class="pillars">
+          <div class="panel pillar" style="--c:var(--amber)"><span class="eyebrow">Ears + lifelog</span><h3>It listens and keeps your life</h3><p>Voice detection on the tablet, a pendant keychain outside, sound events like the cooker whistle. Transcripts, places, money, orders and more in one searchable life log.</p></div>
+          <div class="panel pillar" style="--c:var(--purple)"><span class="eyebrow">Model of Me</span><h3>It learns you</h3><p>From what you tell it, what it notices, and what you do with its nudges. Every fact has evidence, confidence and a delete button. It reflects on your day every night at 03:00.</p></div>
+          <div class="panel pillar" style="--c:var(--green)"><span class="eyebrow">Multi-agent</span><h3>A crew of eleven</h3><p>Jeevo talks; the Scribe hears; the Librarian remembers; the Dreamer reflects; the Guardian protects. They share one memory and one writer.</p></div>
+          <div class="panel pillar" style="--c:var(--blue)"><span class="eyebrow">Multi-model</span><h3>The right model per job</h3><p>Gemini Flash for live voice, Whisper for cheap transcripts, Sarvam for Kannada, Claude Sonnet 5 for the nightly dream, Apple's on-device model for bank SMS, and rules wherever a rule is enough.</p></div>
+        </div>
+      </div>
+
+      <div class="sect">
+        <div class="sh"><h2>Principles</h2><span class="eyebrow">what every part obeys</span></div>
+        <div class="principles" id="principles"></div>
+      </div>
+    </section>
+
+    <!-- SYSTEM -->
+    <section class="view" id="v-system" data-view="system" hidden>
+      <div class="vhead">
+        <span class="eyebrow"><b>SYS</b> · Architecture</span>
+        <h2>The system, drawn as a metro map</h2>
+        <p>Every line meets at one interchange: the Soul Core, a single Cloudflare Durable Object that is the only thing allowed to write your memory. Devices dial out to it, so it works the same at home, on the metro, or in another city.</p>
+      </div>
+
+      <figure class="panel map" style="margin:0">
+        <svg viewBox="0 0 1000 545" role="img" aria-label="Transit-map diagram: the Pocket, Home, Services, Voice and AI lines all meet the Core line at the Soul Core interchange.">
+          <g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="8">
+            <path d="M60 270 H945" style="stroke:var(--amber)"/>
+            <path d="M60 110 H340 L500 270" style="stroke:var(--purple)"/>
+            <path d="M500 270 L660 110 H945" style="stroke:var(--yellow)"/>
+            <path d="M500 270 L660 430 H945" style="stroke:var(--blue)"/>
+            <path d="M500 270 V490 H290" style="stroke:var(--pink)"/>
+            <path d="M250 270 V430 H60" style="stroke:var(--green)"/>
+          </g>
+          <path d="M90 110 C 90 200, 200 230, 250 270" fill="none" stroke-width="2" stroke-dasharray="4 6" style="stroke:var(--muted)"/>
+          <text x="118" y="200" style="fill:var(--muted); font-family:var(--mono); font-size:10px; letter-spacing:.08em">BLE BEACON</text>
+          <g stroke-width="4">
+            <circle cx="90" cy="110" r="9" style="fill:var(--bg-2); stroke:var(--purple)"/>
+            <circle cx="190" cy="110" r="9" style="fill:var(--bg-2); stroke:var(--purple)"/>
+            <circle cx="290" cy="110" r="9" style="fill:var(--bg-2); stroke:var(--purple)"/>
+            <circle cx="90" cy="270" r="9" style="fill:var(--bg-2); stroke:var(--amber)"/>
+            <circle cx="250" cy="270" r="12" style="fill:var(--bg-2); stroke:var(--ink)"/>
+            <circle cx="660" cy="270" r="9" style="fill:var(--bg-2); stroke:var(--amber)"/>
+            <circle cx="800" cy="270" r="9" style="fill:var(--bg-2); stroke:var(--amber)"/>
+            <circle cx="930" cy="270" r="9" style="fill:var(--bg-2); stroke:var(--amber)"/>
+            <circle cx="730" cy="110" r="9" style="fill:var(--bg-2); stroke:var(--yellow)"/>
+            <circle cx="840" cy="110" r="9" style="fill:var(--bg-2); stroke:var(--yellow)"/>
+            <circle cx="930" cy="110" r="9" style="fill:var(--bg-2); stroke:var(--yellow)"/>
+            <circle cx="730" cy="430" r="9" style="fill:var(--bg-2); stroke:var(--blue)"/>
+            <circle cx="840" cy="430" r="9" style="fill:var(--bg-2); stroke:var(--blue)"/>
+            <circle cx="930" cy="430" r="9" style="fill:var(--bg-2); stroke:var(--blue)"/>
+            <circle cx="420" cy="490" r="9" style="fill:var(--bg-2); stroke:var(--pink)"/>
+            <circle cx="310" cy="490" r="9" style="fill:var(--bg-2); stroke:var(--pink)"/>
+            <circle cx="210" cy="430" r="9" style="fill:var(--bg-2); stroke:var(--green)"/>
+            <circle cx="140" cy="430" r="9" style="fill:var(--bg-2); stroke:var(--green)"/>
+            <circle cx="70" cy="430" r="9" style="fill:var(--bg-2); stroke:var(--green)"/>
+          </g>
+          <g style="fill:var(--ink-2); font-family:var(--mono); font-size:11px; letter-spacing:.06em">
+            <text x="90" y="88" text-anchor="middle">KEYCHAIN</text>
+            <text x="190" y="88" text-anchor="middle">CASE</text>
+            <text x="290" y="88" text-anchor="middle">IPHONE</text>
+            <text x="290" y="72" text-anchor="middle" style="fill:var(--muted); font-size:9.5px">SHORTCUTS · SIRI · PUSH</text>
+            <text x="90" y="302" text-anchor="middle">TABLET</text>
+            <text x="90" y="318" text-anchor="middle" style="fill:var(--muted); font-size:9.5px">FACE · EARS</text>
+            <text x="250" y="306" text-anchor="middle" style="fill:var(--ink)">DOCK</text>
+            <text x="250" y="322" text-anchor="middle" style="fill:var(--muted); font-size:9.5px">ESP32 · SWIVEL</text>
+            <text x="660" y="302" text-anchor="middle">CREW</text>
+            <text x="660" y="318" text-anchor="middle" style="fill:var(--muted); font-size:9.5px">11 AGENTS</text>
+            <text x="800" y="302" text-anchor="middle">ROUTER</text>
+            <text x="800" y="318" text-anchor="middle" style="fill:var(--muted); font-size:9.5px">PICKS THE MODEL</text>
+            <text x="930" y="302" text-anchor="end">MODELS</text>
+            <text x="930" y="318" text-anchor="end" style="fill:var(--muted); font-size:9.5px">GEMINI · CLAUDE · SARVAM</text>
+            <text x="730" y="88" text-anchor="middle">METRO GTFS</text>
+            <text x="840" y="88" text-anchor="middle">ROUTES · WEATHER</text>
+            <text x="930" y="72" text-anchor="end">EMAIL · SMS</text>
+            <text x="930" y="88" text-anchor="end" style="fill:var(--muted); font-size:9.5px">ORDERS · BILLS</text>
+            <text x="730" y="462" text-anchor="middle">JEEVO MCP</text>
+            <text x="840" y="462" text-anchor="middle">CLAUDE · CHATGPT</text>
+            <text x="930" y="478" text-anchor="end">SWIGGY · INSTAMART</text>
+            <text x="420" y="522" text-anchor="middle">ALEXA</text>
+            <text x="310" y="522" text-anchor="middle">TELEGRAM · WA</text>
+            <text x="210" y="462" text-anchor="middle">RADAR · BLE</text>
+            <text x="140" y="412" text-anchor="middle">IR · AC</text>
+            <text x="70" y="462" text-anchor="middle">LIGHTS</text>
+          </g>
+          <rect x="420" y="236" width="160" height="68" rx="34" stroke-width="4" style="fill:var(--bg-2); stroke:var(--amber)"/>
+          <text x="500" y="266" text-anchor="middle" style="fill:var(--ink); font-family:var(--display); font-size:20px; font-weight:700; letter-spacing:.08em">SOUL CORE</text>
+          <text x="500" y="286" text-anchor="middle" style="fill:var(--amber); font-family:var(--mono); font-size:9.5px; letter-spacing:.08em">ONE WRITER</text>
+        </svg>
+        <figcaption class="legend">
+          <span><i style="background:var(--amber)"></i>Core line: body → soul → crew → models</span>
+          <span><i style="background:var(--purple)"></i>Pocket line</span>
+          <span><i style="background:var(--green)"></i>Home line</span>
+          <span><i style="background:var(--yellow)"></i>Services line</span>
+          <span><i style="background:var(--pink)"></i>Voice line</span>
+          <span><i style="background:var(--blue)"></i>AI line</span>
+        </figcaption>
+      </figure>
+
+      <div class="sect">
+        <div class="sh"><h2>The crew</h2><span class="eyebrow">11 agents · one memory · one writer</span></div>
+        <div class="kv" id="orch"></div>
+        <div class="crew" id="crew"></div>
+      </div>
+
+      <div class="sect">
+        <div class="sh"><h2>Model router</h2><span class="eyebrow">privacy → language → latency → budget</span></div>
+        <div class="tbl"><table class="wide"><thead><tr><th>Task</th><th>First choice</th><th>Why</th><th>Fallback</th></tr></thead><tbody id="router"></tbody></table></div>
+      </div>
+
+      <div class="sect">
+        <div class="sh"><h2>Ears and the life log</h2><span class="eyebrow">what it hears, what it keeps</span></div>
+        <div class="modes" id="modes"></div>
+        <div class="grid-2">
+          <div class="tbl"><table class="mid"><thead><tr><th>Tier</th><th>Examples</th><th>Stored</th><th>Kept</th></tr></thead><tbody id="tiers"></tbody></table></div>
+          <div class="tbl"><table class="mid"><thead><tr><th>Stream</th><th>Captured by</th><th>Tier</th><th>Kept</th></tr></thead><tbody id="streams"></tbody></table></div>
+        </div>
+        <p class="notice">India's DPDP Act does not apply to processing "by an individual for any personal or domestic purpose" (s.3(c)(i)), which covers your own life log. Recording guests and household staff is still an ethics call, so the defaults are "Ambient · me", staff hours camera-off with no voice learning, and a ring light that always shows the mode. Not legal advice.</p>
+      </div>
+
+      <div class="sect">
+        <div class="sh"><h2>Model of Me</h2><span class="eyebrow">how it learns you</span></div>
+        <div class="mom" id="mom"></div>
+        <div class="kv" id="learning"></div>
+      </div>
+
+      <div class="sect">
+        <div class="sh"><h2>Wire formats</h2><span class="eyebrow">what travels on the lines</span></div>
+        <div class="grid-3">
+          <div class="grid" style="display:grid; gap:8px"><span class="eyebrow">Event → Soul Core</span><pre class="code">{ "id": "ev_01JB2…",
+  "hlc": "2026-09-27T07:12:03.118Z/0003/tab",
+  "device": "tab", "agent": "scribe",
+  "kind": "heard", "who": "me",
+  "text": "atta khatam ho gaya",
+  "lang": "hi-IN", "tier": "P2" }</pre></div>
+          <div style="display:grid; gap:8px"><span class="eyebrow">Presence ← each device</span><pre class="code">{ "t": "presence", "device": "iph",
+  "where": "metro", "attention": "pocket",
+  "focus": "none", "battery": 0.62,
+  "net": "cell",
+  "caps": ["notify","speak","listen","nfc-read"] }</pre></div>
+          <div style="display:grid; gap:8px"><span class="eyebrow">Intent → a device</span><pre class="code">{ "t": "intent", "to": "key",
+  "do": "buzz", "pattern": "long-short",
+  "reason": "leave_now",
+  "trace": "tr_88c1" }
+
+// dock + walker also speak GrowBot's
+// pose · act · routine · stop</pre></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BODIES -->
+    <section class="view" id="v-bodies" data-view="bodies" hidden>
+      <div class="vhead">
+        <span class="eyebrow"><b>BOD</b> · Hardware</span>
+        <h2>Bodies</h2>
+        <p>Your old tablet and iPhone do most of the work. The rest is about ₹9,400 of parts over four months, most of it optional, printed on your own printer.</p>
+      </div>
+      <div class="bodies" id="bodies"></div>
+      <div class="sect">
+        <div class="sh"><h2>What each device can actually do</h2><span class="eyebrow">why the dock and Shortcuts exist</span></div>
+        <div class="tbl"><table class="wide" id="cap"></table></div>
+      </div>
+      <div class="sect">
+        <div class="sh"><h2>Parts budget</h2><span class="eyebrow">₹, estimates · check Robu / Robocraze</span></div>
+        <div class="tbl"><table class="mid"><thead><tr><th>Phase</th><th>What</th><th style="text-align:right">₹</th></tr></thead><tbody id="bom"></tbody></table></div>
+      </div>
+    </section>
+
+    <!-- USE CASES -->
+    <section class="view" id="v-uses" data-view="uses" hidden>
+      <div class="vhead">
+        <span class="eyebrow"><b>USE</b> · Library</span>
+        <h2>Use cases, with the edge cases</h2>
+        <p>Every one is buildable by you, and each says honestly whether it works today, needs your hardware, needs a workaround, is experimental, or is waiting on a platform. Tap a card for the flow and the edge cases.</p>
+      </div>
+      <div class="panel filters">
+        <input class="search" type="search" id="uc-q" placeholder="Search: metro, Kannada, Swiggy, cooker, OTP…" aria-label="Search use cases">
+        <div class="fl"><span>Domain</span><div class="chips" id="uc-dom"></div></div>
+        <div class="fl"><span>Status</span><div class="chips" id="uc-st"></div></div>
+        <div class="fl"><span>Surface</span><div class="chips" id="uc-sf"></div></div>
+        <div class="row" style="justify-content:space-between"><span class="count" id="uc-count"></span><button class="btn small ghost" type="button" id="uc-reset">Clear filters</button></div>
+      </div>
+      <div class="cases" id="cases"></div>
+    </section>
+
+    <!-- INTEGRATIONS -->
+    <section class="view" id="v-links" data-view="links" hidden>
+      <div class="vhead">
+        <span class="eyebrow"><b>INT</b> · India + global</span>
+        <h2>Integrations, checked September 2026</h2>
+        <p>What exists, how Jeevo uses it, what it costs, and the catch. Links go to the source each row came from.</p>
+      </div>
+      <div class="chips" id="int-cat"></div>
+      <div class="tbl"><table class="wide"><thead><tr><th>Service</th><th>Status</th><th>How Jeevo uses it</th><th>Cost</th><th>The catch</th><th>Source</th></tr></thead><tbody id="ints"></tbody></table></div>
+    </section>
+
+    <!-- PLAN -->
+    <section class="view" id="v-plan" data-view="plan" hidden>
+      <div class="vhead">
+        <span class="eyebrow"><b>PLN</b> · Build plan</span>
+        <h2>Eight stations, one demo each</h2>
+        <p>About 10–12 hours a week. Each phase ends with a demo you can post and a "done when" test. Nothing from a later phase starts before the current one passes.</p>
+      </div>
+      <div class="line" id="phases"></div>
+      <div class="grid-2">
+        <div class="panel pad" style="display:grid; gap:10px">
+          <span class="eyebrow">Running cost per month (crew presets)</span>
+          <div id="plan-cost" style="display:grid; gap:8px"></div>
+          <a class="btn small" href="#lab" data-lab="budget" style="justify-self:start">Tune it in the Lab</a>
+        </div>
+        <div class="panel pad" style="display:grid; gap:10px">
+          <span class="eyebrow">Weekly rhythm</span>
+          <ul style="color:var(--ink-2); font-size:.95rem">
+            <li><b>Tue + Thu evenings (2 h each):</b> build the current phase's next task.</li>
+            <li><b>Saturday (4–5 h):</b> the big build block; test on the real tablet and phone.</li>
+            <li><b>Sunday (1 h):</b> Jeevo's Sunday review, update the Lab board, log decisions, clip the week's reel.</li>
+            <li><b>Every phase end:</b> demo video, "done when" test, archive entry.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- LAB -->
+    <section class="view" id="v-lab" data-view="lab" hidden>
+      <div class="vhead">
+        <span class="eyebrow"><b>LAB</b> · Tools that run here</span>
+        <h2>The Lab</h2>
+        <p>Working instruments for the build. Run the Device Check on your tablet and iPhone, try the routing and sync logic, price the crew, ask Claude with the whole project as context, and keep the task board. Everything saved here syncs across your devices.</p>
+      </div>
+      <div class="labtabs chips" id="labtabs" role="tablist">
+        <button class="chip" type="button" data-t="device" aria-pressed="true">Device check</button>
+        <button class="chip" type="button" data-t="router" aria-pressed="false">Attention router</button>
+        <button class="chip" type="button" data-t="budget" aria-pressed="false">Crew budget</button>
+        <button class="chip" type="button" data-t="sync" aria-pressed="false">Sync lab</button>
+        <button class="chip" type="button" data-t="ask" aria-pressed="false">Ask Claude</button>
+        <button class="chip" type="button" data-t="board" aria-pressed="false">Build board</button>
+      </div>
+
+      <div class="panel tool" data-tool="device">
+        <div class="tool-h"><h3>Device check</h3><p>Open this page on the old tablet and on the iPhone. It lists what each browser supports and which Indian voices are installed, then suggests the role the device can play. Save each report to the Archive to compare them.</p></div>
+        <div id="dc-head" class="row"></div>
+        <div class="checks" id="dc-checks"></div>
+        <div><span class="eyebrow">Indian-language voices on this device</span><div class="voices" id="dc-voices" style="margin-top:8px"></div></div>
+        <div class="verdict" id="dc-verdict"></div>
+        <p class="muted" style="font-size:.84rem">Checked inside this Lab page, where camera, mic and Bluetooth prompts are blocked. It shows what the browser supports, not what you've granted.</p>
+        <div class="row"><button class="btn primary" type="button" id="dc-save">Save report to Archive</button><span class="muted" id="dc-msg" style="font-size:.86rem"></span></div>
+      </div>
+
+      <div class="panel tool" data-tool="router" hidden>
+        <div class="tool-h"><h3>Attention router sandbox</h3><p>Set the context and pick a message. The same rules Jeevo will run choose the surface and explain why. Change one thing and watch the answer move.</p></div>
+        <div class="fgrid">
+          <label class="f"><span>Where are you</span><select id="ar-where"><option value="home-desk">Home · at the desk</option><option value="home-room">Home · another room</option><option value="commute">Commuting</option><option value="office">Office</option><option value="out">Out</option></select></label>
+          <label class="f"><span>Focus</span><select id="ar-focus"><option value="none">None</option><option value="work">Work</option><option value="sleep">Sleep</option><option value="dnd">Do not disturb</option></select></label>
+          <label class="f"><span>Phone</span><select id="ar-phone"><option value="pocket">In pocket</option><option value="hand">In hand</option><option value="charging">Charging at home</option></select></label>
+          <label class="f"><span>Hour</span><input type="number" id="ar-hour" min="0" max="23" value="8"></label>
+          <label class="f"><span>Pings so far today</span><input type="number" id="ar-pings" min="0" max="20" value="2"></label>
+          <label class="f"><span>Guests present</span><select id="ar-guests"><option value="no">No</option><option value="yes">Yes</option></select></label>
+          <label class="f"><span>Message</span><select id="ar-kind"></select></label>
+        </div>
+        <div class="panel result" id="ar-out"></div>
+      </div>
+
+      <div class="panel tool" data-tool="budget" hidden>
+        <div class="tool-h"><h3>Crew budget</h3><p>Monthly cost of running the crew, per agent and model. Transcription on Workers AI is free for roughly the first 3.5 hours of speech a day. Gemini Flash's promo price ends 31 Dec 2026; flip the 2027 switch to see the difference.</p></div>
+        <div class="row" id="bg-presets"></div>
+        <div class="grid-2" style="align-items:start">
+          <div style="display:grid; gap:12px">
+            <div class="tbl budget-tbl"><table class="mid"><thead><tr><th>Agent</th><th>Model</th><th>Calls/day</th><th>In tok</th><th>Out tok</th><th>Batch</th></tr></thead><tbody id="bg-rows"></tbody></table></div>
+            <div class="fgrid">
+              <label class="f"><span>Speech heard / day (h)</span><input type="number" id="bg-hours" min="0" max="16" step="0.5"></label>
+              <label class="f"><span>Kannada / mixed (min/day)</span><input type="number" id="bg-kn" min="0" max="600" step="5"></label>
+              <label class="f"><span>Kannada engine</span><select id="bg-kne"><option value="gemini">Gemini audio</option><option value="sarvam">Sarvam (₹30/h)</option></select></label>
+              <label class="f"><span>₹ per US$</span><input type="number" id="bg-fx" min="50" max="150" step="0.5"></label>
+              <label class="f" style="align-content:end"><span>Prices</span><span class="row" style="gap:8px"><input type="checkbox" id="bg-27"> <span style="font-size:.9rem; color:var(--ink-2)">2027 Gemini prices</span></span></label>
+            </div>
+          </div>
+          <div class="panel result" id="bg-out"></div>
+        </div>
+      </div>
+
+      <div class="panel tool" data-tool="sync" hidden>
+        <div class="tool-h"><h3>Sync lab</h3><p>Two devices, one soul. Take either offline, change a fact on both, reconnect, and watch hybrid-logical-clock ordering merge the log. A fact changed on both sides while apart goes to review instead of silently overwriting.</p></div>
+        <div class="row"><button class="btn small" type="button" id="sy-scenario">Run the split-brain scenario</button><button class="btn small ghost" type="button" id="sy-reset">Reset</button></div>
+        <div class="sync-grid" id="sy-grid"></div>
+      </div>
+
+      <div class="panel tool" data-tool="ask" hidden>
+        <div class="tool-h"><h3>Ask Claude</h3><p>Claude gets the whole concept, the open tasks and the Archive index as context, and can search the Archive and the use-case library while it answers. It runs on your Claude account.</p></div>
+        <div id="ask-ui" class="form">
+          <div class="chips" id="ask-quick"></div>
+          <textarea id="ask-q" placeholder="Ask about the build, e.g. what should I do this weekend with 6 hours?"></textarea>
+          <div class="row"><button class="btn primary" type="button" id="ask-go">Ask</button><button class="btn" type="button" id="ask-stop" disabled>Stop</button><button class="btn ghost" type="button" id="ask-save" disabled>Save answer to Archive</button><span class="muted" id="ask-msg" style="font-size:.86rem"></span></div>
+          <div class="panel answer md" id="ask-out"><p class="muted">The answer appears here.</p></div>
+        </div>
+        <p class="notice" id="ask-off" hidden>Asking Claude works when this page is opened in Claude. Everything else in the Lab works anywhere.</p>
+      </div>
+
+      <div class="panel tool" data-tool="board" hidden>
+        <div class="tool-h"><h3>Build board</h3><p>The only to-do list for the project. It's stored in this page's database, so it's the same on the tablet, the iPhone and your laptop, and Claude can read and update it in later sessions.</p></div>
+        <form class="row" id="tk-form">
+          <input type="text" id="tk-title" placeholder="New task" style="flex:1 1 240px" aria-label="Task title">
+          <select id="tk-phase" style="width:auto" aria-label="Phase"></select>
+          <button class="btn primary" type="submit">Add task</button>
+        </form>
+        <div class="chips" id="tk-filter"></div>
+        <div class="board" id="tk-board"></div>
+        <p class="notice" id="tk-off" hidden>The board is stored in this page's database, which is available when the page is opened in Claude.</p>
+      </div>
+    </section>
+
+    <!-- ARCHIVE -->
+    <section class="view" id="v-archive" data-view="archive" hidden>
+      <div class="vhead">
+        <span class="eyebrow"><b>ARC</b> · Research + documents</span>
+        <h2>Archive</h2>
+        <p>Every research brief, decision, device report and Claude answer, dated and searchable. Claude files new research here in later sessions; you can add notes and links from any device.</p>
+      </div>
+      <div class="arch">
+        <div class="panel alist">
+          <input class="search" type="search" id="ar-q" placeholder="Search the archive" aria-label="Search the archive">
+          <div class="chips" id="ar-kinds"></div>
+          <div class="row"><button class="btn small primary" type="button" id="ar-new">New entry</button><button class="btn small" type="button" id="ar-export">Export as Markdown</button></div>
+          <div class="items" id="ar-items"></div>
+        </div>
+        <div class="panel reader" id="ar-reader"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div>Jeevo Lab · concept v2 (personal edition) · researched 26–27 Sep 2026 with Claude. Prices and platform details change often; each row links to its source. Not legal or financial advice.</div>
+    <details><summary style="cursor:pointer">Sources</summary><div class="srcs" id="srcs" style="margin-top:10px"></div></details>
+  </footer>
+</div>
+
+<script>
+/*__DATA__*/
+</script>
+<script>
+/*__APP__*/
+</script>
