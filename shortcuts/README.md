@@ -19,4 +19,18 @@ Every Shortcut ends in one **Get Contents of URL** action:
 | **Door tap / bed tap / pill tap** | NFC tags | `{"kind":"nfc","data":{"tag":"door"}}` etc. |
 | **How was today** | Automation: 10:30 pm, Ask for Input | `{"kind":"text","text":"today felt: <answer>","from":"iphone"}` |
 
+## Phase 1 additions: know every little thing
+
+| Shortcut | Trigger | JSON body |
+|---|---|---|
+| **Daily Sync** | Automation: every day at 10:00 pm | Find Health Samples (Steps today → Calculate Statistics → Sum; Sleep last night → Sum of duration in hours; Resting Heart Rate latest; Active Energy sum), Get Screen Time is not available to Shortcuts, so skip it. Then `{"kind":"sync","data":{"health":{"steps":<n>,"sleepHours":<h>,"restingHR":<bpm>,"activeKcal":<kcal>}},"from":"iphone"}`. The native app's "sync now" does the same. |
+| **Focus on / off** | Automation: when any Focus turns on / off (make one per Focus: Work, Sleep, Riding) | `{"kind":"focus","data":{"mode":"Work","on":true},"from":"iphone"}` / `…"on":false` → Jeevo holds non-urgent nudges and the keychain goes "focused" |
+| **Arrive / leave a place** | Automation: arrive at / leave Home, Office, Gym, Parents' | `{"kind":"location","data":{"place":"office","stage":"arrive","lat":<lat>,"lon":<lon>},"from":"iphone"}` (`"stage":"leave"` when leaving) |
+| **Expense** | Share sheet or "Hey Siri, log expense" | `{"kind":"expense","data":{"amount":<n>,"what":"<text>"},"from":"iphone"}` |
+| **Bank credit** | Automation: message contains "credited" | `{"kind":"sms","text":"credited ₹<amount>","from":"bank"}` |
+| **Bill due** | Automation: message contains "due" from a biller | `{"kind":"sms","text":"<biller> bill ₹<amount> due on <dd/mm>","from":"<biller>"}` |
+| **Remind me** | Siri or Action button | `{"kind":"voice","text":"remind me to <Dictated Text>","from":"iphone"}` (or use the native app's "Remind me with Jeevo") |
+
+The native app (`ios/`) adds Siri phrases, widgets and a one-tap Apple Health sync. The web app (Home Screen) adds push notifications.
+
 Tips: set each automation to **Run Immediately**; keep the token in a Text action at the top of each Shortcut; if Tailscale is off, the Shortcut simply fails quietly.

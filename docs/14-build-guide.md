@@ -80,8 +80,8 @@ jeevo start
 
 Get the keys from Google AI Studio (Gemini) and console.anthropic.com (Claude). Check that Google's current Flash model id matches `config.json → models.chat`.
 
-**A7. The face.**
-1. In Chrome, open `http://localhost:8047`.
+**A7. The app and the face.**
+1. In Chrome, open `http://localhost:8047/app/` (the full app; its Jeevo screen is the camera face).
 2. Open the ⋮ menu and choose **Add to Home screen**. It now opens full screen like an app.
 3. Tap **Eyes** (top right) and allow the camera.
 
@@ -125,8 +125,9 @@ If anything looks off, run `jeevo doctor`. It checks Node, packages, Termux:API,
 
    Open the link it prints on your iPhone and approve the tablet.
 3. Run `jeevo doctor`. It prints `tailscale: http://100.x.y.z:8047`. That is your hub from the office or the road.
-4. In `config.json`, set `"trustLocalhost": false` so every device must send `HUB_TOKEN`. With userspace Tailscale, remote requests look like they come from the tablet itself. Then open the face once as `http://localhost:8047/?token=YOUR_TOKEN`; it remembers the token.
-5. Build three Shortcuts from `shortcuts/README.md`:
+4. For the iPhone app with push, give the hub an https address: `tailscale --socket=$PREFIX/var/run/tailscaled.sock serve --bg 8047`, then open `https://<tablet-name>.<tailnet>.ts.net/app/?token=…` in Safari → Share → Add to Home Screen → Settings → Enable here.
+5. In `config.json`, set `"trustLocalhost": false` so every device must send `HUB_TOKEN`. With userspace Tailscale, remote requests look like they come from the tablet itself. Then open the app once as `http://localhost:8047/app/?token=YOUR_TOKEN`; it remembers the token.
+6. Build three Shortcuts from `shortcuts/README.md`:
    - **Ask Jeevo**: dictate, then POST `/input`.
    - **Ride start/end**: an automation for when the iPhone connects to or disconnects from the Ather's Bluetooth.
    - **Arrive office / home**: a location automation.
@@ -144,7 +145,7 @@ If anything looks off, run `jeevo doctor`. It checks Node, packages, Termux:API,
 | Calendar | Google Calendar → Settings → your calendar → **Secret address in iCal format** → `config.json → adapters.calendar.icsUrl`, and `enabled: true` |
 | Personal email | Gmail → App passwords → `secrets.json → EMAIL_APP_PASSWORD`; `adapters.email.user`, `enabled: true`; then `cd ~/growbot/hub && npm install imapflow` |
 | Bank SMS | iPhone Shortcut (OTPs are filtered on the phone and never sent) |
-| Ather | See `docs/13-life-os-v4.md`. It's unofficial and read-only; fill the endpoint when you confirm it. Ride mode works today through the Bluetooth Shortcut. |
+| Ather | App → **Ride** → your phone number → OTP. Jeevo then reads battery, range, tyres and location every 5 minutes (unofficial, read-only). Ride mode also comes from the Bluetooth Shortcut. |
 
 **Work data:** keep `workCompartment` off unless your employer's policy allows it.
 

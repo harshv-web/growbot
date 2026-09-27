@@ -1,12 +1,15 @@
 // One input, many ways → classify → answer simply (one line) with depth on tap.
 import { detectOrder, orders, habits } from "./orders.mjs";
+import { parseWhen, taskTitle } from "./memory.mjs";
+import { spendCat, merchant } from "./crew/util.mjs";
+import { readJSON } from "./router.mjs";
 
 const DAY = 24 * 3600e3;
 export const LOOK = /\b(what do you see|what can you see|look at|take a look|see this|read this)\b|dekho|kya dikh/i;
 const isToday = t => new Date(t).toDateString() === new Date().toDateString();
 
 export class Brain {
-  constructor(soul, router, cfg, profile, snap) { this.soul = soul; this.router = router; this.cfg = cfg; this.profile = profile || {}; this.snap = snap; }
+  constructor(soul, router, cfg, profile, snap, memory) { this.soul = soul; this.router = router; this.cfg = cfg; this.profile = profile || {}; this.snap = snap; this.memory = memory; this.crew = null; this.ctx = null; }
 
   // kinds: voice | text | photo | share | nfc | button | touch | notification | email | sms | telemetry
   async input(inp) {
@@ -16,6 +19,7 @@ export class Brain {
     if (inp.kind === "touch") { this.soul.sensation(inp.from || "keychain", inp.data?.long ? "cosy" : "tickled"); this.soul.feel("petted"); return { line: "Hehe.", deep: null }; }
     if (inp.kind === "shake") { this.soul.sensation(inp.from || "keychain", "dizzy"); this.soul.feel("played"); return { line: "Whoa, dizzy.", deep: null }; }
     if (inp.kind === "nfc") return this.nfc(inp.data?.tag);
+    if (["health", "focus", "location", "place", "screen", "sync", "expense", "phone"].includes(inp.kind)) return this.phone(inp);
     if (!text) return { line: "I'm here.", deep: null };
     if (inp.kind === "telemetry" || inp.kind === "sms") return this.telemetry(text, inp);
     const chore = Object.keys(this.profile.chores || {}).find(c => new RegExp("\\b(did|done|paid|finished|kar (diya|li))\\b.*" + c.split(" ")[0], "i").test(text) || new RegExp(c.split(" ")[0] + ".*\\b(done|paid|ho gaya)\\b", "i").test(text));
@@ -23,6 +27,8 @@ export class Brain {
     if (inp.kind !== "notification" && inp.kind !== "email" && LOOK.test(text)) return this.look(text, inp.data?.image || null);
     const o = detectOrder(text, inp.from);
     if (o && inp.kind !== "voice" && inp.kind !== "text") { this.soul.log({ kind: "order", order: o, source: inp.from }); if (/deliver|arriv|on the way|out for/i.test(o.stage)) this.soul.sensation("tablet", "excited"); return { line: `Noted: ${o.app} ${o.stage.replace(/_/g, " ")}.`, deep: null }; }
+    const cmd = await this.command(text, inp);
+    if (cmd) { this.soul.log({ kind: "answer", ref: ev.id, line: cmd.line, deep: cmd.deep, model: "rules" }); return cmd; }
     const intent = await this.classify(text);
     if (intent === "log") { this.soul.log({ kind: "note", text, ref: ev.id }); return { line: "Saved.", deep: null }; }
     const felt = this.soul.sense.tablet && this.soul.sense.tablet.until > Date.now() ? this.soul.sense.tablet.name : null;
@@ -55,7 +61,7 @@ export class Brain {
     const s = text.toLowerCase();
     if (/^(remember|note|log|save)\b/.test(s)) return "log";
     if (/\?|^(what|when|where|who|how|why|can|should|do i|did i|is|are|tell|show)\b|kya|kab|kaise/.test(s)) return "ask";
-    const r = await this.router.text("classify", "Classify the user's message to their personal AI. Reply with exactly one word: ask, log, do or ignore.", text);
+    const r = await this.router.text("fast", "Classify the user's message to their personal AI. Reply with exactly one word: ask, log, do or ignore.", text, { prio: "user", agent: "classify" });
     const w = (r?.text || "ask").trim().toLowerCase().split(/\W/)[0];
     return ["ask", "log", "do", "ignore"].includes(w) ? w : "ask";
   }
@@ -81,14 +87,74 @@ export class Brain {
   async answer(q) {
     const ctx = this.context();
     const p = this.profile;
-    const system = `You are ${this.cfg.name}, ${this.cfg.owner}'s personal AI creature in Bengaluru. Who he is: ${p.about || ""} His rhythm: ${(p.rhythm || []).join("; ")}. What he cares about: ${(p.cares || []).join(", ")}. What wears him down: ${(p.drains || []).join(", ")}. You know him like a close friend who lives with him: notice how he's doing, celebrate small wins, be honest and kind, never preachy. Speak English or Hindi, matching him. Style: calm, warm, very brief, like a 2047 car interface. Reply ONLY as JSON: {"line": "<one plain sentence, max 18 words>", "deep": "<optional markdown with the details, sources and options>"}. Use only the context given; if it isn't there, say so in the line. Never invent orders, messages or numbers.`;
-    const user = `CONTEXT:\n${JSON.stringify(ctx)}\n\nQUESTION: ${q}`;
-    const r = await this.router.text("chat", system, user);
+    const style = `You are ${this.cfg.name}, ${this.cfg.owner}'s personal AI creature in Bengaluru. Who he is: ${p.about || ""} His rhythm: ${(p.rhythm || []).join("; ")}. What he cares about: ${(p.cares || []).join(", ")}. What wears him down: ${(p.drains || []).join(", ")}. What you've learned about him: ${JSON.stringify(this.memory?.profile() || {}).slice(0, 3000)}. Who you are: ${(this.memory?.identity || []).join(" ")} You know him like a close friend who lives with him: notice how he's doing, celebrate small wins, be honest and kind, never preachy. Speak English or Hindi, matching him. Style: calm, warm, very brief, like a 2047 car interface.`;
+    const shape = `Reply ONLY as JSON: {"line": "<one plain sentence, max 18 words>", "deep": "<optional markdown with the details, sources and options>"}. Never invent orders, messages or numbers.`;
+    // Claude with tools: it looks things up (memory, tasks, scooter, orders, inbox) and can act (remember, add a task).
+    if (this.router.claude && this.ctx) {
+      try {
+        const r = await this.router.claudeAgent(style + " Use the tools to look up anything you need before answering, and to act when he asks (add tasks, remember facts). " + shape, q, { ...this.ctx, source: "you" }, { prio: "user", agent: "answer", maxTurns: 6 });
+        const j = readJSON(r?.text); if (j?.line) return { line: j.line, deep: j.deep || null, model: r.model };
+        if (r?.text) return { line: r.text.split("\n")[0].slice(0, 160), deep: r.text, model: r.model };
+      } catch (e) { /* fall back below */ }
+    }
+    const r = await this.router.text("chat", style + " " + shape + " Use only the context given; if it isn't there, say so in the line.", `CONTEXT:\n${JSON.stringify(ctx)}\n\nQUESTION: ${q}`, { prio: "user", agent: "answer" });
     if (r) {
-      try { const j = JSON.parse(r.text.replace(/^```(json)?|```$/g, "").trim()); return { line: j.line, deep: j.deep || null, model: r.model }; }
-      catch { return { line: r.text.split("\n")[0].slice(0, 160), deep: r.text, model: r.model }; }
+      const j = readJSON(r.text); if (j?.line) return { line: j.line, deep: j.deep || null, model: r.model };
+      return { line: r.text.split("\n")[0].slice(0, 160), deep: r.text, model: r.model };
     }
     return this.rules(q, ctx);
+  }
+
+  // Direct commands that never need a model: tasks, reminders, parking, plan, money, what it knows.
+  async command(text, inp) {
+    const s = text.toLowerCase(), m = this.memory; if (!m) return null;
+    if (/^(please\s+)?(remind me|add (a )?(task|todo)|todo[:\s]|task[:\s]|yaad dila|mujhe yaad)/i.test(text)) {
+      const due = parseWhen(text), t = m.addTask({ title: taskTitle(text), due, from: inp.from || "you" });
+      this.soul.log({ kind: "task", id: t.id, title: t.title, due: t.due });
+      return { line: due ? `Okay. ${t.title}, ${new Date(due).toLocaleString("en-IN", { weekday: "short", hour: "numeric", minute: "2-digit", timeZone: "Asia/Kolkata" })}.` : `Added: ${t.title}.`, deep: null };
+    }
+    if (/\b(my (tasks|todos?|list)|show (my )?(tasks|list)|what'?s on my list|kya karna hai|pending tasks)\b/.test(s)) {
+      const open = m.open(); if (!open.length) return { line: "Your list is clear.", deep: null };
+      return { line: `${open.length} open. First: ${open[0].title}.`, deep: open.map(t => `- ${t.title}${t.due ? " · " + new Date(t.due).toLocaleString("en-IN", { weekday: "short", hour: "numeric", minute: "2-digit", timeZone: "Asia/Kolkata" }) : ""}`).join("\n") };
+    }
+    const dm = text.match(/^(?:done|finished|completed|ho gaya)[:\s]+(?:with\s+)?(.{3,})$/i);
+    if (dm) {
+      const q = dm[1].toLowerCase(), t = m.open().find(x => x.title.toLowerCase().includes(q) || q.includes(x.title.toLowerCase()));
+      if (t) { m.doneTask(t.id); this.soul.feel("praised", 0.5); this.soul.log({ kind: "win", text: "Done: " + t.title }); return { line: `Done: ${t.title}. Nice.`, deep: null }; }
+    }
+    if (/where did i park|where'?s my scooter|scooter kaha|parking kaha/.test(s)) {
+      const pk = this.soul.status.parked; if (!pk) return { line: "I don't have a parking spot saved yet.", deep: null };
+      return { line: `Parked ${new Date(pk.t).toLocaleString("en-IN", { weekday: "short", hour: "numeric", minute: "2-digit" })}.`, deep: pk.lat ? `https://maps.google.com/?q=${pk.lat},${pk.lon}` : null };
+    }
+    if (/\b(plan my day|what'?s (my|the) plan|today'?s plan|aaj ka plan)\b/.test(s) && this.crew) {
+      await this.crew.run("planner", { kind: "manual" });
+      const pl = this.soul.status.plan; if (!pl) return null;
+      return { line: pl.headline, deep: pl.blocks.map(b => `${b.time}  ${b.title}`).join("\n") + (pl.headsUp?.length ? "\n\n" + pl.headsUp.join("\n") : "") };
+    }
+    if (/\b(how much (did i|have i) spen[dt]|my spend|spent (today|this month)|kharcha)\b/.test(s)) {
+      const mo = this.soul.status.money || {}, cats = this.soul.status.spendCats || {};
+      return { line: `₹${mo.today ?? 0} today, ₹${mo.month ?? 0} this month.`, deep: Object.entries(cats).map(([k, v]) => `- ${k}: ₹${v}`).join("\n") || null };
+    }
+    if (/what do you know about me|mere baare mein kya/.test(s)) {
+      const pr = m.profile(), n = m.facts.length;
+      return { line: `${n} things so far. Tap to see and edit them.`, deep: Object.entries(pr).map(([k, v]) => `**${k}**\n` + v.slice(0, 8).map(x => "- " + x).join("\n")).join("\n\n") || null };
+    }
+    return null;
+  }
+
+  // Structured input from the iPhone (Shortcuts): health, Focus, places, screen time, expenses.
+  phone(inp) {
+    const d = inp.data || {}, st = this.soul.status;
+    st.phoneSync = new Date().toISOString();
+    const out = [];
+    const health = inp.kind === "health" ? d : d.health;
+    if (health) { const h = Object.fromEntries(Object.entries(health).map(([k, v]) => [k, isNaN(+v) ? v : +(+v).toFixed(1)])); st.health = { ...st.health, ...h, t: st.phoneSync }; this.soul.log({ kind: "health", data: h }); out.push("health"); }
+    const screen = inp.kind === "screen" ? d : d.screen;
+    if (screen) { st.screen = { ...screen, t: st.phoneSync }; out.push("screen"); }
+    if (inp.kind === "focus" || d.focus) { const f = inp.kind === "focus" ? d : d.focus; this.soul.log({ kind: "focus", mode: f.mode || "Focus", on: f.on !== false && f.on !== "false" }); out.push("focus"); }
+    if (inp.kind === "location" || inp.kind === "place") { const leave = /leave|left|exit/i.test(d.stage || ""); const place = (d.place || inp.text || "somewhere").toLowerCase(); this.soul.log({ kind: "place", place: leave ? "left-" + place : place, lat: d.lat, lon: d.lon }); if (!leave) this.soul.feel("greeted", 0.3); out.push(place); }
+    if (inp.kind === "expense") { this.soul.log({ kind: "spend", amount: +d.amount || 0, text: d.what || inp.text || "", cat: spendCat(d.what || inp.text || ""), merchant: d.what || null }); out.push("expense"); }
+    return { line: "", deep: null, synced: out };
   }
 
   // Works with no model keys at all.
@@ -127,8 +193,23 @@ export class Brain {
     if (/arrived home/.test(s)) { this.soul.log({ kind: "place", place: "home" }); this.soul.feel("greeted"); const due = (this.soul.status.chores || []).filter(c => c.due).map(c => c.name).slice(0, 2); return { line: "Welcome home." + (due.length ? ` Pending: ${due.join(", ")}.` : ""), deep: null }; }
     if (/woke up/.test(s)) { this.soul.log({ kind: "wake" }); this.soul.feel("greeted"); return { line: "Morning. Chai first.", deep: null }; }
     if (/keys (arrived|left)/.test(s)) { this.soul.log({ kind: "presence", body: "keys", state: s.includes("arrived") ? "desk" : "away" }); return { line: "", deep: null }; }
+    if (/left home/.test(s)) { this.soul.log({ kind: "place", place: "left-home" }); return { line: "", deep: null }; }
     const amt = s.match(/(?:₹|rs\.?|inr)\s?([\d,]+(?:\.\d+)?)/);
-    if (/debited|spent|paid/.test(s) && amt) { this.soul.log({ kind: "spend", amount: +amt[1].replace(/,/g, ""), text }); const o = detectOrder(text, inp.from); if (o) this.soul.log({ kind: "order", order: o, source: "sms" }); return { line: `Logged ₹${amt[1]}.`, deep: null }; }
+    if (inp.kind === "sms") this.soul.status.phoneSync = new Date().toISOString();
+    if (/\b(otp|one time password|verification code)\b/.test(s) && !/debited|credited|spent|paid/.test(s)) return { line: "", deep: null };   // OTP messages are never stored
+    if (/debited|spent|paid|purchase|sent to/.test(s) && amt) {
+      const amount = +amt[1].replace(/,/g, ""), m = merchant(text);
+      this.soul.log({ kind: "spend", amount, text: text.replace(/\b\d{6,}\b/g, "…"), cat: spendCat(text), merchant: m });
+      const o = detectOrder(text, inp.from); if (o) this.soul.log({ kind: "order", order: o, source: "sms" });
+      return { line: `Logged ₹${amt[1]}${m ? " · " + m : ""}.`, deep: null };
+    }
+    if (/credited|received/.test(s) && amt) { this.soul.log({ kind: "credit", amount: +amt[1].replace(/,/g, ""), text: text.replace(/\b\d{6,}\b/g, "…") }); return { line: `₹${amt[1]} came in.`, deep: null }; }
+    const due = s.match(/\bdue (?:on|by)?\s*(\d{1,2})[\/\- ](\d{1,2}|[a-z]{3})/);
+    if (/\bbill\b|\bdue\b/.test(s) && due) {
+      const mon = isNaN(+due[2]) ? "janfebmaraprmayjunjulaugsepoctnovdec".indexOf(due[2]) / 3 : +due[2] - 1, d = new Date(new Date().getFullYear(), mon, +due[1], 10);
+      this.soul.log({ kind: "bill", name: (inp.from || "bill").slice(0, 30), due: d.toISOString(), amount: amt ? +amt[1].replace(/,/g, "") : null });
+      return { line: `Bill noted, due ${d.toLocaleDateString("en-IN", { day: "numeric", month: "short" })}.`, deep: null };
+    }
     this.soul.log({ kind: "telemetry", text, from: inp.from });
     return { line: "", deep: null };
   }

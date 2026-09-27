@@ -12,20 +12,72 @@
     "sleep late on weekdays, catch up on Sunday"
   ],
   "chores": {
-    "laundry": { "everyDays": 4 },
-    "groceries": { "everyDays": 3 },
-    "clean room": { "everyDays": 7 },
-    "water the plants": { "everyDays": 2 },
-    "rent": { "dayOfMonth": 1 },
-    "electricity bill (BESCOM)": { "dayOfMonth": 12 },
-    "phone recharge / postpaid": { "dayOfMonth": 20 },
-    "scooter tyre check": { "everyDays": 14 },
-    "scooter service": { "everyDays": 120 }
+    "laundry": {
+      "everyDays": 4
+    },
+    "groceries": {
+      "everyDays": 3
+    },
+    "clean room": {
+      "everyDays": 7
+    },
+    "water the plants": {
+      "everyDays": 2
+    },
+    "rent": {
+      "dayOfMonth": 1
+    },
+    "electricity bill (BESCOM)": {
+      "dayOfMonth": 12
+    },
+    "phone recharge / postpaid": {
+      "dayOfMonth": 20
+    },
+    "scooter tyre check": {
+      "everyDays": 14
+    },
+    "scooter service": {
+      "everyDays": 120
+    }
   },
-  "cares": ["making beautiful motion work", "shipping the side project", "family back home", "money lasting till payday", "not burning out"],
-  "drains": ["Bengaluru traffic and rain", "back-to-back meetings", "late nights", "skipped meals", "chores piling up", "being alone after long days"],
-  "wins": ["a render finished", "a reel posted", "a design approved", "the robot learned something", "a calm Sunday"],
+  "cares": [
+    "making beautiful motion work",
+    "shipping the side project",
+    "family back home",
+    "money lasting till payday",
+    "not burning out"
+  ],
+  "drains": [
+    "Bengaluru traffic and rain",
+    "back-to-back meetings",
+    "late nights",
+    "skipped meals",
+    "chores piling up",
+    "being alone after long days"
+  ],
+  "wins": [
+    "a render finished",
+    "a reel posted",
+    "a design approved",
+    "the robot learned something",
+    "a calm Sunday"
+  ],
   "payday": 1,
-  "quietHours": ["00:30", "07:30"],
-  "fill_me_in": ["Who you live with (alone, flatmates, family)?", "Home and office areas (for ride times)", "Foods you love and avoid", "People who matter most", "What a good day looks like"]
+  "quietHours": [
+    "00:30",
+    "07:30"
+  ],
+  "fill_me_in": [
+    "Who you live with (alone, flatmates, family)?",
+    "Home and office areas (for ride times)",
+    "Foods you love and avoid",
+    "People who matter most",
+    "What a good day looks like"
+  ],
+  "commuteKm": 12,
+  "leaveAt": "09:30",
+  "leaveOfficeAt": "19:00",
+  "wfhDays": [],
+  "chargeBelow": 35,
+  "monthlyBudget": 40000
 }

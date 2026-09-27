@@ -44,6 +44,9 @@ export const SENSATIONS = {
   proud:   ["Proud",   5,  { eyes: "happy",  mouth: 0.8 }]
 };
 
+// OTP-like codes near "OTP/code/PIN", and long card/account numbers, never reach the log.
+export const scrub = s => s.replace(/\b(otp|code|pin|password|passcode)\b([^0-9]{0,20})(\d{4,8})\b/gi, "$1$2[scrubbed]").replace(/\b\d{12,19}\b/g, "[scrubbed]");
+
 export class Soul {
   constructor(dataDir) {
     this.dir = dataDir; mkdirSync(dataDir, { recursive: true });
@@ -62,6 +65,7 @@ export class Soul {
     }
   }
   log(ev) {
+    if (typeof ev.text === "string") ev.text = scrub(ev.text);
     const e = Object.assign({ id: "ev_" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), t: new Date().toISOString() }, ev);
     appendFileSync(this.logFile, JSON.stringify(e) + "\n");
     this.recent.push(e); if (this.recent.length > 400) this.recent.shift();

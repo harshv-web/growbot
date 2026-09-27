@@ -21,17 +21,18 @@ This repo holds the concept, the research, and the Lab site. It's a personal pro
 | [11 · Prototypes](docs/11-prototypes.md) | Strider, Walker, Perch, Pixel keychain, Halo case, apps, Ather touchpoint |
 | [12 · Build and content plan](docs/12-build-and-content-plan.md) | Phases B0–B9 and the ten-episode content journey |
 | [13 · Life OS (v4)](docs/13-life-os-v4.md) | Ather as primary commute, the office, messages and email, one input many ways, orders and habits, more models, per-body emotions, what to build today |
+| [15 · Phase 1](docs/15-phase-1.md) | **The full system:** 65 agents in 9 departments, models + rate limits + budget, every data source, the app, the native iPhone app, your Claude connected (MCP), the keychain v2, privacy, what's tested, rollout |
 | [14 · Build guide](docs/14-build-guide.md) | **Start here.** Step by step for the kit on the desk: Fire 7 (austin, LineageOS 14.1), XIAO ESP32-S3, 1.3" OLED, iPhone, 3D printer |
 
 ## Start today
 
-Follow [docs/14-build-guide.md](docs/14-build-guide.md).
+Follow [docs/14-build-guide.md](docs/14-build-guide.md), then [docs/15-phase-1.md](docs/15-phase-1.md) § Rollout.
 
-- `hub/`: the local soul for the Fire 7 (Termux) or a laptop. `bash hub/scripts/fire7-setup.sh` on the tablet; `npm install && npm start` anywhere else, then open the face at `http://localhost:8047`. The face has 38 fluid moods, sees with the front camera and hears through the mic. `npm test` runs 17 end-to-end checks.
-- `firmware/keychain-oled/`: XIAO ESP32-S3 + 1.3" SH1106 OLED Jeevo Key with the same moods in 1-bit and its own feelings (tickled, cosy, dizzy). Runs in LED mode with no screen. `firmware/sim/render.sh` previews every mood on a laptop.
-- `hardware/`: OpenSCAD + STL for the Fire 7 stand, the Jeevo Key case and Pebble (a desk body).
-- `firmware/desk-node/`: ESP32 pet pad + "keys on the desk" presence.
-- `shortcuts/README.md`: iPhone Shortcut recipes (Ask Jeevo, Ather ride start/end, office, bank SMS, NFC taps).
+- `hub/`: the soul on the Fire 7. 65 agents, memory, tasks, the Ather, the Claude connector, and the Jeevo app at `/app/` (tablet + iPhone, installable, push). `bash hub/scripts/fire7-setup.sh` on the tablet; `npm test` runs 57 checks.
+- `ios/`: native iPhone app (Siri "Ask Jeevo", widgets, Apple Health). Build with XcodeGen on a Mac.
+- `firmware/keychain-oled/`: XIAO ESP32-S3 + 1.3" SH1106 OLED key: 38 moods, pages (next, scooter, today, clock), alerts, roaming Wi-Fi, OTA. `firmware/sim/render.sh` previews it on a laptop.
+- `shortcuts/`: iPhone automations (Daily Sync, Focus, places, bank SMS, ride Bluetooth).
+- `hardware/`: OpenSCAD + STL for the Fire 7 stand, the key case and Pebble.
 
 ## Prototypes
 

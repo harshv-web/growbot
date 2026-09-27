@@ -7,7 +7,7 @@ import { fileURLToPath } from "node:url";
 import WebSocket from "ws";
 const hub = join(dirname(fileURLToPath(import.meta.url)), "..");
 const PORT = 18047;
-const p = spawn("node", ["src/server.mjs"], { cwd: hub, env: { ...process.env, PORT, ANTHROPIC_API_KEY: "", GEMINI_API_KEY: "", HUB_TOKEN: "" }, stdio: ["ignore", "pipe", "pipe"] });
+const p = spawn("node", ["src/server.mjs"], { cwd: hub, env: { ...process.env, PORT, JEEVO_DATA: mkdtempSync(join(tmpdir(), "jeevo-")), ANTHROPIC_API_KEY: "", GEMINI_API_KEY: "", HUB_TOKEN: "" }, stdio: ["ignore", "pipe", "pipe"] });
 p.stderr.on("data", d => process.stderr.write(d));
 await new Promise(r => p.stdout.once("data", r));
 const post = async (body) => (await fetch(`http://127.0.0.1:${PORT}/input`, { method: "POST", body: JSON.stringify(body) })).json();
@@ -31,7 +31,7 @@ ws.send(JSON.stringify({ t: "sense", name: "dizzy" }));
 await new Promise(r => setTimeout(r, 300));
 const st = await (await fetch(`http://127.0.0.1:${PORT}/api/state`)).json();
 check("dizzy only on the keychain", st.bodies.keychain.label === "dizzy" && st.bodies.tablet.label !== "dizzy", st.bodies.keychain.label + " / " + st.bodies.tablet.label);
-const face = await fetch(`http://127.0.0.1:${PORT}/`); check("face served", face.ok && (await face.text()).includes("Jeevo's face"));
+const face = await fetch(`http://127.0.0.1:${PORT}/face/`); check("face served", face.ok && (await face.text()).includes("Jeevo's face"));
 // the face's eyes: room events, a picture relayed from the face, and hearing without a key
 const faceWs = new WebSocket(`ws://127.0.0.1:${PORT}/ws?body=tablet`);
 await new Promise(r => faceWs.on("open", r));

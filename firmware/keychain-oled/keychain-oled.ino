@@ -3,6 +3,8 @@
 // glances, blush, hearts, zzz, tears, sweat, notes and sparkles. The keychain also has feelings of its own:
 //   touch = tickled, hold = cosy, three quick taps = dizzy, B (BOOT) short = "on my way", B long = "come here".
 // No display plugged in? It still runs: the board's LED breathes with the mood instead.
+// Pages (press B): face → next up → scooter → day → clock. B twice = "on my way". Hold B = "come here" (soul moves in).
+// Alerts (reminders, "plug in tonight") take over the screen; touch to mark done. Dims when idle; updates over Wi-Fi (OTA).
 //
 // Libraries (Arduino Library Manager): Adafruit GFX, Adafruit SH110X (1.3" SH1106) or Adafruit SSD1306 (0.96"),
 //   WebSockets (Markus Sattler), ArduinoJson 7, NimBLE-Arduino.
@@ -10,6 +12,9 @@
 // Wiring for the XIAO (read the labels on YOUR OLED; pin order differs between sellers):
 //   OLED VCC/VDD → 3V3, GND → GND, SDA → D4, SCL/SCK → D5.   Touch: ~10 cm wire or foil on D3.
 #include <WiFi.h>
+#include <WiFiMulti.h>
+#include <ArduinoOTA.h>
+#include <time.h>
 #include <Wire.h>
 #include <Adafruit_GFX.h>
 #include <WebSocketsClient.h>
@@ -40,16 +45,23 @@
 #include <Adafruit_SH110X.h>
 Adafruit_SH1106G oled(128, OLED_H, &Wire, -1);
 #define OLED_BEGIN(a) oled.begin(a, true)
+#define OLED_DIM(d) oled.setContrast((d) ? 8 : 200)
 #else
 #include <Adafruit_SSD1306.h>
 Adafruit_SSD1306 oled(128, OLED_H, &Wire, -1);
 #define OLED_BEGIN(a) oled.begin(SSD1306_SWITCHCAPVCC, a)
+#define OLED_DIM(d) oled.dim(d)
 #endif
 #define W 1
 #define B 0
 
 WebSocketsClient ws;
-bool hasOled = false, online = false;
+WiFiMulti wifi;
+bool hasOled = false, online = false, otaOn = false;
+// what the hub tells the key about your day (see keyInfo() in hub/src/server.mjs)
+struct Info { String next = ""; int soc = -1, range = -1, needs = 0, tasks = 0; bool charging = false; String weather = ""; } info;
+String alertText = "", alertTask = "", noteText = ""; uint32_t alertUntil = 0, noteUntil = 0, lastInteract = 0;
+int page = 0; const int PAGES = 5; bool dimmed = false;
 
 // ---- moods: the same presets as hub/face/face.js, trimmed to what 1 bit can show ----
 enum Ov : uint8_t { O_NONE, O_HEART, O_SPIRAL, O_SQUEEZE, O_STAR, O_CLOSED };
@@ -192,6 +204,30 @@ void effects(int cx, int cy, uint32_t t, float dt) {
 }
 
 uint32_t nextBlink = 0, nextSacc = 0; float saccX = 0, saccY = 0;
+// ---- text pages ----
+void label(const char *s) { oled.setTextSize(1); oled.setTextColor(W); oled.setCursor(0, 0); oled.print(s); }
+void dots() { for (int i = 0; i < PAGES; i++) { if (i == page) oled.fillCircle(52 + i * 6, 61, 2, W); else oled.drawPixel(52 + i * 6, 61, W); } }
+void big(int y, const String &s, int size = 3) { oled.setTextSize(size); oled.setTextColor(W); int w = s.length() * 6 * size; oled.setCursor(max(0, (128 - w) / 2), y); oled.print(s.c_str()); }
+void small(int y, const String &s) { oled.setTextSize(1); oled.setTextColor(W); int w = s.length() * 6; oled.setCursor(max(0, (128 - w) / 2), y); oled.print(s.c_str()); }
+void drawPage() {
+  oled.clearDisplay();
+  if (page == 1) { label("NEXT"); if (info.next.length()) { big(14, info.next.substring(0, 5), 3); small(44, info.next.substring(6, 27)); } else big(22, "free", 2); }
+  if (page == 2) { label("SCOOTER"); if (info.soc >= 0) { big(12, String(info.soc) + "%", 3); small(42, (info.range >= 0 ? String(info.range) + " km" : String("")) + (info.charging ? "  charging" : "")); } else small(28, "not connected"); }
+  if (page == 3) { label("TODAY"); big(14, String(info.tasks), 2); small(32, "tasks open"); small(44, String(info.needs) + " need you  " + info.weather); }
+  if (page == 4) { struct tm tm; if (getLocalTime(&tm, 5)) { char b[8], d[16]; strftime(b, 8, "%H:%M", &tm); strftime(d, 16, "%a %d %b", &tm); big(14, b, 3); small(44, d); } else small(28, "no time yet"); }
+  dots(); if (!online) oled.fillRect(124, 60, 3, 3, W);
+  oled.display();
+}
+void drawAlert(uint32_t t) {
+  oled.clearDisplay();
+  bool on = (t / 400) % 2; if (on) oled.drawRect(0, 0, 128, OLED_H, W);
+  label("  JEEVO"); oled.setTextSize(1);
+  // wrap the message over up to 5 lines
+  String m = alertText; int y = 14;
+  while (m.length() && y < OLED_H - 8) { int n = min((int)m.length(), 20); if ((int)m.length() > 20) { int sp = m.lastIndexOf(' ', 20); if (sp > 8) n = sp; } oled.setCursor(4, y); oled.print(m.substring(0, n).c_str()); m = m.substring(n); m.trim(); y += 10; }
+  oled.display();
+}
+
 void draw() {
   static uint32_t last = millis(); uint32_t t = millis(); float dt = min(0.05f, (t - last) / 1000.0f); last = t;
   const Face *want = (t < senseUntil) ? findFace(localSense) : findFace(hubLabel);
@@ -210,6 +246,7 @@ void draw() {
   if (cur->blush) for (int s = -1; s <= 1; s += 2) for (int k = -1; k <= 1; k++) oled.drawLine(64 + s * 34 + k * 4 + 1, cy + 14, 64 + s * 34 + k * 4 - 1, cy + 18, W);   // ///
   if (OLED_H == 64) mouth(64 + gx / 2, 52 - (int)hop, t);
   effects(64, cy, t, dt);
+  if (millis() < noteUntil) { oled.fillRect(0, 56, 128, 8, B); small(56, noteText.substring(0, 21)); }
   if (!online) oled.fillRect(124, 60, 3, 3, W);        // tiny offline dot
   oled.display();
 }
@@ -239,8 +276,13 @@ void onWs(WStype_t type, uint8_t *payload, size_t len) {
   if (type == WStype_DISCONNECTED) online = false;
   if (type != WStype_TEXT) return;
   JsonDocument d; if (deserializeJson(d, payload, len)) return;
-  if (String((const char *)(d["t"] | "")) != "mood") return;
+  String tt = (const char *)(d["t"] | "");
+  if (tt == "alert") { alertText = (const char *)(d["text"] | ""); alertTask = (const char *)(d["taskId"] | ""); alertUntil = millis() + 90000; lastInteract = millis(); sense("surprised", 2000); return; }
+  if (tt == "note") { noteText = (const char *)(d["text"] | ""); noteUntil = millis() + 6000; return; }
+  if (tt != "mood") return;
   hubLabel = (const char *)(d["label"] | "content"); hubHue = d["hue"] | 150; hubTalk = d["talk"] | false;
+  JsonObject in = d["info"];
+  if (!in.isNull()) { info.next = (const char *)(in["next"] | ""); info.soc = in["soc"] | -1; info.range = in["range"] | -1; info.needs = in["needs"] | 0; info.tasks = in["tasks"] | 0; info.charging = in["charging"] | false; info.weather = (const char *)(in["weather"] | ""); }
 }
 
 uint16_t touchBase = 0; uint32_t touchStart = 0, lastTap = 0; int taps = 0; bool touching = false;
@@ -252,7 +294,16 @@ void setup() {
   if (hasOled) { oled.clearDisplay(); oled.display(); } else Serial.println("No OLED found: using the LED");
   touchBase = touchRead(TOUCH_PIN);
   target(&FACES[0]); sOpen.x = 1;
-  WiFi.mode(WIFI_STA); WiFi.begin(WIFI_SSID, WIFI_PASS);
+  WiFi.mode(WIFI_STA);
+  wifi.addAP(WIFI_SSID, WIFI_PASS);                      // home
+#ifdef WIFI2_SSID
+  wifi.addAP(WIFI2_SSID, WIFI2_PASS);                    // office
+#endif
+#ifdef WIFI3_SSID
+  wifi.addAP(WIFI3_SSID, WIFI3_PASS);                    // iPhone hotspot: the key works on the road
+#endif
+  wifi.run(8000);
+  configTzTime("IST-5:30", "pool.ntp.org", "time.google.com");
   String path = String("/ws?body=keychain&compact=1&token=") + HUB_TOKEN;
   ws.begin(HUB_HOST, HUB_PORT, path); ws.onEvent(onWs); ws.setReconnectInterval(3000);
   NimBLEDevice::init("JeevoKey");                                     // presence beacon for a desk node later
@@ -260,21 +311,40 @@ void setup() {
 }
 
 void loop() {
+  static uint32_t lastWifi = 0; uint32_t now = millis();
+  if (now - lastWifi > 5000) { lastWifi = now; if (wifi.run(3000) == WL_CONNECTED && !otaOn) { ArduinoOTA.setHostname("jeevo-key");
+#ifdef OTA_PASS
+      ArduinoOTA.setPassword(OTA_PASS);
+#endif
+      ArduinoOTA.begin(); otaOn = true; Serial.print("Wi-Fi ok, IP "); Serial.println(WiFi.localIP()); } }
+  if (otaOn) ArduinoOTA.handle();
   ws.loop();
-  uint32_t now = millis();
   bool t = touchRead(TOUCH_PIN) > touchBase * 1.4;                   // S3 touch values rise when touched
-  if (t && !touching) { touching = true; touchStart = now; sSy.v -= 3; }   // squish on contact
+  if (t && !touching) { touching = true; touchStart = now; sSy.v -= 3; lastInteract = now; }   // squish on contact
   if (!t && touching) {
     touching = false; uint32_t held = now - touchStart;
+    if (now < alertUntil) {                                            // touch = got it / done
+      if (alertTask.length()) { JsonDocument a; a["t"] = "ack"; a["taskId"] = alertTask; String s2; serializeJson(a, s2); ws.sendTXT(s2); }
+      alertUntil = 0; sense("proud", 2000); return;
+    }
     if (held > 900) sense("cosy", 8000);
     else { taps = (now - lastTap < 450) ? taps + 1 : 1; lastTap = now; if (taps >= 3) { sense("dizzy", 5000); taps = 0; } else sense("tickled", 2500); }
   }
-  static uint32_t bootAt = 0; static bool bootDown = false;          // BOOT: short = on my way, long = come here
-  if (!digitalRead(BOOT_PIN) && !bootDown) { bootDown = true; bootAt = now; }
+  // B (BOOT): one press = next page, two quick presses = "on my way", hold = "come here"
+  static uint32_t bootAt = 0, lastPress = 0; static bool bootDown = false; static int presses = 0;
+  if (!digitalRead(BOOT_PIN) && !bootDown) { bootDown = true; bootAt = now; lastInteract = now; }
   if (digitalRead(BOOT_PIN) && bootDown) {
     bootDown = false;
-    if (now - bootAt > 800) { sendJson("lease", nullptr, nullptr); sense("excited", 2500); }
-    else { JsonDocument d; d["t"] = "input"; d["kind"] = "button"; d["text"] = "on my way"; String s; serializeJson(d, s); ws.sendTXT(s); sense("wink", 2000); }
+    if (now - bootAt > 800) { sendJson("lease", nullptr, nullptr); sense("excited", 2500); presses = 0; }
+    else { presses++; lastPress = now; }
   }
-  static uint32_t lastDraw = 0; if (now - lastDraw > 33) { lastDraw = now; if (hasOled) draw(); else led(); }
+  if (presses && now - lastPress > 350) {
+    if (presses >= 2) { JsonDocument d; d["t"] = "input"; d["kind"] = "button"; d["text"] = "on my way"; String s; serializeJson(d, s); ws.sendTXT(s); sense("wink", 2000); }
+    else page = (page + 1) % PAGES;
+    presses = 0;
+  }
+  if (page && now - lastInteract > 20000) page = 0;                   // pages fall back to the face
+  bool idle = now - lastInteract > 45000 && now > alertUntil;
+  if (hasOled && idle != dimmed) { dimmed = idle; OLED_DIM(idle); }
+  static uint32_t lastDraw = 0; if (now - lastDraw > 33) { lastDraw = now; if (!hasOled) led(); else if (now < alertUntil) drawAlert(now); else if (page) drawPage(); else draw(); }
 }

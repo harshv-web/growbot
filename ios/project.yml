@@ -1,0 +1,35 @@
+# XcodeGen spec: `brew install xcodegen && xcodegen` makes Jeevo.xcodeproj. Then open it, pick your Apple ID team
+# (Signing & Capabilities), plug in the iPhone and Run. A free Apple ID works (apps re-sign every 7 days).
+name: Jeevo
+options:
+  bundleIdPrefix: com.harsh.jeevo
+  deploymentTarget: { iOS: "17.0" }
+targets:
+  Jeevo:
+    type: application
+    platform: iOS
+    sources: [Jeevo]
+    info:
+      path: Jeevo/Info.plist
+      properties:
+        CFBundleDisplayName: Jeevo
+        UILaunchScreen: {}
+        UIApplicationSceneManifest: { UIApplicationSupportsMultipleScenes: false }
+        NSHealthShareUsageDescription: "Jeevo reads steps, sleep, heart rate and workouts to look after you. It stays on your own hub."
+        NSMicrophoneUsageDescription: "Talk to Jeevo."
+        NSSpeechRecognitionUsageDescription: "Turn what you say into text for Jeevo."
+        NSLocationWhenInUseUsageDescription: "Tell Jeevo when you arrive at home or the office."
+        NSAppTransportSecurity: { NSAllowsArbitraryLoads: true }   # your hub is on your own Wi-Fi / tailnet
+    entitlements:
+      path: Jeevo/Jeevo.entitlements
+      properties: { com.apple.developer.healthkit: true }
+    dependencies: [{ target: JeevoWidget }]
+  JeevoWidget:
+    type: app-extension
+    platform: iOS
+    sources: [JeevoWidget, Jeevo/Hub.swift]
+    info:
+      path: JeevoWidget/Info.plist
+      properties:
+        CFBundleDisplayName: Jeevo
+        NSExtension: { NSExtensionPointIdentifier: com.apple.widgetkit-extension }

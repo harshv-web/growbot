@@ -13,7 +13,7 @@ bash ~/growbot/hub/scripts/fire7-setup.sh      # packages, install, 17 self-test
 jeevo edit profile && jeevo edit secrets && jeevo start
 ```
 
-Open `http://localhost:8047` in Chrome 119 (the last Chrome for Android 7) and add it to the home screen. `jeevo doctor` checks everything and says what to fix; `jeevo log`, `jeevo update`, `jeevo stop` do what they say.
+Open `http://localhost:8047/app/` in Chrome 119 (the last Chrome for Android 7) and add it to the home screen. The whole system is described in `docs/15-phase-1.md`. `jeevo doctor` checks everything and says what to fix; `jeevo log`, `jeevo update`, `jeevo stop` do what they say.
 
 With no model keys it still works on rules (orders, chores, scooter, calendar, feelings). Keys make it smarter:
 - `GEMINI_API_KEY`: live chat, and **hearing** on the Fire 7 (it has no Google speech service, so the face records you and Gemini transcribes).
@@ -39,7 +39,7 @@ Install **Tailscale** on the iPhone, and run it inside Termux on the Fire 7 (the
 | Notifications (WhatsApp, Gmail, Zepto, Swiggy, Blinkit, Ather…) | on by default on Termux | Link WhatsApp to the Fire 7 as a companion device; install the shopping apps there and log in |
 | Calendar | `config.json → adapters.calendar.icsUrl` | Google Calendar → Settings → your calendar → "Secret address in iCal format" |
 | Personal email | `adapters.email` + `EMAIL_APP_PASSWORD` | Gmail: 2-step verification → App passwords; `npm install imapflow` |
-| Ather | `adapters.ather` + `ATHER_TOKEN` | Unofficial and read-only. Fill `baseUrl`, `statusPath` and field paths once confirmed (see docs/13). Can break without notice. |
+| Ather | App → Ride → phone number → OTP | Unofficial and read-only: the Ather app's own endpoints (`cerberus.ather.io`), telemetry every 5 min. Token kept in `data/ather.json`. Can break if Ather changes its app. |
 | Who you are | `profile.json` | Your rhythm, chores, what drains you, what counts as a win. Fill the `fill_me_in` answers. |
 
 **Work data:** keep `workCompartment` off unless your employer's policy allows company mail or chat on a personal AI.
@@ -54,4 +54,4 @@ Install **Tailscale** on the iPhone, and run it inside Termux on the Fire 7 (the
 
 ## Test
 
-`npm test` starts the hub on a spare port and runs 17 checks: orders, notes, chores, feelings, NFC, per-body sensations, the face, room events from the camera, a look relayed from the face, and hearing without a key.
+`npm test` runs 57 checks: `test/smoke.mjs` starts the hub and runs 17: orders, notes, chores, feelings, NFC, per-body sensations, the face, room events from the camera, a look relayed from the face, and hearing without a key; `test/phase1.mjs` runs 40 more on the crew, memory, reminders, the limiter, the Claude tool loop, the Ather flow and the connector.

@@ -1,22 +1,121 @@
 {
   "name": "Jeevo",
   "owner": "Harsh",
-  "languages": ["en-IN", "hi-IN"],
+  "languages": [
+    "en-IN",
+    "hi-IN"
+  ],
   "port": 8047,
+  "timezone": "Asia/Kolkata",
   "trustLocalhost": true,
-  "places": { "home": { "wifi": "home-2g" }, "office": { "wifi": "office-wifi" } },
+  "places": {
+    "home": {
+      "wifi": "home-2g"
+    },
+    "office": {
+      "wifi": "office-wifi"
+    }
+  },
   "models": {
     "chat": "gemini-3.8-flash",
     "classify": "claude-haiku-4-5",
     "agent": "claude-sonnet-5",
-    "deep": "claude-opus-5"
+    "deep": "claude-opus-5",
+    "audio": "gemini-3.8-flash",
+    "note": "chat/audio = Gemini Flash (check Google's current model id); classify = fast jobs; agent = tools and planning; deep = dreams and weekly review"
   },
   "adapters": {
-    "ather": { "enabled": false, "everyMin": 10, "baseUrl": "", "statusPath": "", "fields": { "soc": "battery.soc", "rangeKm": "battery.range", "charging": "battery.charging", "tyreFront": "tpms.front", "tyreRear": "tpms.rear", "lat": "location.lat", "lon": "location.lon", "odoKm": "odometer" } },
-    "notifications": { "enabled": true, "everySec": 60 },
-    "calendar": { "enabled": false, "icsUrl": "", "everyMin": 15 },
-    "email": { "enabled": false, "host": "imap.gmail.com", "user": "", "everyMin": 10 }
+    "ather": {
+      "enabled": true,
+      "everyMin": 5,
+      "baseUrl": "https://cerberus.ather.io",
+      "scooterId": "",
+      "note": "Log in from the app: Ride screen → phone → OTP. Unofficial, read-only."
+    },
+    "notifications": {
+      "enabled": true,
+      "everySec": 60
+    },
+    "calendar": {
+      "enabled": false,
+      "icsUrl": "",
+      "everyMin": 15
+    },
+    "email": {
+      "enabled": false,
+      "host": "imap.gmail.com",
+      "user": "",
+      "everyMin": 10
+    }
   },
-  "camera": { "faceEyes": true, "hubSnap": true, "cameraId": 1, "note": "Face: presence, light and gaze are computed in the browser; frames never leave the tablet. A picture is sent to a model only when you ask what it sees." },
-  "workCompartment": { "enabled": false, "note": "Connect work sources only if your employer's policy allows it." }
+  "camera": {
+    "faceEyes": true,
+    "hubSnap": true,
+    "cameraId": 1,
+    "note": "Face: presence, light and gaze are computed in the browser; frames never leave the tablet. A picture is sent to a model only when you ask what it sees."
+  },
+  "workCompartment": {
+    "enabled": false,
+    "note": "Connect work sources only if your employer's policy allows it."
+  },
+  "limits": {
+    "dailyBudgetUSD": 1.5,
+    "backgroundShare": 0.6,
+    "agentCallsPerDay": 24,
+    "agentCaps": {
+      "librarian": 40,
+      "reply-drafter": 15,
+      "answer": 200,
+      "inbox-sort": 120
+    },
+    "models": {
+      "claude-opus-5": {
+        "rpm": 4,
+        "rpd": 30,
+        "in": 5,
+        "out": 25
+      },
+      "claude-sonnet-5": {
+        "rpm": 15,
+        "rpd": 300,
+        "in": 2,
+        "out": 10
+      },
+      "claude-haiku-4-5": {
+        "rpm": 30,
+        "rpd": 1200,
+        "in": 1,
+        "out": 5
+      },
+      "*gemini*": {
+        "rpm": 10,
+        "rpd": 800,
+        "in": 0.3,
+        "out": 2.5
+      }
+    },
+    "note": "$ per million tokens in/out; rpm/rpd are your own caps (keep them under your API tier and Gemini's free-tier limits)"
+  },
+  "crew": {
+    "concurrency": 2,
+    "off": []
+  },
+  "nudges": {
+    "maxPerDay": 10,
+    "maxImportantPerDay": 30
+  },
+  "privacy": {
+    "retentionDays": 365
+  },
+  "backup": {
+    "dir": ""
+  },
+  "weather": {
+    "enabled": true,
+    "lat": 12.97,
+    "lon": 77.59
+  },
+  "push": {
+    "contact": "mailto:you@example.com"
+  }
 }

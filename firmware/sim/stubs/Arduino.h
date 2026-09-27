@@ -6,6 +6,8 @@
 #include <string>
 #include <algorithm>
 #include <cstdlib>
+#include <ctime>
+#include <cstring>
 using std::min; using std::max;           // ESP32 core 3.x: same-type templates, like here
 #define PI 3.14159265358979
 #define constrain(a, l, h) ((a) < (l) ? (l) : ((a) > (h) ? (h) : (a)))
@@ -37,6 +39,11 @@ class String : public std::string {
   String operator+(const char *o) const { return String(std::string(*this) + o); }
   String operator+(const String &o) const { return String(std::string(*this) + std::string(o)); }
   int toInt() const { return atoi(c_str()); }
+  String substring(size_t a, size_t b = std::string::npos) const { if (a >= size()) return String(); return String(std::string::substr(a, b == std::string::npos ? std::string::npos : (b > a ? b - a : 0))); }
+  int lastIndexOf(char c, int from) const { size_t r = std::string::rfind(c, from); return r == std::string::npos ? -1 : (int)r; }
+  int indexOf(char c) const { size_t r = std::string::find(c); return r == std::string::npos ? -1 : (int)r; }
+  void trim() { size_t a = find_first_not_of(" \t\n"); size_t b = find_last_not_of(" \t\n"); if (a == std::string::npos) { clear(); return; } *this = String(std::string::substr(a, b - a + 1)); }
+  unsigned int length() const { return (unsigned int)size(); }
   size_t write(uint8_t c) { push_back((char)c); return 1; }
   size_t write(const uint8_t *b, size_t n) { append((const char *)b, n); return n; }
 };

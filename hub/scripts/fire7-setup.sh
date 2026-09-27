@@ -36,7 +36,7 @@ if command -v tailscaled >/dev/null; then
 fi
 sh ~/growbot/hub/scripts/run.sh >> ~/jeevo.log 2>&1 &
 sleep 20
-am start -a android.intent.action.VIEW -d http://localhost:8047/ -p com.android.chrome >/dev/null 2>&1
+am start -a android.intent.action.VIEW -d "http://localhost:8047/app/#jeevo" -p com.android.chrome >/dev/null 2>&1
 BOOT
 chmod +x ~/.termux/boot/jeevo.sh
 
@@ -63,5 +63,6 @@ echo "  1. Open Termux:Boot once (so Android lets it run at boot)."
 echo "  2. Settings → Apps → Termux:API → Permissions: Camera, Microphone. And Settings → Sound & notification → Notification access → Termux:API."
 echo "  3. jeevo edit profile    (fill in the fill_me_in answers)"
 echo "  4. jeevo edit secrets    (GEMINI_API_KEY lets it hear you; ANTHROPIC_API_KEY lets it see and think)"
-echo "  5. jeevo start, then open http://localhost:8047 in Chrome and add it to the home screen."
-echo "  6. tailscale --socket=\$PREFIX/var/run/tailscaled.sock up   (after a reboot, to reach it from the iPhone)"
+echo "  5. jeevo start, then open http://localhost:8047/app/ in Chrome and add it to the home screen."
+echo "  6. After a reboot, once: tailscale --socket=\$PREFIX/var/run/tailscaled.sock up"
+echo "     then:                  tailscale --socket=\$PREFIX/var/run/tailscaled.sock serve --bg 8047   (https for the iPhone app + push)"
