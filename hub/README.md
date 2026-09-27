@@ -4,25 +4,33 @@ The local soul. It runs on your rooted Fire 7 (Termux) or any laptop. It holds t
 
 ## Run it on the Fire 7 (today)
 
-1. Install **Termux**, **Termux:API** and **Termux:Boot** from F-Droid. In Android settings, give Termux:API **notification access** (this is how Jeevo reads WhatsApp, Gmail, Zepto, Swiggy and Ather notifications).
-2. In Termux:
-   ```sh
-   pkg update && pkg install nodejs-lts git termux-api
-   git clone -b claude/relaxed-volta-mek7ih https://github.com/harshv-web/growbot && cd growbot/hub
-   npm install
-   cp config.example.json config.json && cp profile.example.json profile.json && cp secrets.example.json secrets.json
-   npm start
-   ```
-3. Open `http://localhost:8047` on the Fire 7 in full screen (Chrome, a kiosk browser, or "Add to Home screen"). That's the face.
-4. Optional: `prototypes/fire7/setup.sh` makes it start at boot, disables Doze and sets up the 40–80% battery window.
+The full walk-through is `docs/14-build-guide.md`. Short version, in Termux (from F-Droid):
 
-With no model keys it still works on rules (orders, chores, scooter, calendar, feelings). Add keys to `secrets.json` to make it think:
-- `GEMINI_API_KEY` for live chat, `ANTHROPIC_API_KEY` for classification, agent work and deep reflection.
-- Model ids are in `config.json` → `models` (defaults: Gemini Flash for chat, Claude Haiku 4.5 to classify, Claude Sonnet 5 for tools, Claude Opus 5 for deep thinking). Check Google's model list for the exact Gemini id.
+```sh
+pkg install -y git
+git clone -b claude/relaxed-volta-mek7ih https://github.com/harshv-web/growbot ~/growbot
+bash ~/growbot/hub/scripts/fire7-setup.sh      # packages, install, 17 self-tests, start at boot, the `jeevo` command
+jeevo edit profile && jeevo edit secrets && jeevo start
+```
+
+Open `http://localhost:8047` in Chrome 119 (the last Chrome for Android 7) and add it to the home screen. `jeevo doctor` checks everything and says what to fix; `jeevo log`, `jeevo update`, `jeevo stop` do what they say.
+
+With no model keys it still works on rules (orders, chores, scooter, calendar, feelings). Keys make it smarter:
+- `GEMINI_API_KEY`: live chat, and **hearing** on the Fire 7 (it has no Google speech service, so the face records you and Gemini transcribes).
+- `ANTHROPIC_API_KEY`: classification, agent work, deep reflection and **sight** (Look).
+- Model ids are in `config.json` → `models`. Check Google's model list for the exact Gemini id.
+
+## The face
+
+`face/face.js` is a spring-physics face with 38 moods (`?demo` walks through them, `?clean` hides the UI for filming). Moods come from the soul's emotion engine plus short sensations the hub sets from what happens: you say "haha" → laughing, "cute" → shy, a scolding → sulky (twice → crying), an order out for delivery → excited, a win → proud. Touch: poke = squish + tickle, three taps = laughing, hold = cosy, drag = the eyes follow your finger.
+
+**Eyes (front camera).** Presence, light and gaze run inside the browser on a 32×24 grey thumbnail; only words ("arrived", "wave", "dark") reach the hub. A picture leaves the tablet only when you ask it to look ("what do you see?", or **Look**), and only the description is kept. From the iPhone, a look borrows a frame from the open face, or falls back to `termux-camera-photo`. Turn parts off in `config.json → camera`.
+
+**Body truth.** It reads the Fire 7's own battery (`termux-battery-status`), feels hungry when low, and tells you if it's getting warm on the charger.
 
 ## Reach it from the iPhone, anywhere
 
-Install **Tailscale** on the Fire 7 and the iPhone (free for personal use). The hub is then at `http://<fire7-tailscale-name>:8047` from the office or on the road. Set `HUB_TOKEN` in `secrets.json` and send it as `Authorization: Bearer …` from Shortcuts. Recipes are in `../shortcuts/README.md`.
+Install **Tailscale** on the iPhone, and run it inside Termux on the Fire 7 (the app needs Android 8+; `fire7-setup.sh` installs it and starts it at boot, see the build guide part C). The hub is then at `http://<fire7-tailscale-name>:8047` from the office or on the road. Set `HUB_TOKEN` in `secrets.json` and send it as `Authorization: Bearer …` from Shortcuts. Recipes are in `../shortcuts/README.md`.
 
 ## Connect your life
 
@@ -41,8 +49,9 @@ Install **Tailscale** on the Fire 7 and the iPhone (free for personal use). The 
 - `POST /input` `{kind, text?, data?, from}`: kinds `voice`, `text`, `photo`, `share`, `nfc`, `button`, `touch`, `shake`, `notification`, `email`, `sms`, `telemetry`. Returns `{line, deep}`: one plain sentence, plus details only if there are any.
 - `GET /api/state`: mood, each body's expression, scooter, calendar, chores.
 - `GET /api/log?h=24`: recent events.
-- `WS /ws?body=tablet|keychain|desk[&compact=1]`: live state; send `{t:"input"}`, `{t:"sense", name:"dizzy"}`, `{t:"lease"}`.
+- `WS /ws?body=tablet|keychain|desk[&compact=1]`: live state; send `{t:"input"}`, `{t:"sense", name:"dizzy"}`, `{t:"lease"}`, `{t:"look", image, q}`, `{t:"hear", audio, mime}`, `{t:"room", what}`, `{t:"eyes", on}`.
+- Every `/api/*` read and `/input` needs `HUB_TOKEN` (header `Authorization: Bearer …` or `?token=`), except from the tablet itself. Set `"trustLocalhost": false` when Tailscale runs in userspace mode.
 
 ## Test
 
-`npm test` starts the hub on a spare port and checks orders, notes, chores, feelings, NFC, per-body sensations and the face.
+`npm test` starts the hub on a spare port and runs 17 checks: orders, notes, chores, feelings, NFC, per-body sensations, the face, room events from the camera, a look relayed from the face, and hearing without a key.

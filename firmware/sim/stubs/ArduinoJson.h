@@ -1,0 +1,7 @@
+#pragma once
+#include "Arduino.h"
+#define ARDUINOJSON_ENABLE_ARDUINO_STRING 0
+#define ARDUINOJSON_ENABLE_PROGMEM 0
+#define ARDUINOJSON_ENABLE_ARDUINO_STREAM 0
+#define ARDUINOJSON_ENABLE_ARDUINO_PRINT 0
+#include "ArduinoJson-v7.h"

@@ -30,6 +30,9 @@
   .pill{font:500 13px var(--f);padding:10px 18px;border-radius:999px;border:0;cursor:pointer;background:rgba(244,244,244,.12);color:var(--ink)}
   .pill.primary{background:var(--blue);color:#fff}
   .pill.listening{background:#fff;color:#000}
+  .eyes{font:inherit;letter-spacing:inherit;text-transform:inherit;color:var(--dim);background:none;border:0;padding:0 18px 0 0;cursor:pointer}
+  .eyes .dot.on{background:#3e6ae1}
+  .clean .top,.clean .ask,.clean .line,.clean .specs{display:none}
   form{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 190px);width:min(560px,90vw);display:none}
   form.open{display:flex;gap:8px}
   form input{flex:1;font:400 16px var(--f);padding:12px 16px;border-radius:999px;border:1px solid var(--line);background:rgba(23,26,32,.9);color:var(--ink);outline:none}
@@ -37,66 +40,33 @@
 </head>
 <body>
 <canvas id="face" aria-label="Jeevo's face"></canvas>
-<div class="top"><span><span class="dot" id="conn"></span><b>Jeevo</b> · <span id="mood">Content</span></span><span id="clock">--:--</span></div>
-<div class="ask"><button class="pill" id="typeBtn" type="button">Type</button><button class="pill primary" id="talkBtn" type="button">Talk</button></div>
+<div class="top"><span><span class="dot" id="conn"></span><b>Jeevo</b> · <span id="mood">Content</span></span><span><button class="eyes" id="eyesBtn" type="button" title="Camera: presence, light and gaze stay on this tablet"><span class="dot" id="eyesDot"></span>Eyes</button><span id="clock">--:--</span></span></div>
+<div class="ask"><button class="pill" id="lookBtn" type="button">Look</button><button class="pill" id="typeBtn" type="button">Type</button><button class="pill primary" id="talkBtn" type="button">Talk</button></div>
 <form id="form"><input id="q" placeholder="Ask anything, or tell me something to remember" autocomplete="off"><button class="pill primary" type="submit">Send</button></form>
 <div class="line" id="line" role="status">Hi Harsh.<small>Tap for more</small></div>
 <div class="specs" id="specs"></div>
 <div class="deep" id="deep" role="dialog" aria-label="Details"></div>
+<script src="face.js"></script>
 <script>
 (() => {
   const $ = s => document.querySelector(s);
   const qs = new URLSearchParams(location.search), token = qs.get("token") || localStorage.getItem("jeevo-token") || "";
   if (qs.get("token")) localStorage.setItem("jeevo-token", token);
   let state = null, ws, deepText = null, lang = localStorage.getItem("jeevo-lang") || "en-IN", speak = localStorage.getItem("jeevo-speak") !== "0";
-  const ex0 = { eyes: "normal", eyeOpen: .8, mouth: .3, hue: 42, text: "Content", blinkEvery: 4, tempo: 1, bounce: .2, glow: false };
 
-  // ---------- face renderer: 14 eye styles ----------
-  const c = $("#face"), ctx = c.getContext("2d");
-  function fit() { const r = Math.min(devicePixelRatio || 1, 2); c.width = innerWidth * r; c.height = innerHeight * r; }
-  addEventListener("resize", fit); fit();
-  let lookX = 0, lookY = 0, talkUntil = 0;
-  function eye(x, y, w, h, style, side, t, ex) {
-    const col = "#fff"; ctx.fillStyle = col; ctx.strokeStyle = col; ctx.lineCap = "round"; ctx.lineWidth = w * .16;
-    const rr = (x, y, w, h, r) => { ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x, y, w, h, r) : ctx.rect(x, y, w, h); ctx.fill(); };
-    switch (style) {
-      case "happy": ctx.beginPath(); ctx.arc(x, y + h * .15, w * .45, Math.PI * 1.1, Math.PI * 1.9); ctx.stroke(); return;
-      case "squint": ctx.beginPath(); ctx.moveTo(x - w * .45, y - h * .1 * side); ctx.lineTo(x + w * .45, y); ctx.lineTo(x - w * .45, y + h * .12 * side); ctx.stroke(); return;
-      case "heart": { const s = w * .5; ctx.beginPath(); ctx.moveTo(x, y + s * .9); ctx.bezierCurveTo(x - s * 1.4, y - s * .1, x - s * .6, y - s * 1.1, x, y - s * .35); ctx.bezierCurveTo(x + s * .6, y - s * 1.1, x + s * 1.4, y - s * .1, x, y + s * .9); ctx.fillStyle = "#ff4d6d"; ctx.fill(); return; }
-      case "spiral": { ctx.lineWidth = w * .07; ctx.beginPath(); for (let a = 0; a < 18; a += .2) { const r = a * w * .028, ang = a + t / 180; ctx.lineTo(x + Math.cos(ang) * r, y + Math.sin(ang) * r); } ctx.stroke(); return; }
-      case "tired": rr(x - w / 2, y, w, h * .18, h * .09); return;
-      case "sad": rr(x - w / 2, y - h * .25, w, h * .6, w * .3); ctx.fillStyle = "#000"; ctx.beginPath(); ctx.moveTo(x - w * .6, y - h * .55); ctx.lineTo(x + w * .6, y - h * .55 + (side > 0 ? h * .35 : -h * .1) * side); ctx.lineTo(x + w * .6, y - h * .6); ctx.fill(); return;
-      case "angry": rr(x - w / 2, y - h * .3, w, h * .7, w * .3); ctx.fillStyle = "#000"; ctx.beginPath(); ctx.moveTo(x - w * .6, y - h * .5 + (side > 0 ? h * .35 : 0)); ctx.lineTo(x + w * .6, y - h * .5 + (side > 0 ? 0 : h * .35)); ctx.lineTo(x + w * .6, y - h); ctx.lineTo(x - w * .6, y - h); ctx.fill(); return;
-      case "narrow": rr(x - w / 2, y - h * .12, w, h * .3, h * .15); return;
-      case "soft": rr(x - w / 2, y - h * .15, w, h * .4, h * .2); return;
-      case "up": rr(x - w / 2 + w * .12, y - h / 2 - h * .1, w * .76, h * .9, w * .3); return;
-      case "wide": rr(x - w * .55, y - h * .6, w * 1.1, h * 1.2, w * .5); return;
-      default: rr(x - w / 2, y - h / 2, w, h, w * .35);
-    }
-  }
-  function frame(t) {
-    const ex = (state && state.bodies && state.bodies.tablet) || ex0, W = c.width, H = c.height, s = Math.min(W, H);
-    ctx.fillStyle = "#000"; ctx.fillRect(0, 0, W, H);
-    if (ex.glow) { const g = ctx.createRadialGradient(W / 2, H * .42, s * .05, W / 2, H * .42, s * .6); g.addColorStop(0, `hsla(${ex.hue},90%,60%,.16)`); g.addColorStop(1, "transparent"); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H); }
-    const period = (ex.blinkEvery || 4) * 1000, ph = (t % period) / 150, blink = ph < 1 && ex.eyes === "normal" ? Math.sin(ph * Math.PI) : 0;
-    lookX += (Math.sin(t / 2600) * .4 - lookX) * .02; lookY += (Math.cos(t / 3900) * .2 - lookY) * .02;
-    const bob = Math.sin(t / 1000 * Math.PI * (ex.tempo || 1)) * s * .006 * (.4 + (ex.bounce || 0));
-    const w = s * .16, h = s * .24 * Math.max(.06, (ex.eyeOpen || .8) * (1 - blink)), gap = s * .15, cy = H * .4 + bob;
-    [-1, 1].forEach(side => eye(W / 2 + side * (gap + w / 2) + lookX * w * .25, cy + lookY * h * .2, w, h, ex.eyes || "normal", side, t, ex));
-    // mouth
-    ctx.strokeStyle = "#fff"; ctx.lineWidth = s * .012; ctx.lineCap = "round";
-    const my = H * .4 + s * .2 + bob, mw = s * .07, talking = ex.talk || t < talkUntil;
-    if (ex.o) { ctx.beginPath(); ctx.arc(W / 2, my, s * .025, 0, 7); ctx.stroke(); }
-    else if (talking) { const o = (Math.sin(t / 70) + 1) * s * .018; ctx.beginPath(); ctx.ellipse(W / 2, my, mw * .6, o + 2, 0, 0, 7); ctx.stroke(); }
-    else { const cc = (ex.mouth || 0) * s * .04; ctx.beginPath(); ctx.moveTo(W / 2 - mw, my - cc * .3); ctx.quadraticCurveTo(W / 2, my + cc, W / 2 + mw, my - cc * .3); ctx.stroke(); }
-    requestAnimationFrame(frame);
-  }
-  requestAnimationFrame(frame);
+  // ---------- face: fluid springs, ~38 moods (face.js) ----------
+  const c = $("#face"), face = JeevoFace.create(c); window.jeevoFace = face;
+  let talkUntil = 0;
+  const EYES = { video: null, prev: null, present: false, since: 0, lastMotion: 0, gazeUntil: 0, gx: 0, gy: 0, big: 0, waved: 0, dark: false, darkSince: 0 };
+  const demo = qs.has("demo"); let demoI = 0;
+  if (qs.has("clean")) document.body.classList.add("clean");      // just the face, for filming (?clean&demo)
+  const showLabel = () => { $("#mood").textContent = face.label; };
+  setInterval(showLabel, 400);
 
   // ---------- UI ----------
   const setLine = (line, deep) => { $("#line").innerHTML = ""; $("#line").append(line); if (deep) { const sm = document.createElement("small"); sm.textContent = "Tap for more"; $("#line").append(sm); } deepText = deep || null; };
   function sayAloud(line) {
-    talkUntil = performance.now() + Math.min(8000, 400 + line.length * 55);
+    face.talk(Math.min(8000, 400 + line.length * 55));
     if (!speak || !("speechSynthesis" in window)) return;
     const u = new SpeechSynthesisUtterance(line); u.lang = /[ऀ-ॿ]/.test(line) ? "hi-IN" : lang; u.rate = 1.02; speechSynthesis.cancel(); speechSynthesis.speak(u);
   }
@@ -107,38 +77,139 @@
     const items = [[sc?.soc != null ? sc.soc + "%" : "—", sc?.rangeKm != null ? `Scooter · ${sc.rangeKm} km` : "Scooter"], [cal ? cal.time : "—", cal ? cal.summary.slice(0, 18) : "Next event"], [String(chores.length), "Chores due"]];
     $("#specs").innerHTML = ""; items.forEach(([b, s]) => { const d = document.createElement("div"); d.className = "spec"; const bb = document.createElement("b"); bb.textContent = b; const ss = document.createElement("span"); ss.textContent = s; d.append(bb, ss); $("#specs").append(d); });
   }
-  setInterval(() => { $("#clock").textContent = new Date().toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" }); }, 5000);
+  const clock = () => { $("#clock").textContent = new Date().toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" }); };
+  clock(); setInterval(clock, 5000);
 
   function connect() {
     ws = new WebSocket((location.protocol === "https:" ? "wss://" : "ws://") + location.host + "/ws?body=tablet" + (token ? "&token=" + encodeURIComponent(token) : ""));
-    ws.onopen = () => $("#conn").classList.add("on");
+    ws.onopen = () => { $("#conn").classList.add("on"); if (EYES.video) wsSend({ t: "eyes", on: true }); };
     ws.onclose = () => { $("#conn").classList.remove("on"); setTimeout(connect, 2000); };
     ws.onmessage = e => {
       const m = JSON.parse(e.data);
-      if (m.t === "state") { state = m; $("#mood").textContent = m.bodies.tablet.text; specs(); }
-      if (m.t === "reply" || m.t === "nudge") { setLine(m.line, m.deep); sayAloud(m.line); }
+      if (m.t === "state") { state = m; if (!demo) face.set(m.bodies.tablet.label); specs(); }
+      if ((m.t === "reply" || m.t === "nudge") && m.line) { setLine(m.line, m.deep); sayAloud(m.line); }
+      if (m.t === "heard") setLine("“" + m.text + "”");
+      if (m.t === "snap") grab().then(image => wsSend({ t: "frame", id: m.id, image })).catch(() => wsSend({ t: "frame", id: m.id, image: null }));
     };
   }
   connect();
-  function send(text, kind = "text") { if (ws && ws.readyState === 1) ws.send(JSON.stringify({ t: "input", kind, text })); setLine("…"); }
+  const wsSend = o => { if (ws && ws.readyState === 1) ws.send(JSON.stringify(o)); };
+  const LOOK = /\b(what do you see|what can you see|look at|take a look|see this|read this)\b|dekho|kya dikh/i;
+  function send(text, kind = "text") {
+    setLine("…");
+    if (LOOK.test(text)) return look(text);
+    wsSend({ t: "input", kind, text });
+  }
   $("#typeBtn").onclick = () => { $("#form").classList.toggle("open"); $("#q").focus(); };
   $("#form").onsubmit = e => { e.preventDefault(); const v = $("#q").value.trim(); if (v) send(v); $("#q").value = ""; $("#form").classList.remove("open"); };
   // voice: browser speech recognition where present (Android WebView/Chrome); long-press Talk toggles Hindi
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   let pressT;
   $("#talkBtn").onpointerdown = () => { pressT = setTimeout(() => { lang = lang === "en-IN" ? "hi-IN" : "en-IN"; localStorage.setItem("jeevo-lang", lang); setLine(lang === "hi-IN" ? "Hindi mode." : "English mode."); pressT = null; }, 700); };
+  let ear = localStorage.getItem("jeevo-ear") || (SR ? "sr" : "rec"), rec = null;
+  const talkUI = on => { $("#talkBtn").classList.toggle("listening", on); $("#talkBtn").textContent = on ? (ear === "rec" ? "Done" : "Listening") : "Talk"; };
   $("#talkBtn").onpointerup = () => {
     if (!pressT) return; clearTimeout(pressT);
-    if (!SR) { $("#form").classList.add("open"); $("#q").focus(); return; }
-    const r = new SR(); r.lang = lang; r.interimResults = false;
-    $("#talkBtn").classList.add("listening"); $("#talkBtn").textContent = "Listening";
-    if (ws && ws.readyState === 1) ws.send(JSON.stringify({ t: "sense", name: "listening" }));
-    r.onresult = e => send(e.results[0][0].transcript, "voice");
-    r.onend = () => { $("#talkBtn").classList.remove("listening"); $("#talkBtn").textContent = "Talk"; };
-    r.start();
+    if (rec) return rec.stop();
+    wsSend({ t: "sense", name: "listening" });
+    if (ear === "sr" && SR) {
+      const r = new SR(); r.lang = lang; r.interimResults = false; let failed = false;
+      talkUI(true);
+      r.onresult = e => send(e.results[0][0].transcript, "voice");
+      r.onerror = e => { if (/network|service-not-allowed|language-not-supported/.test(e.error)) { failed = true; ear = "rec"; localStorage.setItem("jeevo-ear", "rec"); } };
+      r.onend = () => { talkUI(false); if (failed) record(); };
+      r.start();
+    } else record();
   };
-  // touch the face = pet it
-  c.addEventListener("click", () => { if (ws && ws.readyState === 1) ws.send(JSON.stringify({ t: "input", kind: "touch", data: {} })); });
+  async function record() {
+    if (!window.MediaRecorder) { $("#form").classList.add("open"); $("#q").focus(); return; }
+    let st; try { st = await navigator.mediaDevices.getUserMedia({ audio: true }); } catch (e) { setLine("I can't use the mic.", "Allow microphone access for this page. (" + e.name + ")"); return; }
+    const mime = ["audio/webm;codecs=opus", "audio/webm", "audio/ogg;codecs=opus"].find(m => MediaRecorder.isTypeSupported(m)) || "";
+    rec = new MediaRecorder(st, mime ? { mimeType: mime } : {}); const chunks = [];
+    rec.ondataavailable = e => chunks.push(e.data);
+    rec.onstop = () => {
+      st.getTracks().forEach(t => t.stop()); talkUI(false);
+      const blob = new Blob(chunks, { type: rec.mimeType || "audio/webm" }); rec = null;
+      const fr = new FileReader(); fr.onload = () => { setLine("…"); wsSend({ t: "hear", audio: String(fr.result).split(",")[1], mime: blob.type }); }; fr.readAsDataURL(blob);
+    };
+    rec.start(); talkUI(true); setLine("Listening. Tap Done when you finish.");
+    setTimeout(() => rec && rec.state === "recording" && rec.stop(), 12000);
+  }
+
+  // ---------- eyes: the front camera, processed here on the tablet ----------
+  // Every 250 ms a 32×24 grey thumbnail: movement → someone's here (and where, so the eyes follow),
+  // brightness → lights off at night means dozing, a big wave → hi. Only words go to the hub, never frames.
+  // A real picture leaves the tablet only when you ask "what do you see?" (Look).
+  async function eyesOn() {
+    if (EYES.video) return true;
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user", width: { ideal: 640 }, height: { ideal: 480 } }, audio: false });
+      const v = document.createElement("video"); v.muted = true; v.setAttribute("playsinline", ""); v.srcObject = stream; await v.play();
+      EYES.video = v; EYES.stream = stream; EYES.small = document.createElement("canvas"); EYES.small.width = 32; EYES.small.height = 24;
+      EYES.timer = setInterval(watch, 250); $("#eyesDot").classList.add("on"); localStorage.setItem("jeevo-eyes", "1"); wsSend({ t: "eyes", on: true });
+      return true;
+    } catch (e) { setLine("I can't open my eyes here.", "The camera needs this page on http://localhost (or https) in Chrome 119, with camera permission. (" + e.name + ")"); return false; }
+  }
+  function eyesOff() {
+    clearInterval(EYES.timer); EYES.stream && EYES.stream.getTracks().forEach(t => t.stop());
+    EYES.video = null; EYES.prev = null; $("#eyesDot").classList.remove("on"); localStorage.setItem("jeevo-eyes", "0"); wsSend({ t: "eyes", on: false });
+  }
+  $("#eyesBtn").onclick = () => EYES.video ? (eyesOff(), setLine("Eyes closed.")) : eyesOn().then(ok => ok && setLine("I can see you."));
+  const room = what => wsSend({ t: "room", what });
+  function watch() {
+    const v = EYES.video; if (!v || v.readyState < 2) return;
+    const g = EYES.small.getContext("2d"); g.drawImage(v, 0, 0, 32, 24);
+    const d = g.getImageData(0, 0, 32, 24).data, n = 768, cur = new Uint8Array(n), now = Date.now();
+    let sum = 0; for (let i = 0; i < n; i++) { cur[i] = (d[i * 4] * 77 + d[i * 4 + 1] * 150 + d[i * 4 + 2] * 29) >> 8; sum += cur[i]; }
+    const bright = sum / n;
+    if (EYES.prev) {
+      let moved = 0, mx = 0, my = 0;
+      for (let i = 0; i < n; i++) if (Math.abs(cur[i] - EYES.prev[i]) > 24) { moved++; mx += i % 32; my += (i / 32) | 0; }
+      const frac = moved / n;
+      if (frac > 0.02 && frac < 0.6) {                       // > 0.6 is the lights changing, not a person
+        if (!EYES.present) { EYES.present = true; EYES.since = now; room("arrived"); }
+        EYES.lastMotion = now;
+        EYES.gx = -((mx / moved) / 31 * 2 - 1); EYES.gy = (my / moved) / 23 * 2 - 1; EYES.gazeUntil = now + 1500; face.gaze(EYES.gx * 1.2, EYES.gy * .8, 1500);   // front camera is mirrored
+        EYES.big = frac > 0.18 ? EYES.big + 1 : 0;
+        if (EYES.big >= 3 && now - EYES.since > 5000 && now - EYES.waved > 60e3) { EYES.waved = now; EYES.big = 0; room("wave"); }
+      } else EYES.big = 0;
+      if (EYES.present && now - EYES.lastMotion > 30 * 60e3) { EYES.present = false; room("left"); }
+    }
+    if (bright < 18) { EYES.darkSince = EYES.darkSince || now; if (!EYES.dark && now - EYES.darkSince > 60e3) { EYES.dark = true; room("dark"); } }
+    else { EYES.darkSince = 0; if (EYES.dark && bright > 30) { EYES.dark = false; room("light"); } }
+    EYES.prev = cur;
+  }
+  async function grab() {
+    if (!(await eyesOn())) throw new Error("no camera");
+    const v = EYES.video, k = Math.min(1, 640 / (v.videoWidth || 640)), cv = document.createElement("canvas");
+    cv.width = (v.videoWidth || 640) * k; cv.height = (v.videoHeight || 480) * k; cv.getContext("2d").drawImage(v, 0, 0, cv.width, cv.height);
+    return cv.toDataURL("image/jpeg", 0.75).split(",")[1];
+  }
+  async function look(q) {
+    wsSend({ t: "sense", name: "looking" }); setLine("Looking…");
+    try { wsSend({ t: "look", q: q || "What do you see?", image: await grab() }); } catch { setLine("I can't see right now.", null); }
+  }
+  $("#lookBtn").onclick = () => look();
+  if (localStorage.getItem("jeevo-eyes") !== "0") eyesOn();
+  // touch: poke = squish + tickle, three quick taps = laughing, hold = cosy, drag = eyes follow your finger
+  let downAt = 0, taps = [], holdT = null;
+  const rel = e => { const r = c.getBoundingClientRect(); return { x: ((e.clientX - r.left) / r.width * 2 - 1) * 1.6, y: ((e.clientY - r.top) / r.height * 2 - 1) * 1.4 }; };
+  c.addEventListener("pointerdown", e => {
+    downAt = performance.now(); face.poke(); const p = rel(e); face.gaze(p.x, p.y, 1500);
+    holdT = setTimeout(() => { face.react("cosy", 4000); wsSend({ t: "input", kind: "touch", data: { long: true } }); holdT = null; }, 800);
+  });
+  c.addEventListener("pointermove", e => { if (e.buttons || e.pointerType === "touch") { const p = rel(e); face.gaze(p.x, p.y, 1200); } });
+  c.addEventListener("pointerup", () => {
+    if (!holdT) return; clearTimeout(holdT); holdT = null;
+    const now = performance.now(); taps = taps.filter(t => now - t < 1200); taps.push(now);
+    if (taps.length >= 3) { taps = []; face.react("laughing", 2600); wsSend({ t: "sense", name: "laughing" }); }
+    else { face.react("tickled", 1400); wsSend({ t: "input", kind: "touch", data: {} }); }
+  });
+  // tap the mood name to walk through every emotion (demo mode for filming: ?demo)
+  const names = Object.keys(face.presets);
+  const nextMood = () => { demoI = (demoI + 1) % names.length; face.react(names[demoI], 3400); };
+  $("#mood").style.cursor = "pointer"; $("#mood").onclick = nextMood;
+  if (demo) setInterval(nextMood, 3500);
   specs();
 })();
 </script>

@@ -24,10 +24,34 @@ export class Router {
     if (res.stop_reason === "refusal") throw new Error("refused");
     return res.content.filter(b => b.type === "text").map(b => b.text).join("");
   }
-  async geminiText(model, system, user) {
+  geminiText(model, system, user) { return this.geminiParts(model, system, [{ text: user }]); }
+  // Sight: one JPEG + a question. Claude first (agent model), then Gemini. null when no keys.
+  async vision(system, question, jpegB64) {
+    if (this.claude) {
+      try {
+        const res = await this.claude.messages.create({ model: this.cfg.agent, max_tokens: 800, system, messages: [{ role: "user", content: [
+          { type: "image", source: { type: "base64", media_type: "image/jpeg", data: jpegB64 } }, { type: "text", text: question }] }] });
+        this.spend.calls++;
+        return { text: res.content.filter(b => b.type === "text").map(b => b.text).join(""), model: this.cfg.agent };
+      } catch (e) { /* fall through */ }
+    }
+    if (this.gemini) {
+      try { return { text: await this.geminiParts(this.cfg.chat, system, [{ inline_data: { mime_type: "image/jpeg", data: jpegB64 } }, { text: question }]), model: this.cfg.chat }; } catch (e) { /* none */ }
+    }
+    return null;
+  }
+  // Hearing: speech → text for devices with no Google speech service (the Fire 7). Gemini takes audio inline.
+  async transcribe(audioB64, mime) {
+    if (!this.gemini) return null;
+    try {
+      const t = await this.geminiParts(this.cfg.chat, "Transcribe the speech exactly. It is English, Hindi or a mix; write Hindi in Devanagari. Reply with only the transcript, or nothing if there is no speech.", [{ inline_data: { mime_type: mime.split(";")[0], data: audioB64 } }]);
+      return t.trim();
+    } catch { return null; }
+  }
+  async geminiParts(model, system, parts) {
     const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${this.gemini}`, {
       method: "POST", headers: { "content-type": "application/json" },
-      body: JSON.stringify({ systemInstruction: { parts: [{ text: system }] }, contents: [{ role: "user", parts: [{ text: user }] }] })
+      body: JSON.stringify({ systemInstruction: { parts: [{ text: system }] }, contents: [{ role: "user", parts }] })
     });
     if (!r.ok) throw new Error("gemini " + r.status);
     const j = await r.json(); this.spend.calls++;

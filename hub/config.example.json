@@ -3,6 +3,7 @@
   "owner": "Harsh",
   "languages": ["en-IN", "hi-IN"],
   "port": 8047,
+  "trustLocalhost": true,
   "places": { "home": { "wifi": "home-2g" }, "office": { "wifi": "office-wifi" } },
   "models": {
     "chat": "gemini-3.8-flash",
@@ -16,5 +17,6 @@
     "calendar": { "enabled": false, "icsUrl": "", "everyMin": 15 },
     "email": { "enabled": false, "host": "imap.gmail.com", "user": "", "everyMin": 10 }
   },
+  "camera": { "faceEyes": true, "hubSnap": true, "cameraId": 1, "note": "Face: presence, light and gaze are computed in the browser; frames never leave the tablet. A picture is sent to a model only when you ask what it sees." },
   "workCompartment": { "enabled": false, "note": "Connect work sources only if your employer's policy allows it." }
 }

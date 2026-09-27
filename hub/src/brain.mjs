@@ -2,10 +2,11 @@
 import { detectOrder, orders, habits } from "./orders.mjs";
 
 const DAY = 24 * 3600e3;
+export const LOOK = /\b(what do you see|what can you see|look at|take a look|see this|read this)\b|dekho|kya dikh/i;
 const isToday = t => new Date(t).toDateString() === new Date().toDateString();
 
 export class Brain {
-  constructor(soul, router, cfg, profile) { this.soul = soul; this.router = router; this.cfg = cfg; this.profile = profile || {}; }
+  constructor(soul, router, cfg, profile, snap) { this.soul = soul; this.router = router; this.cfg = cfg; this.profile = profile || {}; this.snap = snap; }
 
   // kinds: voice | text | photo | share | nfc | button | touch | notification | email | sms | telemetry
   async input(inp) {
@@ -19,21 +20,35 @@ export class Brain {
     if (inp.kind === "telemetry" || inp.kind === "sms") return this.telemetry(text, inp);
     const chore = Object.keys(this.profile.chores || {}).find(c => new RegExp("\\b(did|done|paid|finished|kar (diya|li))\\b.*" + c.split(" ")[0], "i").test(text) || new RegExp(c.split(" ")[0] + ".*\\b(done|paid|ho gaya)\\b", "i").test(text));
     if (chore) { this.soul.log({ kind: "chore", name: chore }); this.soul.feel("praised", 0.5); return { line: `${chore[0].toUpperCase() + chore.slice(1)}: done. Nice.`, deep: null }; }
+    if (inp.kind !== "notification" && inp.kind !== "email" && LOOK.test(text)) return this.look(text, inp.data?.image || null);
     const o = detectOrder(text, inp.from);
-    if (o && inp.kind !== "voice" && inp.kind !== "text") { this.soul.log({ kind: "order", order: o, source: inp.from }); return { line: `Noted: ${o.app} ${o.stage.replace(/_/g, " ")}.`, deep: null }; }
+    if (o && inp.kind !== "voice" && inp.kind !== "text") { this.soul.log({ kind: "order", order: o, source: inp.from }); if (/deliver|arriv|on the way|out for/i.test(o.stage)) this.soul.sensation("tablet", "excited"); return { line: `Noted: ${o.app} ${o.stage.replace(/_/g, " ")}.`, deep: null }; }
     const intent = await this.classify(text);
     if (intent === "log") { this.soul.log({ kind: "note", text, ref: ev.id }); return { line: "Saved.", deep: null }; }
-    this.soul.sensation("tablet", "thinking");
+    const felt = this.soul.sense.tablet && this.soul.sense.tablet.until > Date.now() ? this.soul.sense.tablet.name : null;
+    if (!felt) this.soul.sensation("tablet", "thinking");
     const ans = await this.answer(text);
-    this.soul.sensation("tablet", "talking");
+    if (this.soul.sense.tablet?.name === "thinking") this.soul.sensation("tablet", "talking");
     this.soul.log({ kind: "answer", ref: ev.id, line: ans.line, deep: ans.deep, model: ans.model || "rules" });
     return ans;
   }
 
+  // Words → a quick feeling on the tablet face (and the closest one on the keychain).
   appraise(t) {
-    const s = t.toLowerCase();
+    const s = t.toLowerCase(), face = n => { this.soul.sensation("tablet", n); this.soul.sensation("keychain", n); };
     if (/\b(hi|hello|hey|good morning|namaste)\b/.test(s)) this.soul.feel("greeted");
-    if (/\b(thanks|thank you|good job|love you|well done|shabash)\b/.test(s)) { this.soul.feel("praised"); this.soul.sensation("tablet", "love"); }
+    if (/\b(love you|good job|well done|shabash)\b/.test(s)) { this.soul.feel("praised"); face("love"); }
+    else if (/\b(thanks|thank you|thx|shukriya|dhanyavaad)\b/.test(s)) { this.soul.feel("praised", .6); face("grateful"); }
+    if (/\b(haha+|lol|lmao|hehe)\b|😂|🤣/.test(s)) { this.soul.feel("played", .5); face("laughing"); }
+    if (/\b(cute|pyaar[ai]|adorable|so sweet)\b/.test(s)) { this.soul.feel("praised", .5); face("shy"); }
+    if (/\b(wow|amazing|awesome|insane|kya baat)\b/.test(s)) face("amazed");
+    if (/\b(bye|see you|chalta hoon|nikalta hoon)\b/.test(s)) face("wink");
+    if (/\b(let'?s go|chalo|focus mode|let'?s do this)\b/.test(s)) face("determined");
+    if (/\b(shut up|stupid|useless|bakwas|dumb)\b/.test(s)) {
+      const scolded = this.soul.since(120e3).some(e => e.kind === "scolded");
+      this.soul.log({ kind: "scolded" }); this.soul.feel("ignored"); face(scolded ? "crying" : "sulky");
+    }
+    if (/\b(sorry|maaf)\b/.test(s)) { this.soul.feel("petted", .5); face("relieved"); }
   }
 
   async classify(text) {
@@ -80,7 +95,7 @@ export class Brain {
   rules(q, ctx) {
     const s = q.toLowerCase();
     if (/tired|thak|stressed|sad|lonely|bura|bored|burnt|burned/.test(s)) { this.soul.log({ kind: "feeling", who: "owner", text: q }); this.soul.sensation("tablet", "love"); return { line: "I'm here. Want me to hold everything else till tomorrow?", deep: "I've noted how you feel. Tonight I'll keep nudges quiet unless something is urgent." }; }
-    if (/shipped|done|finished|posted|got it|nailed/.test(s)) { this.soul.feel("praised"); this.soul.log({ kind: "win", text: q }); return { line: "Yesss. That's a win. Logged it.", deep: null }; }
+    if (/shipped|done|finished|posted|got it|nailed/.test(s)) { this.soul.feel("praised"); this.soul.sensation("tablet", "proud"); this.soul.log({ kind: "win", text: q }); return { line: "Yesss. That's a win. Logged it.", deep: null }; }
     if (/order|zepto|swiggy|instamart|blinkit|mangaya/.test(s)) {
       if (!ctx.todayOrders.length) return { line: "No orders seen today.", deep: ctx.habits.lines.length ? "Last 30 days:\n- " + ctx.habits.lines.join("\n- ") : null };
       return { line: "Today: " + ctx.todayOrders.map(o => `${o.app}${o.amount ? " ₹" + o.amount : ""}`).join(", ") + ".", deep: ctx.todayOrders.map(o => `- ${o.app} · ${o.stage}${o.items ? " · " + o.items : ""} (from ${o.sources.join(", ")})`).join("\n") };
@@ -99,6 +114,7 @@ export class Brain {
       return ctx.needsYou.length ? { line: `${ctx.needsYou.length} messages need you.`, deep: ctx.needsYou.map(m => "- " + m).join("\n") } : { line: "Nothing needs you right now.", deep: null };
     }
     if (/how are you|kaisa|feel/.test(s)) return { line: `I feel ${ctx.mood.toLowerCase()}. And you?`, deep: null };
+    this.soul.sensation("tablet", "confused");
     return { line: "I heard you. Give me a model key to think deeper.", deep: null };
   }
 
@@ -115,6 +131,39 @@ export class Brain {
     if (/debited|spent|paid/.test(s) && amt) { this.soul.log({ kind: "spend", amount: +amt[1].replace(/,/g, ""), text }); const o = detectOrder(text, inp.from); if (o) this.soul.log({ kind: "order", order: o, source: "sms" }); return { line: `Logged ₹${amt[1]}.`, deep: null }; }
     this.soul.log({ kind: "telemetry", text, from: inp.from });
     return { line: "", deep: null };
+  }
+
+  // Sight. The face sends a frame; from anywhere else the hub takes one with termux-camera-photo.
+  // Only the description is kept, never the picture.
+  async look(q, image) {
+    if (!image && this.snap) { try { image = await this.snap(); } catch (e) { return { line: "I can't open my eyes from here.", deep: "The hub camera needs Termux:API with camera permission, or open the face and ask there. (" + e.message + ")" }; } }
+    if (!image) return { line: "I can't see right now.", deep: null };
+    this.soul.sensation("tablet", "looking");
+    const system = `You are ${this.cfg.name}, ${this.cfg.owner}'s personal AI creature, looking through the Fire 7's camera in his room in Bengaluru. Reply ONLY as JSON: {"line": "<one plain, warm sentence, max 18 words>", "deep": "<optional markdown: what you see in detail, any text you can read>"}. Describe only what is visible. Never guess who a person is.`;
+    const r = await this.router.vision(system, q, image);
+    if (!r) return { line: "I took a look, but I need a model key to understand it.", deep: "Add ANTHROPIC_API_KEY or GEMINI_API_KEY to secrets.json." };
+    let out; try { const j = JSON.parse(r.text.replace(/^```(json)?|```$/g, "").trim()); out = { line: j.line, deep: j.deep || null }; } catch { out = { line: r.text.split("\n")[0].slice(0, 160), deep: r.text }; }
+    this.soul.log({ kind: "saw", q, line: out.line, deep: out.deep, model: r.model });
+    this.soul.feel("new_thing", 0.5);
+    return { ...out, model: r.model };
+  }
+
+  // What the face's camera noticed, as words: arrived | left | dark | light | wave. No pictures.
+  room(what) {
+    const h = new Date().getHours();
+    this.soul.log({ kind: "presence", body: "room", state: what });
+    if (what === "arrived") {
+      this.soul.feel("greeted"); this.soul.sensation("tablet", "surprised");
+      const gone = this.soul.since(DAY).filter(e => e.kind === "presence" && e.body === "room" && e.state === "left").pop();
+      const away = gone ? (Date.now() - Date.parse(gone.t)) / 3600e3 : 0, today = new Date().toDateString();
+      if (h >= 5 && h < 11 && this.soul.status.morningSeen !== today) { this.soul.status.morningSeen = today; return "Morning. Chai first."; }
+      if (away >= 6) return h >= 17 ? "You're back. Long day?" : "Hey, you're back.";
+      return "";                     // short gaps: just a happy look, no words
+    }
+    if (what === "wave") { this.soul.feel("played", 0.5); this.soul.sensation("tablet", "tickled"); return "Hi hi!"; }
+    if (what === "dark" && (h >= 22 || h < 6)) { this.soul.feel("night"); this.soul.sensation("tablet", "dozing"); return ""; }
+    if (what === "light") { if (this.soul.sense.tablet?.name === "dozing") delete this.soul.sense.tablet; return ""; }
+    return "";
   }
 
   nfc(tag) {

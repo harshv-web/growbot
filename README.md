@@ -21,11 +21,15 @@ This repo holds the concept, the research, and the Lab site. It's a personal pro
 | [11 · Prototypes](docs/11-prototypes.md) | Strider, Walker, Perch, Pixel keychain, Halo case, apps, Ather touchpoint |
 | [12 · Build and content plan](docs/12-build-and-content-plan.md) | Phases B0–B9 and the ten-episode content journey |
 | [13 · Life OS (v4)](docs/13-life-os-v4.md) | Ather as primary commute, the office, messages and email, one input many ways, orders and habits, more models, per-body emotions, what to build today |
+| [14 · Build guide](docs/14-build-guide.md) | **Start here.** Step by step for the kit on the desk: Fire 7 (austin, LineageOS 14.1), XIAO ESP32-S3, 1.3" OLED, iPhone, 3D printer |
 
 ## Start today
 
-- `hub/`: the local soul for the Fire 7 (Termux) or a laptop. `npm install && npm start`, then open the face at `http://localhost:8047`. `npm test` runs 13 end-to-end checks. See `hub/README.md`.
-- `firmware/keychain-oled/`: ESP32-S3 + OLED Jeevo Key with pixel-eye emotions and its own feelings (tickled, cosy, dizzy).
+Follow [docs/14-build-guide.md](docs/14-build-guide.md).
+
+- `hub/`: the local soul for the Fire 7 (Termux) or a laptop. `bash hub/scripts/fire7-setup.sh` on the tablet; `npm install && npm start` anywhere else, then open the face at `http://localhost:8047`. The face has 38 fluid moods, sees with the front camera and hears through the mic. `npm test` runs 17 end-to-end checks.
+- `firmware/keychain-oled/`: XIAO ESP32-S3 + 1.3" SH1106 OLED Jeevo Key with the same moods in 1-bit and its own feelings (tickled, cosy, dizzy). Runs in LED mode with no screen. `firmware/sim/render.sh` previews every mood on a laptop.
+- `hardware/`: OpenSCAD + STL for the Fire 7 stand, the Jeevo Key case and Pebble (a desk body).
 - `firmware/desk-node/`: ESP32 pet pad + "keys on the desk" presence.
 - `shortcuts/README.md`: iPhone Shortcut recipes (Ask Jeevo, Ather ride start/end, office, bank SMS, NFC taps).
 

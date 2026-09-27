@@ -22,7 +22,26 @@ export const SENSATIONS = {
   listening:["Listening",8,{ eyes: "wide",   mouth: 0 }],
   thinking:["Thinking",8,  { eyes: "up",     mouth: 0 }],
   talking: ["Talking", 6,  { eyes: "happy",  mouth: 0.5, talk: true }],
-  surprised:["Surprised",3,{ eyes: "wide",   mouth: -0.1, o: true }]
+  surprised:["Surprised",3,{ eyes: "wide",   mouth: -0.1, o: true }],
+  looking: ["Looking", 6,  { eyes: "wide",   mouth: 0 }],
+  dozing:  ["Dozing",  900,{ eyes: "tired",  mouth: 0.1, eyeOpen: 0.15 }],
+  // v5 moods. `eyes` is the closest style the keychain OLED can draw; the tablet face uses the full preset.
+  excited: ["Excited", 5,  { eyes: "wide",   mouth: 1 }],
+  shy:     ["Shy",     5,  { eyes: "happy",  mouth: 0.4 }],
+  laughing:["Laughing",4,  { eyes: "squint", mouth: 1, talk: true }],
+  confused:["Confused",5,  { eyes: "up",     mouth: -0.1 }],
+  scared:  ["Scared",  3,  { eyes: "wide",   mouth: -0.4 }],
+  crying:  ["Crying",  6,  { eyes: "sad",    mouth: -0.7 }],
+  sad:     ["Sad",     60, { eyes: "sad",    mouth: -0.5 }],
+  bored:   ["Bored",   60, { eyes: "tired",  mouth: -0.1 }],
+  smug:    ["Smug",    5,  { eyes: "narrow", mouth: 0.6 }],
+  wink:    ["Wink",    3,  { eyes: "happy",  mouth: 0.8 }],
+  amazed:  ["Amazed",  5,  { eyes: "wide",   mouth: 0.5, o: true }],
+  determined:["Determined",30,{ eyes: "angry", mouth: 0.2 }],
+  relieved:["Relieved",5,  { eyes: "happy",  mouth: 0.5 }],
+  sulky:   ["Sulky",   20, { eyes: "angry",  mouth: -0.3 }],
+  grateful:["Grateful",5,  { eyes: "happy",  mouth: 0.7 }],
+  proud:   ["Proud",   5,  { eyes: "happy",  mouth: 0.8 }]
 };
 
 export class Soul {
